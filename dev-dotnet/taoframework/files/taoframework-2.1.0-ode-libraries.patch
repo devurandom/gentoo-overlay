@@ -1,0 +1,10 @@
+--- src/Tao.Ode/Tao.Ode.dll.config.orig	2010-09-19 14:46:04.922314721 +0200
++++ src/Tao.Ode/Tao.Ode.dll.config	2010-09-19 14:46:13.509054161 +0200
+@@ -1,6 +1,6 @@
+ <configuration>
+     <dllmap dll="ode.dll">
+-    	<dllentry os="linux" dll="libode.so.0debian1" />
++    	<dllentry os="linux" dll="libode.so.1" />
+     	<dllentry os="windows" dll="ode.dll" />
+     	<dllentry os="osx" dll="libode.so.0debian1" />
+     </dllmap>

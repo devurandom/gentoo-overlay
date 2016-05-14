@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>crypto</herd>
+  <maintainer>
+    <email>zerochaos@gentoo.org</email>
+    <name>Rick Farina</name>
+    <description>Any and all help appreciated</description>
+  </maintainer>
+  <use>
+    <flag name="cuda">Use nvidia cuda toolkit for speeding up cracking on capable devices</flag>
+    <flag name="mozilla"> Support mozilla password cracking</flag>
+    <flag name="wow"> Support World of Warcraft password cracking</flag>
+    <flag name="opencl">Enable opencl support for speeding up cracking on capable devices</flag>
+    <flag name="openssl">Use OpenSSL as crypto backend</flag>
+    <flag name="commoncrypto">Use CommonCrypto as crypto backend</flag>
+	<flag name="pcap">Support network packet sniffing using net-libs/libpcap</flag>
+	<flag name="rexgen">Use ?-libs/rexgen to create regular expression matches</flag>
+  </use>
+</pkgmetadata>

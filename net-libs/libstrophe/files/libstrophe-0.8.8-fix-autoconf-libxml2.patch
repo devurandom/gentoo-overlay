@@ -1,0 +1,13 @@
+--- libstrophe-0.8.0/configure.ac.orig   2015-08-26 19:35:21.451438099 +0200
++++ libstrophe-0.8.0/configure.ac        2015-08-26 19:36:15.601904591 +0200
+@@ -24,9 +24,8 @@
+ PKG_CHECK_MODULES([check], [check >= 0.9.4], [], [AC_MSG_WARN([libcheck not found; unit tests will not be compilable])])
+ 
+ AC_ARG_WITH([libxml2],
+             [AS_HELP_STRING([--with-libxml2], [use libxml2 for XML parsing])],
+-            [with_libxml2=check],
+-            [with_libxml2=no])
++            [], [with_libxml2=no])
+ 
+ if test "x$with_libxml2" != xno; then
+   PKG_CHECK_MODULES([libxml2], [libxml-2.0 >= 2.7],

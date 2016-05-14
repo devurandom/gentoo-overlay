@@ -1,0 +1,22 @@
+--- src/Tao.FFmpeg/Tao.FFmpeg.dll.config.orig	2010-09-19 14:46:00.319454396 +0200
++++ src/Tao.FFmpeg/Tao.FFmpeg.dll.config	2010-09-19 14:46:26.997644899 +0200
+@@ -1,16 +1,16 @@
+ <configuration>
+     <dllmap dll="avcodec-51.dll">
+-    	<dllentry os="linux" dll="libavcodec.so.1d" />
++    	<dllentry os="linux" dll="libavcodec.so.52" />
+     	<dllentry os="windows" dll="avcodec-51.dll" />
+     	<dllentry os="osx" dll="libavcodec.so.1d" />
+     </dllmap>
+     <dllmap dll="avformat-51.dll">
+-    	<dllentry os="linux" dll="libavformat.so.1d" />
++    	<dllentry os="linux" dll="libavformat.so.52" />
+     	<dllentry os="windows" dll="avformat-51.dll" />
+     	<dllentry os="osx" dll="libavformat.so.1d" />
+     </dllmap>
+     <dllmap dll="avutil-49.dll">
+-    	<dllentry os="linux" dll="libavutil.so.1d" />
++    	<dllentry os="linux" dll="libavutil.so.52" />
+     	<dllentry os="windows" dll="avutil-49.dll" />
+     	<dllentry os="osx" dll="libavutil.so.1d" />
+     </dllmap>

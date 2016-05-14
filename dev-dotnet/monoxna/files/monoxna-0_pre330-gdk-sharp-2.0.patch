@@ -1,0 +1,11 @@
+--- monoxna-0_pre330/src/MonoDevelop.Xna/MonoDevelop.Xna.csproj.orig	2010-09-19 18:40:21.269938538 +0200
++++ monoxna-0_pre330/src/MonoDevelop.Xna/MonoDevelop.Xna.csproj	2010-09-19 18:40:32.043616430 +0200
+@@ -86,7 +86,7 @@
+     <Reference Include="System.Xml" />
+     <Reference Include="Microsoft.Build.Framework" />
+     <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f">
+-      <Package>gtk-sharp-2.0</Package>
++      <Package>gdk-sharp-2.0</Package>
+     </Reference>
+     <Reference Include="MonoDevelop.Core, Version=2.4.0.0, Culture=neutral">
+       <Package>monodevelop</Package>
