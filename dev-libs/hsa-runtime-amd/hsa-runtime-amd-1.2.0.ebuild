@@ -19,7 +19,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-RDEPEND="=dev-libs/hsathk-${PV}"
+RDEPEND="=dev-libs/hsathk-amd-${PV}"
 DEPEND="${RDEPEND}"
 
 S="${WORKDIR}/${MY_PN}-${MY_PV}"
