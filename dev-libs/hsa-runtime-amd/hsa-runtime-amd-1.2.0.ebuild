@@ -37,6 +37,6 @@ src_configure() {
 src_install() {
 	cmake-utils_src_install
 
-	insinto /usr/include/hsa-runtime
-	doins src/inc/* src/core/inc/* src/libamdhsacode/*.hpp
+	insinto /usr/include/hsa
+	doins src/inc/amd_hsa_* src/inc/hsa_ext_* src/inc/hsa.h
 }
