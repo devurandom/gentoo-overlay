@@ -1,0 +1,72 @@
+--- openimageio-1.7.13/CMakeLists.txt.orig	2017-04-29 15:19:41.888720688 +0200
++++ openimageio-1.7.13/CMakeLists.txt	2017-04-29 15:20:10.255529133 +0200
+@@ -519,10 +519,10 @@
+     endforeach ()
+ endif ()
+ 
+-if (USE_PYTHON AND boost_PYTHON_FOUND AND NOT BUILD_OIIOUTIL_ONLY)
++if (USE_PYTHON AND Boost_PYTHON_FOUND AND NOT BUILD_OIIOUTIL_ONLY)
+     add_subdirectory (src/python)
+ endif ()
+-if (USE_PYTHON3 AND boost_PYTHON_FOUND AND NOT BUILD_OIIOUTIL_ONLY)
++if (USE_PYTHON3 AND Boost_PYTHON_FOUND AND NOT BUILD_OIIOUTIL_ONLY)
+     #build the python3 module in a different binary directory since it will
+     #have the same name as the python2 module (e.g. OpenImageIO.so)
+     add_subdirectory (src/python src/python3)
+--- openimageio-1.7.13/src/cmake/externalpackages.cmake.orig	2017-04-29 15:39:28.055972762 +0200
++++ openimageio-1.7.13/src/cmake/externalpackages.cmake	2017-04-29 15:41:19.813295317 +0200
+@@ -135,6 +135,10 @@
+                   COMPONENTS ${Boost_COMPONENTS}
+                  )
+ 
++	if (CMAKE_GENTOO_BUILD OR CMAKE_BUILD_TYPE STREQUAL Gentoo)
++	    # Gentoo's patches to CMake make sure that we will always find exactly the version of Python required by Gentoo
++		find_package (Boost 1.42 COMPONENTS ${Boost_COMPONENTS} python)
++	else ()
+     # Try to figure out if this boost distro has Boost::python.  If we
+     # include python in the component list above, cmake will abort if
+     # it's not found.  So we resort to checking for the boost_python
+@@ -172,10 +176,11 @@
+     endif ()
+     if (my_boost_python_lib OR
+         my_boost_PYTHON_LIBRARY_RELEASE OR my_boost_PYTHON_LIBRARY_DEBUG)
+-        set (boost_PYTHON_FOUND ON)
++        set (Boost_PYTHON_FOUND ON)
+     else ()
+-        set (boost_PYTHON_FOUND OFF)
++        set (Boost_PYTHON_FOUND OFF)
+     endif ()
++	endif ()
+ endif ()
+ 
+ # On Linux, Boost 1.55 and higher seems to need to link against -lrt
+@@ -190,9 +195,9 @@
+     message (STATUS "Boost include dirs ${Boost_INCLUDE_DIRS}")
+     message (STATUS "Boost library dirs ${Boost_LIBRARY_DIRS}")
+     message (STATUS "Boost libraries    ${Boost_LIBRARIES}")
+-    message (STATUS "Boost python found ${boost_PYTHON_FOUND}")
++    message (STATUS "Boost python found ${Boost_PYTHON_FOUND}")
+ endif ()
+-if (NOT boost_PYTHON_FOUND)
++if (NOT Boost_PYTHON_FOUND)
+     # If Boost python components were not found, turn off all python support.
+     message (STATUS "Boost python support not found -- will not build python components!")
+     if (APPLE AND USE_PYTHON)
+--- openimageio-1.7.13/src/python/CMakeLists.txt.orig	2017-04-29 15:05:07.117933355 +0200
++++ openimageio-1.7.13/src/python/CMakeLists.txt	2017-04-29 15:07:50.747700197 +0200
+@@ -8,7 +8,14 @@
+     set (BUILD_PY3 OFF)
+ endif ()
+ 
+-if (NOT BOOST_CUSTOM AND NOT BUILD_PY3)
++if (CMAKE_GENTOO_BUILD OR CMAKE_BUILD_TYPE STREQUAL Gentoo)
++	# Gentoo's patches to CMake make sure that we will always find exactly the version of Python required by Gentoo
++	if (BUILD_PY3)
++    	find_package (PythonInterp ${PYTHON3_VERSION} REQUIRED)
++    	find_package (PythonLibs ${PYTHON3_VERSION} REQUIRED)
++	endif ()
++    find_package (Boost 1.42 REQUIRED COMPONENTS python)
++elseif (NOT BOOST_CUSTOM AND NOT BUILD_PY3)
+     #Unset those, otherwise find_package(PythonLibs) will pick up old stuff
+     #if it has been run before
+     unset(Python_ADDITIONAL_VERSIONS)
