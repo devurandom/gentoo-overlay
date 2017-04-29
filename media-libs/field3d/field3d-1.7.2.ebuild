@@ -1,10 +1,9 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
+EAPI=6
 
-inherit cmake-utils
+inherit cmake-utils versionator
 
 MY_P="Field3D-${PV}"
 
@@ -13,7 +12,7 @@ HOMEPAGE="http://sites.google.com/site/field3d/ https://github.com/imageworks/Fi
 SRC_URI="https://github.com/imageworks/Field3D/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE=""
-SLOT="0"
+SLOT="0/$(get_version_component_range 1-2)"
 KEYWORDS="~amd64 ~x86"
 IUSE="doc mpi"
 
@@ -31,7 +30,6 @@ S="${WORKDIR}/${MY_P}"
 
 src_configure() {
 	local mycmakeargs=(
-		-DLIB_INSTALL_DIR="/usr/$(get_libdir)"
 		$(use doc && echo -DINSTALL_DOCS)
 		)
 
