@@ -1,10 +1,12 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
-inherit eutils
+PYTHON_COMPAT=( python2_7 python3_{3,4,5} pypy pypy3 )
+
+inherit python-single-r1
 
 DESCRIPTION="A console based XMPP client"
 HOMEPAGE="http://www.profanity.im/"
@@ -14,23 +16,26 @@ LICENSE="GPL-3"
 SLOT="0/0.4"
 KEYWORDS="~amd64"
 
-IUSE="+expat notifications otr pgp test +themes xscreensaver"
+IUSE="icons notifications otr pgp +plugins python test +themes xscreensaver"
+
+REQUIRED_USE="python? ( plugins )"
 
 # tests also need "stabber" and "libexpect", which are not in portage
 DEPEND="net-libs/libstrophe:=
 	net-misc/curl
 	>=dev-libs/glib-2.26:2
 	sys-libs/ncurses:=[unicode]
-	dev-libs/openssl
+	dev-libs/openssl:=
 	sys-apps/util-linux
+	sys-libs/readline:=
+	icons? ( >=x11-libs/gtk+-2.24.10:2 )
 	notifications? ( x11-libs/libnotify )
 	otr? ( net-libs/libotr )
 	pgp? ( app-crypt/gpgme:= )
 	xscreensaver? (
 		x11-libs/libXScrnSaver
 		x11-libs/libX11 )
-	expat? ( dev-libs/expat )
-	!expat? ( dev-libs/libxml2 )"
+	python? ( dev-lang/python:2.7 )"
 RDEPEND="${DEPEND}"
 DEPEND="${DEPEND}
 	test? ( dev-util/cmocka )"
@@ -40,7 +45,8 @@ src_configure() {
 		$(use_enable notifications) \
 		$(use_enable otr) \
 		$(use_enable pgp) \
-		$(use_with !expat libxml2) \
+		$(use_enable plugins c-plugins) \
+		$(use_enable python python-plugins) \
 		$(use_with xscreensaver) \
 		$(use_with themes)
 }
