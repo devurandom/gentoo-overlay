@@ -24,7 +24,6 @@ DEPEND="${DEPEND}
 	test? ( >=dev-libs/check-0.9.4 )"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}"-fix-autoconf-libxml2.patch
 	./bootstrap.sh || die
 }
 
