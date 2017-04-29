@@ -1,10 +1,7 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI=4
-
-LANGS="ca de es fr hu nl pl ru se sk"
+EAPI=6
 
 if [[ ${PV} = *9999* ]] ; then
 	git_eclass="git-2"
@@ -15,31 +12,48 @@ else
 	KEYWORDS="~amd64 ~x86"
 fi
 
-inherit multilib toolchain-funcs qt4-r2 scons-utils ${git_eclass}
+inherit multilib toolchain-funcs scons-utils ${git_eclass}
 
 DESCRIPTION="Your friendly chat client"
 HOMEPAGE="http://swift.im/"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="avahi debug doc examples +expat ssl static-libs zeroconf"
+IUSE="debug doc gconf examples +expat experimental experimental-filetransfer icu hunspell readline ssl unbound zeroconf"
 
+# zeroconf: Swift would also support mDNSResponder, but Gentoo dropped that package
 RDEPEND="
-	dev-libs/boost
 	expat? ( dev-libs/expat )
 	!expat? ( dev-libs/libxml2 )
-	ssl? ( dev-libs/openssl )
-	zeroconf? (
-		avahi? ( net-dns/avahi )
-		!avahi? ( net-misc/mDNSResponder )
+	experimental? (
+		dev-db/sqlite:3
 	)
-	net-dns/libidn
-	sys-libs/zlib
+	experimental-filetransfer? (
+		net-libs/miniupnpc:=
+		net-libs/libnatpmp
+	)
+	gconf? ( gnome-base/gconf:2 )
+	hunspell? ( app-text/hunspell:= )
+	icu? ( dev-libs/icu:= )
+	!icu? ( net-dns/libidn )
+	readline? ( dev-libs/libedit )
+	unbound? (
+		net-libs/ldns
+		net-dns/unbound
+	)
+	zeroconf? ( net-dns/avahi )
+	dev-lang/lua:=
+	dev-libs/boost:=
+	dev-libs/openssl:0=
+	dev-qt/qtgui:5=
+	dev-qt/qtmultimedia:5=
+	dev-qt/qtwebkit:5=
+	dev-qt/qtx11extras:5=
 	x11-libs/libXScrnSaver
-	x11-libs/qt-gui
-	x11-libs/qt-webkit
+	sys-libs/zlib
 "
 DEPEND="${RDEPEND}
+	dev-qt/linguist-tools:5
 	doc? (
 		>=app-text/docbook-xsl-stylesheets-1.75
 		>=app-text/docbook-xml-dtd-4.5
@@ -54,39 +68,39 @@ set_scons_vars() {
 		allow_warnings=1
 		cc="$(tc-getCC)"
 		cxx="$(tc-getCXX)"
-		ccflags="${CXXFLAGS}"
+		ccflags="${CXXFLAGS} -std=c++11"
 		linkflags="${LDFLAGS}"
-		qt="${S}/local-qt"
+		qt="${S}/system-qt"
 		openssl="${EPREFIX}/usr"
 		docbook_xsl="${EPREFIX}/usr/share/sgml/docbook/xsl-stylesheets"
 		docbook_xml="${EPREFIX}/usr/share/sgml/docbook/xml-dtd-4.5"
-		$(use_scons debug)
-		$(use !static-libs && use_scons !static-libs swiften_dll)
-		$(use_scons ssl openssl)
-		$(use zeroconf && use_scons !avahi bonjour)
+		debug=$(usex debug)
+		try_expat=$(usex expat)
+		try_libxml=$(usex !expat)
+		experimental=$(usex experimental)
+		experimental_ft=$(usex experimental-filetransfer)
+		try_gconf=$(usex gconf)
+		hunspell_enable=$(usex hunspell)
+		icu=$(usex icu)
+		openssl=$(usex ssl)
+		unbound=$(usex unbound)
 	)
 }
 
 src_prepare() {
-	mkdir local-qt
-	ln -s "${EPREFIX}"/usr/$(get_libdir)/qt4 local-qt/lib || die
-	ln -s "${EPREFIX}"/usr/include/qt4 local-qt/include || die
+	mkdir system-qt || die
+	ln -s "${EPREFIX}"/usr/$(get_libdir)/qt5/bin system-qt/bin || die
+	ln -s "${EPREFIX}"/usr/$(get_libdir)/qt5 system-qt/lib || die
+	ln -s "${EPREFIX}"/usr/include/qt5 system-qt/include || die
 
-	cd 3rdParty || die
-	# TODO CppUnit, Lua
-	rm -rf Boost CAres DocBook Expat LCov LibIDN OpenSSL SCons SQLite ZLib || die
-	cd .. || die
+	rm -r 3rdParty || die
 
-	for x in ${LANGS}; do
-		if use !linguas_${x}; then
-			rm -f Swift/Translations/swift_${x}.ts || die
-		fi
-	done
+	default
 }
 
 src_compile() {
 	local scons_targets=( Swiften Swift )
-	use avahi && scons_targets+=( Slimber )
+	use zeroconf && scons_targets+=( Slimber )
 	use examples && scons_targets+=(
 		Documentation/SwiftenDevelopersGuide/Examples
 		Limber
@@ -113,7 +127,7 @@ src_install() {
 
 	escons "${scons_vars[@]}" SWIFT_INSTALLDIR="${D}/usr" SWIFTEN_INSTALLDIR="${D}/usr" "${D}"
 
-	if use avahi ; then
+	if use zeroconf ; then
 		newbin Slimber/Qt/slimber slimber-qt
 		newbin Slimber/CLI/slimber slimber-cli
 	fi
@@ -131,7 +145,7 @@ src_install() {
 			newbin "Swiften/Examples/${i}/${i}" "${PN}-${i}"
 		done
 		newbin Swiften/Examples/SendFile/ReceiveFile "${PN}-ReceiveFile"
-		use avahi && dobin Swiften/Examples/LinkLocalTool/LinkLocalTool
+		use zeroconf && dobin Swiften/Examples/LinkLocalTool/LinkLocalTool
 
 		for i in ClientTest NetworkTest StorageTest TLSTest ; do
 			newbin "Swiften/QA/${i}/${i}" "${PN}-${i}"

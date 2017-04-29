@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-<herd>no-herd</herd>
-<maintainer>
-  <email></email>
-</maintainer>
+  <maintainer type="person">
+    <name>Dennis Schridde</name>
+    <email>devurandom@gmx.net</email>
+  </maintainer>
+  <use>
+    <flag name="gconf">Enable support for gnome-base/gconf</flag>
+    <flag name="experimental">Enable support for experimental features</flag>
+    <flag name="experimental-filetransfer">Enable experimental support for file-transfers</flag>
+    <flag name="hunspell">Enable spellchecking using app-text/hunspell</flag>
+    <flag name="unbound">Use the unbound DNSSEC library to perform TLSA DANE checks</flag>
+  </use>
 </pkgmetadata>
