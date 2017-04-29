@@ -8,7 +8,9 @@ if [[ ${PV} = *9999* ]] ; then
 	EGIT_REPO_URI="git://swift.im/swift"
 	KEYWORDS=""
 else
-	SRC_URI="http://swift.im/downloads/releases/${P}/${P}.tar.gz"
+	MY_PV="${PV/_/}"
+	MY_P="${PN}-${MY_PV}"
+	SRC_URI="http://swift.im/downloads/releases/${MY_P}/${MY_P}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
 fi
 
@@ -19,7 +21,7 @@ HOMEPAGE="http://swift.im/"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="debug doc gconf examples +expat experimental experimental-filetransfer icu hunspell readline ssl unbound zeroconf"
+IUSE="debug doc gconf examples +expat experimental experimental-filetransfer icu hunspell qt5 readline ssl static-libs unbound zeroconf"
 
 # zeroconf: Swift would also support mDNSResponder, but Gentoo dropped that package
 RDEPEND="
@@ -33,7 +35,6 @@ RDEPEND="
 		net-libs/libnatpmp
 	)
 	gconf? ( gnome-base/gconf:2 )
-	hunspell? ( app-text/hunspell:= )
 	icu? ( dev-libs/icu:= )
 	!icu? ( net-dns/libidn )
 	readline? ( dev-libs/libedit )
@@ -45,11 +46,14 @@ RDEPEND="
 	dev-lang/lua:=
 	dev-libs/boost:=
 	dev-libs/openssl:0=
-	dev-qt/qtgui:5=
-	dev-qt/qtmultimedia:5=
-	dev-qt/qtwebkit:5=
-	dev-qt/qtx11extras:5=
-	x11-libs/libXScrnSaver
+	qt5? (
+		hunspell? ( app-text/hunspell:= )
+		dev-qt/qtgui:5=
+		dev-qt/qtmultimedia:5=
+		dev-qt/qtwebkit:5=
+		dev-qt/qtx11extras:5=
+		x11-libs/libXScrnSaver
+	)
 	sys-libs/zlib
 "
 DEPEND="${RDEPEND}
@@ -60,6 +64,8 @@ DEPEND="${RDEPEND}
 		dev-libs/libxslt
 	)
 "
+
+S="${WORKDIR}/${MY_P}"
 
 scons_vars=()
 set_scons_vars() {
@@ -75,14 +81,16 @@ set_scons_vars() {
 		docbook_xsl="${EPREFIX}/usr/share/sgml/docbook/xsl-stylesheets"
 		docbook_xml="${EPREFIX}/usr/share/sgml/docbook/xml-dtd-4.5"
 		debug=$(usex debug)
-		try_expat=$(usex expat)
-		try_libxml=$(usex !expat)
 		experimental=$(usex experimental)
 		experimental_ft=$(usex experimental-filetransfer)
-		try_gconf=$(usex gconf)
 		hunspell_enable=$(usex hunspell)
 		icu=$(usex icu)
 		openssl=$(usex ssl)
+		qt5=$(usex qt5)
+		swiften_dll=$(usex !static-libs)
+		try_expat=$(usex expat)
+		try_gconf=$(usex gconf)
+		try_libxml=$(usex !expat)
 		unbound=$(usex unbound)
 	)
 }
@@ -99,7 +107,8 @@ src_prepare() {
 }
 
 src_compile() {
-	local scons_targets=( Swiften Swift )
+	local scons_targets=( Swiften )
+	use qt5 && scons_targets+=( Swift )
 	use zeroconf && scons_targets+=( Slimber )
 	use examples && scons_targets+=(
 		Documentation/SwiftenDevelopersGuide/Examples
