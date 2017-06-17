@@ -16,7 +16,7 @@ chrono-0.2.25
 cmake-0.1.22
 crossbeam-0.2.10
 curl-0.4.6
-curl-sys-0.3.11
+curl-sys-0.3.10
 docopt-0.7.0
 dtoa-0.4.1
 env_logger-0.4.2
@@ -35,7 +35,7 @@ itoa-0.3.1
 kernel32-sys-0.2.2
 lazy_static-0.2.5
 libc-0.2.21
-libgit2-sys-0.6.8
+libgit2-sys-0.6.7
 libssh2-sys-0.2.5
 libz-sys-1.0.13
 log-0.3.7
@@ -54,7 +54,7 @@ num-iter-0.1.33
 num-rational-0.1.36
 num-traits-0.1.37
 openssl-0.9.10
-openssl-probe-0.1.0
+openssl-probe-0.1.1
 openssl-sys-0.9.10
 pkg-config-0.3.9
 psapi-sys-0.1.0
@@ -77,7 +77,7 @@ shell-escape-0.1.3
 strsim-0.6.0
 syn-0.11.9
 synom-0.11.3
-tar-0.4.11
+tar-0.4.10
 tempdir-0.3.5
 term-0.4.5
 thread-id-2.0.0
@@ -85,7 +85,7 @@ thread-id-3.0.0
 thread_local-0.2.7
 thread_local-0.3.3
 time-0.1.36
-toml-0.3.1
+toml-0.3.2
 unicode-bidi-0.2.5
 unicode-normalization-0.1.4
 unicode-xid-0.0.4
