@@ -63,8 +63,7 @@ PDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
 	>=dev-util/cargo-${CARGO_DEPEND_VERSION}"
 
 PATCHES=(
-	"${FILESDIR}/${P}"-bootstrap-output-name-of-failed-config.patch
-	"${FILESDIR}/${P}"-bootstrap-verbose.patch
+	"${FILESDIR}/${P}"-bootstrap-use-configured-rustc-cargo-paths.patch
 )
 
 S="${WORKDIR}/${MY_P}-src"
