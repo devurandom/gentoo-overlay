@@ -43,8 +43,7 @@ SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.gz
 
 LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4 UoI-NCSA"
 
-IUSE="clang debug doc jemalloc llvm"
-REQUIRED_USE="clang? ( llvm )"
+IUSE="clang debug doc jemalloc"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
@@ -96,14 +95,6 @@ src_configure() {
 
 	local archiver="$(tc-getAR)"
 	local linker="$(tc-getCC)"
-	if use llvm ; then
-		# Gentoo currently lacks CHOST prefixed binaries for sys-devel/llvm
-		# https://bugs.gentoo.org/show_bug.cgi?id=617776
-		#archiver="${CHOST}"-llvm-ar
-		#linker="${CHOST}"-llvm-link
-		archiver=llvm-ar
-		linker=llvm-link
-	fi
 
 	local llvm_config="$(get_llvm_prefix)/bin/${CBUILD}-llvm-config"
 	local c_compiler="$(tc-getBUILD_CC)"
