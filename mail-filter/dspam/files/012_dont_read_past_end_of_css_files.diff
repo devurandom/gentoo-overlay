@@ -1,0 +1,51 @@
+From: Thomas Preud'homme <robotux@celest.fr>
+Subject: don't read past the end of css files
+
+Currently, dspam's code assumes css files are well formed. It will thus
+check wether a record exist or not by comparing its position against
+the maximum number of records stored in the header. In the case of a
+corrupted header, that check could return true and the code access data
+beyond the end of the file, leading to a segmentation fault. This patch
+enhance cssclean to fix this kind of corruption.
+
+Origin: vendor
+Bug: https://sourceforge.net/p/dspam/bug-tracker/170/
+Bug-Debian: http://bugs.debian.org/722485
+Last-Update: 2013-11-26
+---
+ src/tools.hash_drv/cssclean.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/tools.hash_drv/cssclean.c b/src/tools.hash_drv/cssclean.c
+index b3f6264..2f1209b 100644
+--- a/src/tools.hash_drv/cssclean.c
++++ b/src/tools.hash_drv/cssclean.c
+@@ -189,7 +189,7 @@ int cssclean(const char *filename, int heavy) {
+   filepos = sizeof(struct _hash_drv_header);
+   header = old.addr;
+   while(filepos < old.file_len) {
+-    for(i=0;i<header->hash_rec_max;i++) {
++    for(i=0;i<header->hash_rec_max&&filepos+sizeof(*rec)-1<=old.file_len;i++) {
+       rec = (void *)((unsigned long) old.addr + filepos);
+ 
+       nonspam = rec->nonspam & 0x0fffffff;
+@@ -232,12 +232,18 @@ int cssclean(const char *filename, int heavy) {
+       }
+       filepos += sizeof(struct _hash_drv_spam_record);
+     }
++    if (i<header->hash_rec_max) {
++      LOG(LOG_INFO, "css file was corrupted, fixing it now");
++      if (header == old.addr)
++        old.header->hash_rec_max = i;
++      else
++        header->hash_rec_max = i;
++    }
+     offset = (void *)((unsigned long) old.addr + filepos);
+     header = offset;
+     filepos += sizeof(struct _hash_drv_header);
+   }
+ 
+-  bcopy (old.header, new.header, sizeof(struct _hash_drv_header));
+   _hash_drv_close(&new);
+   _hash_drv_close(&old);
+   if (rename(newfile, filename) < 0)

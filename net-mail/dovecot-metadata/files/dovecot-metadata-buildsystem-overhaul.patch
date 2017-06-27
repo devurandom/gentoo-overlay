@@ -1,0 +1,155 @@
+# HG changeset patch
+# User Dennis Schridde <devurandom@gna.org>
+# Date 1249725051 -7200
+# Node ID 6724773753d960c9ea5a562bbbf990e0ad73b483
+# Parent  4372f4ab8b0ee66b8c8e88e3661a67d441537b2d
+Overhaul autotools build system
+
+diff -r 4372f4ab8b0e -r 6724773753d9 Makefile.am
+--- a/Makefile.am	Fri Aug 07 20:17:25 2009 +0000
++++ b/Makefile.am	Sat Aug 08 11:50:51 2009 +0200
+@@ -1,3 +1,5 @@
++ACLOCAL_AMFLAGS = -I m4
++
+ SUBDIRS = src
+ 
+ EXTRA_DIST = \
+diff -r 4372f4ab8b0e -r 6724773753d9 autogen.sh
+--- a/autogen.sh	Fri Aug 07 20:17:25 2009 +0000
++++ b/autogen.sh	Sat Aug 08 11:50:51 2009 +0200
+@@ -1,12 +1,7 @@
+ #!/bin/sh
+ 
+-# If you've non-standard directories, set these
+-#ACLOCAL_DIR=
+-#GETTEXT_DIR=
++echo '+ creating m4/ ...'
++test -d m4 || mkdir m4
+ 
+-if test "$ACLOCAL_DIR" != ""; then
+-  ACLOCAL="aclocal -I $ACLOCAL_DIR"
+-  export ACLOCAL
+-fi
+-
++echo '+ running autoreconf ...'
+ autoreconf -i
+diff -r 4372f4ab8b0e -r 6724773753d9 configure.ac
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/configure.ac	Sat Aug 08 11:50:51 2009 +0200
+@@ -0,0 +1,56 @@
++AC_PREREQ([2.56])
++AC_INIT([dovecot-metadata], [0.0.1], [bh@intevation.de])
++
++AM_INIT_AUTOMAKE([1.10])
++
++AC_CONFIG_MACRO_DIR([m4])
++AC_CONFIG_SRCDIR([src])
++
++
++AC_PROG_CC
++AM_PROG_LIBTOOL
++
++
++AM_MAINTAINER_MODE
++
++AC_ARG_WITH(dovecot,
++	AS_HELP_STRING([--with-dovecot=DIR],[Dovecot base directory [../dovecot]]),
++	[ dovecotdir="$withval" ], [ dovecotdir="../dovecot" ]
++)
++AC_MSG_CHECKING([for dovecot-config in "${dovecotdir}"])
++AS_IF([test -f "${dovecotdir}/dovecot-config"],[
++	AC_MSG_RESULT([${dovecotdir}/dovecot-config])
++],[
++	AC_MSG_RESULT([not found])
++	AC_MSG_NOTICE([])
++	AC_MSG_NOTICE([Use --with-dovecot=DIR to give path to compiled Dovecot sources])
++	AC_MSG_NOTICE([or to a directory with the installed dovecot-config file.])
++	AC_MSG_ERROR([dovecot-config not found])
++])
++AC_SUBST([dovecotdir], [`cd ${dovecotdir} && pwd`])
++
++# Get dovecot config vars, replacing relative ../ paths in the file with full paths
++eval `sed -nr \
++	-e "s,\\$\(top_builddir\)/,${dovecotdir}/,g" \
++	-e '/^(dovecot_incdir|moduledir)=(.*)$/p' \
++	${dovecotdir}/dovecot-config`
++
++# Check whether we are compiling against sources or installed headers
++AS_IF([test -d "${dovecotdir}/src"],[
++	have_dovecot_libs=yes
++	dovecot_incdir="${dovecotdir}"
++],[
++	have_dovecot_libs=no
++])
++AM_CONDITIONAL([HAVE_DOVECOT_LIBS], [test "$have_dovecot_libs" = "yes"])
++
++AC_SUBST([dovecot_incdir])
++AC_SUBST([moduledir])
++
++
++AC_CONFIG_HEADERS([metadata-config.h])
++AC_CONFIG_FILES([
++	Makefile
++	src/Makefile
++])
++AC_OUTPUT
+diff -r 4372f4ab8b0e -r 6724773753d9 configure.in
+--- a/configure.in	Fri Aug 07 20:17:25 2009 +0000
++++ /dev/null	Thu Jan 01 00:00:00 1970 +0000
+@@ -1,56 +0,0 @@
+-AC_INIT(dovecot-metadata, 0.0.1, [bh@intevation.de])
+-AC_CONFIG_SRCDIR([src])
+-
+-AC_CONFIG_HEADERS([metadata-config.h])
+-AM_INIT_AUTOMAKE
+-
+-AM_MAINTAINER_MODE
+-
+-AC_PROG_CC
+-AM_PROG_LIBTOOL
+-
+-AC_ARG_WITH(dovecot,
+-[  --with-dovecot[=DIR]    Dovecot base directory (../dovecot)],
+-	dovecotdir="$withval",
+-	dovecotdir=../dovecot
+-)
+-old=`pwd`
+-cd $dovecotdir
+-dovecotdir=`pwd`
+-cd $old
+-AC_SUBST(dovecotdir)
+-
+-if ! test -f "$dovecotdir/dovecot-config"; then
+-  echo
+-  echo "dovecot-config not found from $dovecotdir, use --with-dovecot=PATH"
+-  echo "to give path to compiled Dovecot sources or to a directory with the"
+-  echo "installed dovecot-config file."
+-  AC_MSG_ERROR([dovecot-config not found])
+-fi
+-
+-if test -d "$dovecotdir/src"; then
+-  # compiling against sources
+-  have_dovecot_libs=yes
+-else
+-  # compiling against installed headers
+-  have_dovecot_libs=no
+-fi
+-AM_CONDITIONAL(HAVE_DOVECOT_LIBS, test "$have_dovecot_libs" = "yes")
+-
+-dnl replace relative ../ paths in the file with full paths
+-eval `cat $dovecotdir/dovecot-config|sed 's,\$(top_builddir)/,$dovecotdir/,g'`
+-
+-if test $have_dovecot_libs = yes; then
+-  dovecot_incdir="$dovecotdir"
+-fi
+-
+-
+-AC_SUBST(dovecot_incdir)
+-AC_SUBST(moduledir)
+-
+-AC_CONFIG_FILES([
+-Makefile
+-src/Makefile
+-])
+-
+-AC_OUTPUT

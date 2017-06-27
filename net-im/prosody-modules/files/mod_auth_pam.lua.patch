@@ -1,0 +1,52 @@
+--- mod_auth_pam/mod_auth_pam.lua.orig	2013-11-08 00:07:43.000000000 +0100
++++ mod_auth_pam/mod_auth_pam.lua	2013-11-08 00:14:12.000000000 +0100
+@@ -7,20 +7,43 @@
+ local posix = require "posix";
+ local pam = require "pam";
+ local new_sasl = require "util.sasl".new;
++local io = require "io"
+ 
+ function user_exists(username)
+ 	return not not posix.getpasswd(username);
+ end
+ 
+ function test_password(username, password)
+-	local h, err = pam.start("xmpp", username, {
+-		function (t)
+-			if #t == 1 and t[1][1] == pam.PROMPT_ECHO_OFF then
+-				return { { password, 0} };
++	local function conversation(messages)
++		local responses = {}
++
++		for i, message in ipairs(messages) do
++			local msg_style, msg = message[1], message[2]
++
++			if msg_style == pam.PROMPT_ECHO_OFF then
++				-- Assume PAM asks us for the password
++				responses[i] = {password, 0}
++			elseif msg_style == pam.PROMPT_ECHO_ON then
++				responses[i] = {username, 0}
++			elseif msg_style == pam.ERROR_MSG then
++				io.write("ERROR: ")
++				io.write(msg)
++				io.write("\n")
++				responses[i] = {"", 0}
++			elseif msg_style == pam.TEXT_INFO then
++				io.write(msg)
++				io.write("\n")
++				responses[i] = {"", 0}
++			else
++				error("Unsupported conversation message style: " .. msg_style)
+ 			end
+ 		end
+-	});
+-	if h and h:authenticate() and h:endx(pam.SUCCESS) then
++
++		return responses
++	end
++
++	local h, err = pam.start("xmpp", username, {conversation, nil});
++	if h and h:authenticate() and h:endx(pam.SUCCESS) then
+ 		return user_exists(username), true;
+ 	end
+ 	return nil, true;

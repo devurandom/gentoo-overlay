@@ -1,0 +1,22 @@
+Description: Fix quarantine deletion in web frontend for spanish users
+ A string in dspam webfrontend is translated despite its value being used
+ in cgi scripts. This string should not be translated as it is not shown
+ to the user.
+Author: Daniel Vidal de la Rubia <dvrubia@gmail.com>
+Bug-Debian: http://bugs.debian.org/673833
+Origin: other, http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=673833
+Forwarded: no
+Reviewed-By: Thomas Preud'homme <robotux@celest.fr>
+Last-Update: 2012-05-21
+
+--- dspam-3.10.2+dfsg.orig/webui/cgi-bin/templates/es-es/nav_quarantine.html
++++ dspam-3.10.2+dfsg/webui/cgi-bin/templates/es-es/nav_quarantine.html
+@@ -38,7 +38,7 @@ Marca los mensajes y luego usa las opcio
+ 
+ <form action="$CGI$" method="post">
+ <p>
+-<input type="hidden" name="command" value="processMensajes en cuarentena">
++<input type="hidden" name="command" value="processQuarantine">
+ <input type="hidden" name="template" value="quarantine">
+ <input type="hidden" name="user" value="$REMOTE_USER$">
+ <input type="hidden" name="sortby" value="$SORTBY$">

@@ -1,0 +1,216 @@
+Description: Debian configuration for the WebUI
+Author: Debian DSPAM Maintainers <pkg-dspam-misc@lists.alioth.debian.org>
+Forwarded: not-needed
+
+--- a/webui/cgi-bin/admin.cgi
++++ b/webui/cgi-bin/admin.cgi
+@@ -24,14 +24,14 @@
+ #
+ # Read configuration parameters common to all CGI scripts
+ #
+-if (!(-e "configure.pl") || !(-r "configure.pl")) {
++if (!(-e "/etc/dspam/webfrontend.conf") || !(-r "/etc/dspam/webfrontend.conf")) {
+   &htmlheader;
+   print "<html><head><title>Error!</title></head><body bgcolor='white' text='black'><center><h1>";
+   print "Missing file configure.pl";
+   print "</h1></center></body></html>\n";
+   exit;
+ }
+-require "configure.pl";
++require "/etc/dspam/webfrontend.conf";
+ 
+ #
+ # The current CGI script
+@@ -74,7 +74,7 @@
+ #
+ do {
+   my($admin) = 0;
+-  open(FILE, "<./admins");
++  open(FILE, "</etc/dspam/admins");
+   while(<FILE>) {
+     chomp;
+     if ($_ eq $ENV{'REMOTE_USER'}) {
+@@ -165,9 +165,9 @@
+ 
+   $DATA{'USERNAME'} = $USER;
+ 
+-  if ($FORM{'username'} eq "") {
+-    $FILE = "./default.prefs";
+-    if ($CONFIG{'PREFERENCES_EXTENSION'} != 1 && ! -l "$CONFIG{'DSPAM_HOME'}/default.prefs") {
++  if ($FORM{'username'} eq "" || $FORM{'username'} eq "default") {
++    $FILE = "/etc/dspam/default.prefs";
++    if ($CONFIG{'PREFERENCES_EXTENSION'} != 1 && ! -l "/etc/dspam/default.prefs") {
+       $DATA{'ERROR'} = "<em>WARNING:</em> " .
+         "These default preferences will not be loaded by DSPAM, but only by ".
+         " the CGI interface when a user initially sets up their preferences. ".
+@@ -261,7 +261,7 @@
+   }
+ 
+   if (! -e $FILE) {
+-    %PREFS = GetPrefs($USER, "./default.prefs");
++    %PREFS = GetPrefs($USER, "/etc/dspam/default.prefs");
+   } else {
+     %PREFS = GetPrefs($USER, $FILE);
+   }
+@@ -869,7 +869,7 @@
+     close(PIPE);
+   } else {
+     if (! -e $FILE) {
+-      $FILE = "./default.prefs";
++      $FILE = "/etc/dspam/default.prefs";
+     }
+                                                                                 
+     if (! -e $FILE) {
+--- a/webui/cgi-bin/admingraph.cgi
++++ b/webui/cgi-bin/admingraph.cgi
+@@ -25,14 +25,14 @@
+ #
+ # Read configuration parameters common to all CGI scripts
+ #
+-if (!(-e "configure.pl") || !(-r "configure.pl")) {
++if (!(-e "/etc/dspam/webfrontend.conf") || !(-r "/etc/dspam/webfrontend.conf")) {
+   &htmlheader;
+   print "<html><head><title>Error!</title></head><body bgcolor='white' text='black'><center><h1>";
+-  print "Missing file configure.pl";
++  print "Missing file /etc/dspam/webfrontend.conf";
+   print "</h1></center></body></html>\n";
+   exit;
+ }
+-require "configure.pl";
++require "/etc/dspam/webfrontend.conf";
+ 
+ #
+ # Parse form
+@@ -52,7 +52,7 @@
+   $LANGUAGE = $CONFIG{'LANGUAGE_USED'};
+ }
+ 
+-GD::Graph::colour::read_rgb("rgb.txt"); 
++GD::Graph::colour::read_rgb("/etc/dspam/rgb.txt");
+ 
+ do {
+   my($spam, $nonspam, $sm, $fp, $inoc, $wh, $corpus, $virus, $black, $block, $period) = split(/\_/, $FORM{'data'});
+--- a/webui/cgi-bin/configure.pl.in
++++ b/webui/cgi-bin/configure.pl.in
+@@ -28,11 +28,11 @@
+ $CONFIG{'DSPAM_STATS'}	= $CONFIG{'DSPAM_BIN'} . "/dspam_stats";
+ $CONFIG{'DSPAM_ARGS'}	= "--deliver=innocent --class=innocent " .
+                           "--source=error --user %CURRENT_USER% -d %u";
+-$CONFIG{'TEMPLATES'}	= "./templates";	# Location of HTML templates
++$CONFIG{'TEMPLATES'}	= "/etc/dspam/templates";	# Location of HTML templates
+ $CONFIG{'DSPAM_PROCESSES'} = "ps auxw | grep dspam | grep -v 'grep\|cgi\|sock' | wc -l"; # use ps -deaf for Solaris
+ $CONFIG{'MAIL_QUEUE'}	= "mailq | grep '^[0-9,A-F]\{10,12\}[\t ][\t ]*[1-9]' | wc -l";
+ 
+-$CONFIG{'WEB_ROOT'}	= ""; # URL location of included htdocs/ files
++$CONFIG{'WEB_ROOT'}	= "/usr/share/dspam/"; # URL location of included htdocs/ files
+ 
+ # Default DSPAM display
+ #$CONFIG{'DATE_FORMAT'}	= "%d.%m.%Y %H:%M"; # Date format in strftime style
+@@ -45,13 +45,15 @@
+ $CONFIG{'MAX_COL_LEN'}	= 50;		# Max chars in list columns
+ $CONFIG{'SORT_DEFAULT'}	= "Rating";	# Show quarantine by "Date" or "Rating"
+ $CONFIG{'3D_GRAPHS'}	= 1;		# 0=graphs in 2D, 1=graphs in 3D
+-$CONFIG{'OPTMODE'}	= "NONE";	# OUT=OptOut IN=OptIn NONE=not selectable
++$CONFIG{'OPTMODE'}	= "OUT";	# OUT=OptOut IN=OptIn NONE=not selectable
+ 
+ # Full path to TTF font(s) used for legend, x and y labels in Graphs. GD must be compiled
+ # with TTF support if you want to use this feature.
+-#$CONFIG{'GRAPHS_X_LABEL_FONT'} = "/usr/share/fonts/dejavu/DejaVuSans.ttf";
+-#$CONFIG{'GRAPHS_Y_LABEL_FONT'} = "/usr/share/fonts/dejavu/DejaVuSans.ttf";
+-#$CONFIG{'GRAPHS_LEGEND_FONT'}  = "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf";
++# On Debian, you need to install libgd-gd2-perl rather than libgd-gd2-noxpm-perl
++# You will also need some ttf font (eg. DejaVu in the ttf-dejavu-core package)
++#$CONFIG{'GRAPHS_X_LABEL_FONT'} = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
++#$CONFIG{'GRAPHS_Y_LABEL_FONT'} = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
++#$CONFIG{'GRAPHS_LEGEND_FONT'}  = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf";
+ 
+ # Add customized settings below
+ $CONFIG{'LOCAL_DOMAIN'}	= "example.org";
+--- a/webui/cgi-bin/dspam.cgi
++++ b/webui/cgi-bin/dspam.cgi
+@@ -26,14 +26,14 @@
+ #
+ # Read configuration parameters common to all CGI scripts
+ #
+-if (!(-e "configure.pl") || !(-r "configure.pl")) {
++if (!(-e "/etc/dspam/webfrontend.conf") || !(-r "/etc/dspam/webfrontend.conf")) {
+   &htmlheader;
+   print "<html><head><title>Error!</title></head><body bgcolor='white' text='black'><center><h1>";
+-  print "Missing file configure.pl";
++  print "Missing file /etc/dspam/webfrontend.conf";
+   print "</h1></center></body></html>\n";
+   exit;
+ }
+-require "configure.pl";
++require "/etc/dspam/webfrontend.conf";
+ 
+ #
+ # The current CGI script
+@@ -71,7 +71,7 @@
+ 
+ $CONFIG{'ADMIN'} = 0;
+ if ($ENV{'REMOTE_USER'} ne "") {
+-  open(FILE, "<./admins");
++  open(FILE, "</etc/dspam/admins");
+   while(<FILE>) {
+     chomp;
+     if ($_ eq $ENV{'REMOTE_USER'}) {
+@@ -84,7 +84,7 @@
+ $CONFIG{'SUBADMIN'} = 0;
+ $CONFIG{'SUBADMIN_USERS'} = {};
+ if ($ENV{'REMOTE_USER'} ne "" && $CONFIG{'ADMIN'} == 0) {
+-  open(FILE, "<./subadmins");
++  open(FILE, "</etc/dspam/subadmins");
+   while(<FILE>) {
+     chomp;
+     if ($_ !~ /^\s*#/) {
+@@ -1829,6 +1829,7 @@
+   my(%PREFS);
+ 
+   my($FILE) = "$USER.prefs";
++  my($DEFAULT_PREFS) = "/etc/dspam/default.prefs";
+ 
+   if ($CONFIG{'PREFERENCES_EXTENSION'} == 1) {
+     my $PREF_USER = $CURRENT_USER;
+@@ -1844,10 +1845,10 @@
+ 
+   if (keys(%PREFS) eq "0" || $CONFIG{'PREFERENCES_EXTENSION'} != 1) {
+ 
+-    if (! -e "./default.prefs") {
++    if (! -e "$DEFAULT_PREFS") {
+       &error("$CONFIG{'LANG'}->{$LANGUAGE}->{'error_load_default_prefs'}");
+     }
+-    open(FILE, "<./default.prefs");
++    open(FILE, "<$DEFAULT_PREFS");
+     while(<FILE>) {
+       chomp;
+       my($directive, $value) = split(/\=/);
+--- a/webui/cgi-bin/graph.cgi
++++ b/webui/cgi-bin/graph.cgi
+@@ -26,14 +26,14 @@
+ #
+ # Read configuration parameters common to all CGI scripts
+ #
+-if (!(-e "configure.pl") || !(-r "configure.pl")) {
++if (!(-e "/etc/dspam/webfrontend.conf") || !(-r "/etc/dspam/webfrontend.conf")) {
+   &htmlheader;
+   print "<html><head><title>Error!</title></head><body bgcolor='white' text='black'><center><h1>";
+-  print "Missing file configure.pl";
++  print "Missing file /etc/dspam/webfrontend.conf";
+   print "</h1></center></body></html>\n";
+   exit;
+ }
+-require "configure.pl";
++require "/etc/dspam/webfrontend.conf";
+ 
+ #
+ # Parse form
+@@ -53,7 +53,7 @@
+   $LANGUAGE = $CONFIG{'LANGUAGE_USED'};
+ }
+ 
+-GD::Graph::colour::read_rgb("rgb.txt"); 
++GD::Graph::colour::read_rgb("/etc/dspam/rgb.txt");
+ 
+ do {
+   my($spam, $nonspam, $period) = split(/\_/, $FORM{'data'});

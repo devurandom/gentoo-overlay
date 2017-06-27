@@ -1,0 +1,128 @@
+Description: Debian default configuration
+Author: Debian DSPAM Maintainers <pkg-dspam-misc@lists.alioth.debian.org>
+Forwarded: not-needed
+
+--- a/src/dspam.conf.in
++++ b/src/dspam.conf.in
+@@ -19,7 +19,7 @@
+ #
+ # Options include:
+ #
+-#   libmysql_drv.so     libpgsql_drv.so   libsqlite_drv.so
++#   libmysql_drv.so     libpgsql_drv.so
+ #   libsqlite3_drv.so   libhash_drv.so
+ #
+ # IMPORTANT: Switching storage drivers requires more than merely changing
+@@ -143,11 +143,10 @@
+ #
+ Trust root
+ Trust dspam
+-Trust apache
++Trust www-data
+ Trust mail
+-Trust mailnull
+-Trust smmsp
+ Trust daemon
++Trust amavis
+ #Trust nobody
+ #Trust majordomo
+ 
+@@ -290,7 +289,7 @@
+ # defaults.
+ #
+ Preference "trainingMode=TEFT"		# { TOE | TUM | TEFT | NOTRAIN } -> default:teft
+-Preference "spamAction=quarantine"	# { quarantine | tag | deliver } -> default:quarantine
++Preference "spamAction=tag"		# { quarantine | tag | deliver } -> default:quarantine
+ Preference "spamSubject=[SPAM]"		# { string } -> default:[SPAM]
+ Preference "statisticalSedation=5"	# { 0 - 10 } -> default:0
+ Preference "enableBNR=on"		# { on | off } -> default:off
+@@ -350,19 +349,19 @@
+ # Storage driver settings: Specific to a particular storage driver. Uncomment
+ # the configuration specific to your installation, if applicable.
+ #
+-#MySQLServer		/var/lib/mysql/mysql.sock
+-#MySQLPort		
+-#MySQLUser		dspam
+-#MySQLPass		changeme
+-#MySQLDb		dspam
+-#MySQLCompress		true
+-#MySQLReconnect		true
++MySQLServer		/var/run/mysqld/mysqld.sock
++#MySQLPort		3306
++MySQLUser		_DBC_DBUSER_
++MySQLPass		_DBC_DBPASS_
++MySQLDb			_DBC_DBNAME_
++MySQLCompress		true
++MySQLReconnect		true
+ 
+ # If you are using replication for clustering, you can also specify a separate
+ # server to perform all writes to.
+ #
+-#MySQLWriteServer	/var/lib/mysql/mysql.sock
+-#MySQLWritePort		
++#MySQLWriteServer	/var/run/mysqld/mysqld.sock
++#MySQLWritePort		3306
+ #MySQLWriteUser		dspam
+ #MySQLWritePass		changeme
+ #MySQLWriteDb		dspam_write
+@@ -406,11 +405,11 @@
+ # in /var/run/postgresql/.s.PGSQL.5432 specify just the path where the socket
+ # resits (without .s.PGSQL.5432).
+ 
+-#PgSQLServer		/var/run/postgresql/
+-#PgSQLPort		
+-#PgSQLUser		dspam
+-#PgSQLPass		changeme
+-#PgSQLDb		dspam
++PgSQLServer	127.0.0.1
++PgSQLPort	5432
++PgSQLUser	_DBC_DBUSER_
++PgSQLPass	_DBC_DBPASS_
++PgSQLDb		_DBC_DBNAME_
+ 
+ # If you're running DSPAM in client/server (daemon) mode, uncomment the
+ # setting below to override the default connection cache size (the number
+@@ -645,7 +644,7 @@
+ # TxtDirectory: the directory that holds the templates for notification 
+ # messages (see Notifications) and tagging (see tagSpam/tagNonspam).
+ #
+-#TxtDirectory @dspam_home@/txt
++#TxtDirectory /etc/dspam/txt
+ 
+ #
+ # QuarantineWarnSize: You may specify a size when DSPAM should send a "Quarantine
+@@ -809,7 +808,7 @@
+ #ServerHost		127.0.0.1
+ #ServerPort		24
+ #ServerQueueSize	32
+-#ServerPID		/var/run/dspam.pid
++#ServerPID		/var/run/dspam/dspam.pid
+ 
+ #
+ # ServerMode specifies the type of LMTP server to start. This can be one of:
+@@ -845,14 +844,14 @@
+ # you are running the client and server on the same machine, as it eliminates
+ # much of the bandwidth overhead.
+ #
+-#ServerDomainSocketPath	"/tmp/dspam.sock"
++#ServerDomainSocketPath	"/var/run/dspam/dspam.sock"
+ 
+ #
+ # Client Mode: If you are running DSPAM in client/server mode, uncomment and
+ # set these variables. A ClientHost beginning with a / will be treated as
+ # a domain socket.
+ #
+-#ClientHost	/tmp/dspam.sock
++#ClientHost	/var/run/dspam/dspam.sock
+ #ClientIdent	"secret@Relay1"
+ #
+ #ClientHost	127.0.0.1
+@@ -906,7 +905,7 @@
+ # --- Split Configuration File Support ---
+ 
+ # Include a directory with configuration items.
+-#Include /etc/dspam/dspam.d/
++Include /etc/dspam/dspam.d/
+ 
+ # ---  ---
+ 

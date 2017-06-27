@@ -1,0 +1,50 @@
+Description: Debian default port is set to 2424 as dspam daemon is run by an
+ unpriviledge user
+Author: Debian DSPAM Maintainers <pkg-dspam-misc@lists.alioth.debian.org>
+Forwarded: not-needed
+
+--- a/src/daemon.c
++++ b/src/daemon.c
+@@ -97,7 +97,7 @@
+   int domain = 0;		/* listening on domain socket? */
+   int listener;			/* listener fd */
+   int i;
+-  int port = 24, queue = 32;	/* default port and queue size */
++  int port = 2424, queue = 32;	/* default port and queue size */
+ 
+   signal(SIGPIPE, SIG_IGN);
+   signal(SIGINT,  process_signal);
+--- a/src/dspam.conf.in
++++ b/src/dspam.conf.in
+@@ -68,7 +68,7 @@
+ # the syntax: DeliveryHost.example.org 1.2.3.4
+ #
+ #DeliveryHost		127.0.0.1
+-#DeliveryPort		24
++#DeliveryPort		2424
+ #DeliveryIdent		localhost
+ #DeliveryProto		LMTP
+ 
+@@ -805,8 +805,12 @@
+ # ServerHost: Not enabling ServerHost will bind DSPAM server to all available
+ # interfaces.
+ #
++# ServerPort: Default upstream configuration is to run dspam daemon on port
++# 24. On Debian, dspam being run as a unprivileged user, default port is
++# set to 2424.
++#
+ #ServerHost		127.0.0.1
+-#ServerPort		24
++#ServerPort		2424
+ #ServerQueueSize	32
+ #ServerPID		/var/run/dspam/dspam.pid
+ 
+@@ -855,7 +859,7 @@
+ #ClientIdent	"secret@Relay1"
+ #
+ #ClientHost	127.0.0.1
+-#ClientPort	24
++#ClientPort	2424
+ #ClientIdent	"secret@Relay1"
+ 
+ # --- RABL ---
