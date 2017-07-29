@@ -163,6 +163,7 @@ src_compile() {
 
 	# Building sources
 	export CARGO_HOME="${ECARGO_HOME}"
+	export RUST_BACKTRACE=1
 	${cargo} build --release --verbose --verbose
 
 	# Building HTML documentation
@@ -174,6 +175,7 @@ src_install() {
 	local cargo_stage0="${!cargo_stagename}"
 	local cargo="${WORKDIR}/${cargo_stage0}"/cargo/bin/cargo
 
+	export RUST_BACKTRACE=1
 	${cargo} install --root="${ED}"/usr --verbose --verbose
 	rm "${ED}"/usr/.cargo.toml
 
@@ -192,5 +194,6 @@ src_test() {
 	local cargo_stage0="${!cargo_stagename}"
 	local cargo="${WORKDIR}/${cargo_stage0}"/cargo/bin/cargo
 
+	export RUST_BACKTRACE=1
 	${cargo} test --release --verbose --verbose
 }
