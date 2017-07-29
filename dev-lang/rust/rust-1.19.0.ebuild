@@ -61,10 +61,6 @@ DEPEND="${RDEPEND}
 PDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
 	>=dev-util/cargo-${CARGO_DEPEND_VERSION}"
 
-PATCHES=(
-	"${FILESDIR}/${P}"-bootstrap-use-configured-rustc-cargo-paths.patch
-)
-
 S="${WORKDIR}/${MY_P}-src"
 
 toml_usex() {
@@ -149,11 +145,12 @@ src_compile() {
 }
 
 src_install() {
-	env DESTDIR="${D}" ./x.py dist --install || die
+	env DESTDIR="${D}" ./x.py install || die
 
 	mv "${D}/usr/bin/rustc" "${D}/usr/bin/rustc-${PV}" || die
 	mv "${D}/usr/bin/rustdoc" "${D}/usr/bin/rustdoc-${PV}" || die
 	mv "${D}/usr/bin/rust-gdb" "${D}/usr/bin/rust-gdb-${PV}" || die
+	mv "${D}/usr/bin/rust-lldb" "${D}/usr/bin/rust-lldb-${PV}" || die
 
 	dodoc COPYRIGHT
 
@@ -172,6 +169,7 @@ src_install() {
 	cat <<-EOF > "${T}/provider-${P}"
 		/usr/bin/rustdoc
 		/usr/bin/rust-gdb
+		/usr/bin/rust-lldb
 	EOF
 	dodir /etc/env.d/rust
 	insinto /etc/env.d/rust
@@ -181,8 +179,8 @@ src_install() {
 pkg_postinst() {
 	eselect rust update --if-unset
 
-	elog "Rust installs a helper script for calling GDB now,"
-	elog "for your convenience it is installed under /usr/bin/rust-gdb-${PV}."
+	elog "Rust installs a helper script for calling GDB and LLDB,"
+	elog "for your convenience it is installed under /usr/bin/rust-{gdb,lldb}-${PV}."
 
 	if has_version app-editors/emacs || has_version app-editors/emacs-vcs; then
 		elog "install app-emacs/rust-mode to get emacs support for rust."
