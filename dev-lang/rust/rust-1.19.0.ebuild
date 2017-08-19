@@ -43,11 +43,18 @@ SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.gz
 
 LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4 UoI-NCSA"
 
-IUSE="clang debug doc jemalloc"
+IUSE="clang debug doc jemalloc system-llvm"
 
 RDEPEND=""
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
+	system-llvm? (
+		<sys-devel/llvm-6_pre:=
+		|| (
+			sys-devel/llvm:4
+			>=sys-devel/llvm-3:0
+		)
+	)
 	clang? (
 		<sys-devel/clang-6_pre:=
 		|| (
@@ -69,7 +76,7 @@ toml_usex() {
 
 pkg_setup() {
 	python-any-r1_pkg_setup
-	llvm_pkg_setup
+	use system-llvm && llvm_pkg_setup
 }
 
 src_prepare() {
@@ -92,7 +99,6 @@ src_configure() {
 	local archiver="$(tc-getAR)"
 	local linker="$(tc-getCC)"
 
-	local llvm_config="$(get_llvm_prefix)/bin/${CBUILD}-llvm-config"
 	local c_compiler="$(tc-getBUILD_CC)"
 	local cxx_compiler="$(tc-getBUILD_CXX)"
 	if use clang ; then
@@ -133,8 +139,14 @@ src_configure() {
 		[target.${rust_target}]
 		cc = "${c_compiler}"
 		cxx = "${cxx_compiler}"
-		llvm-config = "${llvm_config}"
 	EOF
+
+	if use system-llvm ; then
+		local llvm_config="$(get_llvm_prefix)/bin/${CBUILD}-llvm-config"
+		cat <<- EOF >> "${S}"/config.toml
+			llvm-config = "${llvm_config}"
+		EOF
+	fi
 }
 
 src_compile() {
