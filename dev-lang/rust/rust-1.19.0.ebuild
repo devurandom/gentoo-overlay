@@ -43,9 +43,9 @@ SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.gz
 
 LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4 UoI-NCSA"
 
-IUSE="clang debug doc jemalloc system-llvm"
+IUSE="debug doc +jemalloc system-llvm"
 
-RDEPEND=""
+RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	system-llvm? (
@@ -55,18 +55,13 @@ DEPEND="${RDEPEND}
 			>=sys-devel/llvm-3:0
 		)
 	)
-	clang? (
-		<sys-devel/clang-6_pre:=
-		|| (
-			sys-devel/clang:4
-			>=sys-devel/clang-3:0
-		)
+	|| (
+		>=sys-devel/gcc-4.7
+		>=sys-devel/clang-3.5
 	)
-	!clang? ( >=sys-devel/gcc-4.7 )
 	dev-util/cmake
 "
-PDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
-	>=dev-util/cargo-${CARGO_DEPEND_VERSION}"
+PDEPEND=">=dev-util/cargo-${CARGO_DEPEND_VERSION}"
 
 S="${WORKDIR}/${MY_P}-src"
 
@@ -96,16 +91,6 @@ src_configure() {
 	local rust_target_name="CHOST_${ARCH}"
 	local rust_target="${!rust_target_name}"
 
-	local archiver="$(tc-getAR)"
-	local linker="$(tc-getCC)"
-
-	local c_compiler="$(tc-getBUILD_CC)"
-	local cxx_compiler="$(tc-getBUILD_CXX)"
-	if use clang ; then
-		c_compiler="${CBUILD}-clang"
-		cxx_compiler="${CBUILD}-clang++"
-	fi
-
 	cat <<- EOF > "${S}"/config.toml
 		[llvm]
 		optimize = $(toml_usex !debug)
@@ -133,12 +118,12 @@ src_configure() {
 		debuginfo = $(toml_usex debug)
 		debug-assertions = $(toml_usex debug)
 		use-jemalloc = $(toml_usex jemalloc)
-		default-linker = "${linker}"
-		default-ar = "${archiver}"
+		default-linker = "$(tc-getCC)"
+		default-ar = "$(tc-getAR)"
 		rpath = false
 		[target.${rust_target}]
-		cc = "${c_compiler}"
-		cxx = "${cxx_compiler}"
+		cc = "$(tc-getBUILD_CC)"
+		cxx = "$(tc-getBUILD_CXX)"
 	EOF
 
 	if use system-llvm ; then
