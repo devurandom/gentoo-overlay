@@ -49,7 +49,7 @@ src_prepare() {
 }
 
 src_configure() {
-	env \
+	for v in \
 		MORECMD=cat \
 		$(use mongodb || echo TURN_NO_MONGO=1) \
 		$(use mysql || echo TURN_NO_MYSQL=1) \
@@ -60,6 +60,9 @@ src_configure() {
 		$(use sctp || echo TURN_NO_SCTP=1) \
 		$(use dtls || echo TURN_NO_DTLS=1) \
 		$(use tls || echo TURN_NO_TLS=1) \
+	; do
+		export "${v}"
+	done
 	econf $(use_with sqlite)
 }
 
