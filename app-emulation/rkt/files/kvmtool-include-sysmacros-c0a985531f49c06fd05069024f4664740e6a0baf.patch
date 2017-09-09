@@ -1,0 +1,45 @@
+From c0a985531f49c06fd05069024f4664740e6a0baf Mon Sep 17 00:00:00 2001
+From: Jeremy Linton <jeremy.linton@arm.com>
+Date: Fri, 3 Feb 2017 14:29:43 -0600
+Subject: kvmtool: makedev should be sourced from sysmacros
+
+makedev() should be sourced from sys/sysmacros.h rather than
+sys/types.h. This is because glibc is moving away from having
+it available in types.h.
+
+https://patchwork.ozlabs.org/patch/611994/
+
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+---
+ include/kvm/virtio-9p.h | 1 -
+ virtio/9p.c             | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/kvm/virtio-9p.h b/include/kvm/virtio-9p.h
+index 19ffe50..3ea7698 100644
+--- a/include/kvm/virtio-9p.h
++++ b/include/kvm/virtio-9p.h
+@@ -5,7 +5,6 @@
+ #include "kvm/threadpool.h"
+ #include "kvm/parse-options.h"
+ 
+-#include <sys/types.h>
+ #include <dirent.h>
+ #include <linux/list.h>
+ #include <linux/rbtree.h>
+diff --git a/virtio/9p.c b/virtio/9p.c
+index 6acbfdd..69fdc4b 100644
+--- a/virtio/9p.c
++++ b/virtio/9p.c
+@@ -11,6 +11,7 @@
+ #include <stdlib.h>
+ #include <fcntl.h>
+ #include <sys/stat.h>
++#include <sys/sysmacros.h>
+ #include <unistd.h>
+ #include <string.h>
+ #include <errno.h>
+-- 
+cgit v1.1
+
