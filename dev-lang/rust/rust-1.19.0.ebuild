@@ -127,7 +127,7 @@ src_configure() {
 	EOF
 
 	if use system-llvm ; then
-		local llvm_config="$(get_llvm_prefix)/bin/${CBUILD}-llvm-config"
+		local llvm_config="$(get_llvm_prefix ${LLVM_MAX_SLOT})/bin/${CBUILD}-llvm-config"
 		cat <<- EOF >> "${S}"/config.toml
 			llvm-config = "${llvm_config}"
 		EOF
