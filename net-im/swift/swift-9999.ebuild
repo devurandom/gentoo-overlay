@@ -4,7 +4,7 @@
 EAPI=6
 
 if [[ ${PV} = *9999* ]] ; then
-	git_eclass="git-2"
+	git_eclass="git-r3"
 	EGIT_REPO_URI="git://swift.im/swift"
 	KEYWORDS=""
 else
@@ -12,6 +12,7 @@ else
 	MY_P="${PN}-${MY_PV}"
 	SRC_URI="http://swift.im/downloads/releases/${MY_P}/${MY_P}.tar.gz"
 	KEYWORDS="~amd64 ~x86"
+	S="${WORKDIR}/${MY_P}"
 fi
 
 inherit multilib toolchain-funcs scons-utils ${git_eclass}
@@ -65,7 +66,9 @@ DEPEND="${RDEPEND}
 	)
 "
 
-S="${WORKDIR}/${MY_P}"
+PATCHES=(
+	"${FILESDIR}/swift-5.0_alpha-swiften-libdir-ed52c27734034a9811208de17f0948451edb3f4a.patch"
+)
 
 scons_vars=()
 set_scons_vars() {
@@ -134,7 +137,7 @@ src_test() {
 src_install() {
 	set_scons_vars
 
-	escons "${scons_vars[@]}" SWIFT_INSTALLDIR="${D}/usr" SWIFTEN_INSTALLDIR="${D}/usr" "${D}"
+	escons "${scons_vars[@]}" SWIFT_INSTALLDIR="${D}/usr" SWIFTEN_INSTALLDIR="${D}/usr" SWIFTEN_LIBDIR="$(get_libdir)" "${D}"
 
 	if use zeroconf ; then
 		newbin Slimber/Qt/slimber slimber-qt
