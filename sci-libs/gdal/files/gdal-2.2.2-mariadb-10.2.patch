@@ -1,0 +1,26 @@
+--- gdal-2.2.2/ogr/ogrsf_frmts/mysql/ogr_mysql.h.orig	2017-10-07 14:49:15.397265690 +0200
++++ gdal-2.2.2/ogr/ogrsf_frmts/mysql/ogr_mysql.h	2017-10-07 14:51:10.944823002 +0200
+@@ -43,8 +43,10 @@
+ #pragma warning( disable : 4211 ) /* nonstandard extension used : redefined extern to static */
+ #endif
+ 
+-#include <my_global.h>
+ #include <mysql.h>
++#ifndef LIBMARIADB
++#include <my_global.h>
++#endif
+ 
+ #ifdef _MSC_VER
+ #pragma warning( pop )
+--- gdal-2.2.2/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp.orig	2017-10-07 15:01:42.748581543 +0200
++++ gdal-2.2.2/ogr/ogrsf_frmts/mysql/ogrmysqldatasource.cpp	2017-10-07 15:02:14.252146219 +0200
+@@ -44,7 +44,9 @@
+ #pragma clang diagnostic ignored "-Wunknown-pragmas"
+ #pragma clang diagnostic ignored "-Wdocumentation"
+ #endif
++#ifndef LIBMARIADB
+ #include <my_sys.h>
++#endif
+ #ifdef __clang__
+ #pragma clang diagnostic pop
+ #endif
