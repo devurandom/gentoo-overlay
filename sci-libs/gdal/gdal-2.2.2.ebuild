@@ -17,7 +17,7 @@ SRC_URI="http://download.osgeo.org/${PN}/${PV}/${P}.tar.gz"
 
 SLOT="0/2.2"
 LICENSE="BSD Info-ZIP MIT"
-KEYWORDS="amd64 ~arm ~arm64 ~ia64 ppc ppc64 x86 ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos"
+KEYWORDS="~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos"
 IUSE="armadillo +aux_xml crypto curl debug doc fits geos gif gml gnm hdf5 java jasper jpeg jpeg2k lto mdb mongodb mysql netcdf odbc ogdi opencl oracle perl png podofo poppler postgres python spatialite sqlite threads webp xls"
 
 COMMON_DEPEND="dev-libs/expat
