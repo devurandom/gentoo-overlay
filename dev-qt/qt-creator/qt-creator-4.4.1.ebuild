@@ -4,6 +4,8 @@
 EAPI=6
 PLOCALES="cs de fr ja pl ru sl uk zh_CN zh_TW"
 
+LLVM_MAX_SLOT=5
+
 inherit l10n llvm qmake-utils toolchain-funcs virtualx xdg
 
 DESCRIPTION="Lightweight IDE for C++/QML development centering around Qt"
@@ -51,7 +53,14 @@ CDEPEND="
 	>=dev-qt/qtwidgets-${QT_PV}
 	>=dev-qt/qtx11extras-${QT_PV}
 	>=dev-qt/qtxml-${QT_PV}
-	clangcodemodel? ( >=sys-devel/clang-3.9:= )
+	clangcodemodel? (
+		<sys-devel/clang-6:=
+		|| (
+			sys-devel/llvm:5
+			sys-devel/llvm:4
+			>=sys-devel/llvm-3.9:0
+		)
+	)
 	designer? ( >=dev-qt/designer-${QT_PV} )
 	qbs? ( >=dev-util/qbs-1.8.1-r1 )
 	systemd? ( sys-apps/systemd:= )
@@ -71,7 +80,14 @@ RDEPEND="${CDEPEND}
 	sys-devel/gdb[client,python]
 	autotools? ( sys-devel/autoconf )
 	bazaar? ( dev-vcs/bzr )
-	clangstaticanalyzer? ( >=sys-devel/clang-3.9:* )
+	clangstaticanalyzer? (
+		<sys-devel/clang-6:*
+		|| (
+			sys-devel/llvm:5
+			sys-devel/llvm:4
+			>=sys-devel/llvm-3.9:0
+		)
+	)
 	cmake? ( dev-util/cmake[server(+)] )
 	cvs? ( dev-vcs/cvs )
 	git? ( dev-vcs/git )
@@ -153,7 +169,7 @@ src_prepare() {
 src_configure() {
 	eqmake5 IDE_LIBRARY_BASENAME="$(get_libdir)" \
 		IDE_PACKAGE_MODE=1 \
-		$(use clangcodemodel && echo LLVM_INSTALL_DIR="$(get_llvm_prefix)") \
+		$(use clangcodemodel && echo LLVM_INSTALL_DIR="$(get_llvm_prefix ${LLVM_MAX_SLOT})") \
 		$(use qbs && echo QBS_INSTALL_DIR="${EPREFIX}/usr") \
 		CONFIG+=qbs_disable_rpath \
 		CONFIG+=qbs_enable_project_file_updates \
