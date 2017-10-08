@@ -67,7 +67,7 @@ DEPEND="${RDEPEND}
 "
 
 PATCHES=(
-	"${FILESDIR}/swift-5.0_alpha-swiften-libdir-ed52c27734034a9811208de17f0948451edb3f4a.patch"
+	"${FILESDIR}"/${PN}-5.0_alpha-swiften-libdir-cb2ff90c252e0fc7ec81d45681e90fdbf1c8bc8e.patch
 )
 
 scons_vars=()
