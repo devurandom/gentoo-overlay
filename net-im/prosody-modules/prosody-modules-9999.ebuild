@@ -1,8 +1,7 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI=5
+EAPI=6
 
 inherit eutils mercurial multilib
 
@@ -52,6 +51,7 @@ src_unpack() {
 }
 
 src_prepare() {
+	default
 	cp "${FILESDIR}"/mod_auth_pam.lua "${S}/mod_auth_pam/" || die
 	mv mod_lib_ldap ldap || die
 }
