@@ -18,7 +18,7 @@ SRC_URI="http://download.osgeo.org/${PN}/${PV}/${P}.tar.gz"
 SLOT="0/2.2"
 LICENSE="BSD Info-ZIP MIT"
 KEYWORDS="~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos"
-IUSE="armadillo +aux_xml crypto curl debug doc fits geos gif gml gnm hdf5 java jasper jpeg jpeg2k lto mdb mongodb mysql netcdf odbc ogdi opencl oracle perl png podofo poppler postgres python spatialite sqlite threads webp xls"
+IUSE="armadillo +aux_xml crypto curl debug doc fits geos gif gml gnm hdf5 java jasper jpeg jpeg2k +libtirpc lto mdb mongodb mysql netcdf odbc ogdi opencl oracle perl png podofo poppler postgres python spatialite sqlite threads webp xls"
 
 COMMON_DEPEND="dev-libs/expat
 	dev-libs/json-c:=
@@ -43,7 +43,7 @@ COMMON_DEPEND="dev-libs/expat
 	mysql? ( virtual/mysql )
 	netcdf? ( sci-libs/netcdf:= )
 	odbc?   ( dev-db/unixODBC )
-	ogdi? ( sci-libs/ogdi )
+	ogdi? ( sci-libs/ogdi[libtirpc=] )
 	opencl? ( virtual/opencl )
 	oracle? ( dev-db/oracle-instantclient:= )
 	podofo? ( app-text/podofo:= )
@@ -77,8 +77,6 @@ REQUIRED_USE="mdb? ( java )
 
 PATCHES=(
 	"${FILESDIR}"/${PN}-2.2.2-soname.patch
-	"${FILESDIR}"/${PN}-2.2.2-r40330-openjpeg-2.3.patch
-	"${FILESDIR}"/${PN}-2.2.2-mariadb-10.2.patch
 )
 
 src_prepare() {
@@ -124,8 +122,6 @@ src_prepare() {
 	default
 
 	tc-export AR RANLIB
-
-	eautoreconf
 }
 
 src_configure() {
@@ -142,6 +138,12 @@ src_configure() {
 
 	if use sqlite; then
 		myopts+=" LIBS=-lsqlite3"
+	fi
+
+	if use ogdi && use libtirpc ; then
+		tc-export PKG_CONFIG
+		append-cflags $(${PKG_CONFIG} --cflags libtirpc)
+		append-cxxflags $(${PKG_CONFIG} --cflags libtirpc)
 	fi
 
 	# pcidsk is internal, because there is no such library yet released
