@@ -3,7 +3,7 @@
 
 EAPI=6
 
-PYTHON_COMPAT=( python{2_7,3_4,3_5} )
+PYTHON_COMPAT=( python{2_7,3_5,3_6} )
 
 inherit cmake-utils python-single-r1 vcs-snapshot
 
@@ -20,7 +20,7 @@ X86_CPU_FEATURES=(
 	avx:avx avx2:avx2 avx512f:avx512f f16c:f16c
 )
 CPU_FEATURES=( ${X86_CPU_FEATURES[@]/#/cpu_flags_x86_} )
-IUSE="colorio ffmpeg field3d gif jpeg2k jpegturbo opencv opengl ptex python qt4 raw ssl +truetype ${CPU_FEATURES[@]%:*}"
+IUSE="colorio ffmpeg field3d gif jpeg2k jpegturbo opencv opengl ptex python qt5 raw ssl +truetype ${CPU_FEATURES[@]%:*}"
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
@@ -55,10 +55,10 @@ RDEPEND="
 		${PYTHON_DEPS}
 		dev-libs/boost:=[python,${PYTHON_USEDEP}]
 	)
-	qt4? (
-		dev-qt/qtcore:4
-		dev-qt/qtgui:4
-		dev-qt/qtopengl:4
+	qt5? (
+		dev-qt/qtcore:5
+		dev-qt/qtgui:5
+		dev-qt/qtopengl:5
 		media-libs/glew:=
 	)
 	raw? ( media-libs/libraw:= )
@@ -68,8 +68,6 @@ DEPEND="${RDEPEND}"
 
 #S=${WORKDIR}/${P}/src
 
-PATCHES=( "${FILESDIR}/${P}-fix-python-on-gentoo.patch" )
-
 DOCS=( CHANGES.md CREDITS.md README.md src/doc/${PN}.pdf )
 
 pkg_setup() {
@@ -78,6 +76,8 @@ pkg_setup() {
 
 src_prepare() {
 	default
+
+	cmake-utils_src_prepare
 
 	use python && python_fix_shebang .
 }
@@ -122,27 +122,17 @@ src_configure() {
 		-DUSE_OPENSSL=$(usex ssl)
 		-DUSE_PTEX=$(usex ptex)
 		-DUSE_LIBRAW=$(usex raw)
-		-DUSE_QT=$(usex qt4)
+		-DUSE_QT=$(usex qt5)
 		-DUSE_SIMD=$(join_by , "${mysimd[@]}")
 		-DVERBOSE=ON
 	)
 
 	if use python ; then
-		if [[ "${EPYTHON}" = python2* ]] ; then
-			mycmakeargs+=(
-				-DPYLIB_INSTALL_DIR="$(python_get_sitedir)"
-				-DPYTHON_VERSION="${EPYTHON#python}"
-				-DUSE_PYTHON=ON
-				-DUSE_PYTHON3=OFF
-			)
-		elif [[ "${EPYTHON}" = python3* ]] ; then
-			mycmakeargs+=(
-				-DPYLIB3_INSTALL_DIR="$(python_get_sitedir)"
-				-DPYTHON3_VERSION="${EPYTHON#python}"
-				-DUSE_PYTHON=OFF
-				-DUSE_PYTHON3=ON
-			)
-		fi
+		mycmakeargs+=(
+			-DPYLIB_INSTALL_DIR="$(python_get_sitedir)"
+			-DPYTHON_VERSION="${EPYTHON#python}"
+			-DUSE_PYTHON=ON
+		)
 	fi
 
 	cmake-utils_src_configure
