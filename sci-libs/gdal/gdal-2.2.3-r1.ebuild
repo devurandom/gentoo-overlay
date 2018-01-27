@@ -16,39 +16,43 @@ SRC_URI="http://download.osgeo.org/${PN}/${PV}/${P}.tar.gz"
 SLOT="0/2.2"
 LICENSE="BSD Info-ZIP MIT"
 KEYWORDS="~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos"
-IUSE="armadillo +aux_xml crypto curl debug doc fits geos gif gml gnm hdf5 java jasper jpeg jpeg2k lto mdb mongodb mysql netcdf odbc ogdi opencl oracle pdf perl png podofo postgres python spatialite sqlite threads webp xls"
+IUSE_CPU_FLAGS_X86=(cpu_flags_x86_{avx,sse,ssse3})
+IUSE="armadillo +aux_xml ${IUSE_CPU_FLAGS_X86[@]} crypto curl debug doc +expat fits geos gif gml gnm grass hdf5 java jasper jpeg jpeg2k +libtirpc +libxml2 lto lzma mdb mongodb mysql netcdf odbc ogdi opencl oracle +pcre pdf perl png podofo postgres python spatialite sqlite threads webp xls"
 
 COMMON_DEPEND="
-	dev-libs/expat
 	dev-libs/json-c:=
-	dev-libs/libpcre
-	dev-libs/libxml2:=
 	media-libs/tiff:0=
 	sci-libs/libgeotiff
 	sys-libs/zlib:=[minizip(+)]
 	armadillo? ( sci-libs/armadillo:=[lapack] )
 	crypto? ( dev-libs/crypto++:= )
 	curl? ( net-misc/curl )
+	expat? ( dev-libs/expat )
 	fits? ( sci-libs/cfitsio:= )
 	geos? ( >=sci-libs/geos-2.2.1 )
 	gif? ( media-libs/giflib:= )
 	gml? ( >=dev-libs/xerces-c-3.1 )
+	grass? ( sci-geosciences/grass:= )
 	hdf5? ( >=sci-libs/hdf5-1.6.4:=[szip] )
 	jasper? ( media-libs/jasper:= )
 	jpeg? ( virtual/jpeg:0= )
 	jpeg2k? ( media-libs/openjpeg:2= )
+	libxml2? ( dev-libs/libxml2:= )
+	lzma? ( || (
+		app-arch/xz-utils
+		app-arch/lzma
+	) )
 	mdb? ( dev-java/jackcess:1 )
 	mongodb? ( dev-libs/mongo-cxx-driver )
 	mysql? ( virtual/mysql )
 	netcdf? ( sci-libs/netcdf:= )
 	odbc? ( dev-db/unixODBC )
-	ogdi? ( sci-libs/ogdi )
+	ogdi? ( sci-libs/ogdi[libtirpc=] )
 	opencl? ( virtual/opencl )
 	oracle? ( dev-db/oracle-instantclient:= )
-	pdf? (
-		!podofo? ( >=app-text/poppler-0.24.3:= )
-		podofo? ( app-text/podofo:= )
-	)
+	pcre? ( dev-libs/libpcre )
+	pdf? ( >=app-text/poppler-0.24.3:= )
+	podofo? ( app-text/podofo:= )
 	perl? ( dev-lang/perl:= )
 	png? ( media-libs/libpng:0= )
 	postgres? ( >=dev-db/postgresql-8.4:= )
@@ -137,8 +141,21 @@ src_configure() {
 		myopts+=( --without-java --without-mdb )
 	fi
 
+	for f in "${IUSE_CPU_FLAGS_X86[@]}"; do
+		myopts+=(
+			$(use_with "${f}" "${f##cpu_flags_x86_}")
+		)
+	done
+
 	if use sqlite; then
 		append-libs -lsqlite3
+	fi
+
+	# bug #632660
+	if use libtirpc; then
+		tc-export PKG_CONFIG
+		append-cflags $(${PKG_CONFIG} --cflags libtirpc)
+		append-cxxflags $(${PKG_CONFIG} --cflags libtirpc)
 	fi
 
 	# pcidsk is internal, because there is no such library yet released
@@ -154,7 +171,6 @@ src_configure() {
 		--disable-pdf-plugin \
 		--disable-static \
 		--enable-shared \
-		--with-expat \
 		--with-geotiff \
 		--with-grib \
 		--with-hide-internal-symbols \
@@ -165,36 +181,50 @@ src_configure() {
 		--without-dods-root \
 		--without-ecw \
 		--without-epsilon \
+		--without-fgdb \
 		--without-fme \
-		--without-grass \
+		--without-gta \
 		--without-hdf4 \
 		--without-idb \
 		--without-ingres \
+		--without-jp2lura \
 		--without-jp2mrsid \
 		--without-kakadu \
+		--without-kea \
+		--without-libkml \
 		--without-mrsid \
+		--without-mrsid_lidar \
 		--without-msg \
 		--without-mrf \
+		--without-rasdaman \
+		--without-rasterlite2 \
 		--without-pcraster \
 		--without-pdfium \
+		--without-php \
+		--without-qhull \
 		--without-sde \
+		--without-sfcgal \
 		--without-sosi \
+		--without-teigha \
 		$(use_enable debug) \
 		$(use_enable lto) \
 		$(use_with armadillo) \
 		$(use_with aux_xml pam) \
 		$(use_with crypto cryptopp) \
 		$(use_with curl) \
+		$(use_with expat) \
 		$(use_with fits cfitsio) \
 		$(use_with geos) \
 		$(use_with gif) \
 		$(use_with gml xerces) \
 		$(use_with gnm) \
+		$(use_with grass) \
 		$(use_with hdf5) \
-		$(use_with jasper) \
 		$(use_with jpeg pcidsk) \
 		$(use_with jpeg) \
+		$(use_with jasper) \
 		$(use_with jpeg2k openjpeg) \
+		$(use_with lzma liblzma) \
 		$(use_with mongodb mongocxx) \
 		$(use_with mysql mysql "${EPREFIX}"/usr/bin/mysql_config) \
 		$(use_with netcdf) \
@@ -202,10 +232,11 @@ src_configure() {
 		$(use_with odbc) \
 		$(use_with ogdi ogdi "${EPREFIX}"/usr) \
 		$(use_with opencl) \
+		$(use_with pcre) \
+		$(use_with pdf poppler) \
 		$(use_with perl) \
 		$(use_with png) \
 		$(use_with podofo) \
-		$(use_with poppler) \
 		$(use_with postgres pg) \
 		$(use_with python) \
 		$(use_with spatialite) \
@@ -213,6 +244,7 @@ src_configure() {
 		$(use_with threads) \
 		$(use_with webp) \
 		$(use_with xls freexl) \
+		$(use_with libxml2 xml2) \
 		"${myopts[@]}"
 
 	# mysql-config puts this in (and boy is it a PITA to get it out)
