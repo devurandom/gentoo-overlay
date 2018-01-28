@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -43,9 +43,10 @@ SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.gz
 
 LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4 UoI-NCSA"
 
-IUSE="debug doc +jemalloc system-llvm"
+IUSE="debug doc +jemalloc +ninja system-llvm"
 
-RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425"
+RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
+	jemalloc? ( dev-libs/jemalloc )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	system-llvm? (
@@ -54,6 +55,9 @@ DEPEND="${RDEPEND}
 			sys-devel/llvm:4
 			>=sys-devel/llvm-3:0
 		)
+	)
+	!system-llvm? (
+		ninja? ( dev-util/ninja )
 	)
 	|| (
 		>=sys-devel/gcc-4.7
@@ -96,6 +100,8 @@ src_configure() {
 		optimize = $(toml_usex !debug)
 		release-debuginfo = $(toml_usex debug)
 		assertions = $(toml_usex debug)
+		link-shared = $(toml_usex system-llvm)
+		ninja = $(toml_usex ninja)
 		[build]
 		build = "${rust_target}"
 		host = ["${rust_target}"]
@@ -114,16 +120,19 @@ src_configure() {
 		docdir = "share/doc/${P}"
 		mandir = "share/${P}/man"
 		[rust]
+		debug = $(toml_usex debug)
 		optimize = $(toml_usex !debug)
 		debuginfo = $(toml_usex debug)
+		debuginfo-lines = $(toml_usex debug)
 		debug-assertions = $(toml_usex debug)
 		use-jemalloc = $(toml_usex jemalloc)
 		default-linker = "$(tc-getCC)"
-		default-ar = "$(tc-getAR)"
 		rpath = false
 		[target.${rust_target}]
 		cc = "$(tc-getBUILD_CC)"
 		cxx = "$(tc-getBUILD_CXX)"
+		ar = "$(tc-getBUILD_AR)"
+		linker = "$(tc-getBUILD_CC)"
 	EOF
 
 	if use system-llvm ; then
@@ -135,8 +144,9 @@ src_configure() {
 }
 
 src_compile() {
+	local llvm_config="$(get_llvm_prefix ${LLVM_MAX_SLOT})/bin/${CBUILD}-llvm-config"
+	export RUSTFLAGS=-Clink-arg="$(${llvm_config} --ldflags)"
 	export RUST_BACKTRACE=1
-	export LLVM_LINK_SHARED=1
 
 	./x.py build --verbose --config="${S}"/config.toml || die
 }
