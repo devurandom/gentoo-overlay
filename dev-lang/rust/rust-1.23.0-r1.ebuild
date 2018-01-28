@@ -43,7 +43,7 @@ SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.gz
 
 LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4 UoI-NCSA"
 
-IUSE="debug doc +jemalloc +ninja system-llvm"
+IUSE="debug doc extended +jemalloc +ninja system-llvm"
 
 RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
 	jemalloc? ( dev-libs/jemalloc )"
@@ -65,7 +65,9 @@ DEPEND="${RDEPEND}
 	)
 	dev-util/cmake
 "
-PDEPEND=">=dev-util/cargo-${CARGO_DEPEND_VERSION}"
+PDEPEND="!extended? ( >=dev-util/cargo-${CARGO_DEPEND_VERSION} )"
+
+PATCHES=( "${FILESDIR}/${P}"-separate-libdir.patch )
 
 S="${WORKDIR}/${MY_P}-src"
 
@@ -113,6 +115,7 @@ src_configure() {
 		python = "${EPYTHON}"
 		locked-deps = true
 		vendor = true
+		extended = $(toml_usex extended)
 		verbose = 2
 		[install]
 		prefix = "${EPREFIX}/usr"
@@ -162,9 +165,9 @@ src_install() {
 	dodoc COPYRIGHT
 
 	if use doc ; then
-		dodir "/usr/share/doc/rust-${PV}/"
-		mv "${D}/usr/share/doc/rust"/* "${D}/usr/share/doc/rust-${PV}/" || die
-		rmdir "${D}/usr/share/doc/rust/" || die
+		dodir /usr/share/doc/rust-"${PV}"
+		mv "${D}"/usr/share/doc/rust/* "${D}/usr/share/doc/rust-${PV}/" || die
+		rmdir "${D}"/usr/share/doc/rust || die
 	fi
 
 	cat <<-EOF > "${T}"/50${P}
