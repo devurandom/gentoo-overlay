@@ -214,6 +214,8 @@ src_install() {
 	insinto /usr/share/zsh/site-functions
 	doins src/etc/_cargo
 	doman src/etc/man/*
+
+	dobin "${FILESDIR}"/cargo-extract-locked-dependencies.sh
 }
 
 src_test() {
