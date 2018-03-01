@@ -22,6 +22,10 @@ IUSE=""
 RDEPEND="=dev-libs/hsathk-amd-${PV}"
 DEPEND="${RDEPEND}"
 
+PATCHES=(
+	"${FILESDIR}/${P}"-install-libdir.patch
+)
+
 S="${WORKDIR}/${MY_PN}-${MY_PV}"
 
 CMAKE_USE_DIR="${S}/src"
