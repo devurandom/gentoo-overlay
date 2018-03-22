@@ -138,6 +138,12 @@ src_configure() {
 	local mysql_libdir="$(mysql_config --variable=pkglibdir)"
 	local mysql_includedir="$(mysql_config --variable=pkgincludedir)"
 
+	local cblas_libdir="$(pkg-config cblas --variable=libdir)"
+	local cblas_includedir="$(pkg-config cblas --variable=includedir)"
+
+	local lapack_libdir="$(pkg-config lapack --variable=libdir)"
+	local lapack_includedir="$(pkg-config lapack --variable=includedir)"
+
 	if use X; then
 		WX_BUILD=yes
 		setup-wxwidgets
@@ -167,7 +173,11 @@ src_configure() {
 		$(use_with odbc) \
 		$(use_with fftw) \
 		$(use_with blas) \
+		$(use_with blas blas-includes "${EROOT}${cblas_includedir}") \
+		$(use_with blas blas-libs "${EROOT}${cblas_libdir}") \
 		$(use_with lapack) \
+		$(use_with lapack lapack-includes "${EROOT}${lapack_includedir}") \
+		$(use_with lapack lapack-libs "${EROOT}${lapack_libdir}") \
 		$(use_with X cairo) \
 		$(use_with truetype freetype) \
 		$(use_with truetype freetype-includes "${ROOT}usr/include/freetype2") \
