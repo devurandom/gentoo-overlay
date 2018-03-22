@@ -4,7 +4,7 @@
 EAPI=6
 
 DIST_AUTHOR=MIKEM
-DIST_VERSION=1.82
+DIST_VERSION=1.84
 DIST_EXAMPLES=("examples/*")
 inherit multilib perl-module
 
