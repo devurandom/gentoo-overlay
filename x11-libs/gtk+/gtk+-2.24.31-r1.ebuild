@@ -173,6 +173,9 @@ src_prepare() {
 	# Fix beep when overwriting at the end of a gtkentry, from gtk-2-24 branch
 	eapply "${FILESDIR}"/${PN}-2.24.31-fix-gtkentry-beep.patch
 
+	# Fix undefined reference to `_gtk_marshal_BOOLEAN__BOXED_BOXED' with dev-libs/glib-2.54.3, bug #650536, upstream merge requrest !67
+	eapply "${FILESDIR}"/${PN}-2.24.31-fix-gtk-symbols-for-glib-2.54.3.patch
+
 	eautoreconf
 	gnome2_src_prepare
 }
