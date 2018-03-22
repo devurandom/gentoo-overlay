@@ -1,0 +1,10 @@
+--- a/infinality/infinality.conf.orig	2018-03-19 22:24:51.433436234 -0000
++++ b/infinality/infinality.conf	2018-03-19 22:25:31.773437453 -0000
+@@ -113,6 +113,6 @@
+ 	</match>
+ 
+ 	<!-- Run infctl.sh or change the symlink in current directory instead of modifying this -->
+-	<include>infinality/conf.d</include>
++	<include>infinality/conf.d/</include>
+ 
+ </fontconfig>

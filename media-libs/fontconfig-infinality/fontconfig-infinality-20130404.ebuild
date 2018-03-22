@@ -22,6 +22,10 @@ PDEPEND="media-libs/freetype:2[infinality]
 	>=x11-libs/libXft-2.3.0
 	nyx? ( media-fonts/croscorefonts )"
 
+PATCHES=(
+	"${FILESDIR}/${P}"-fix-include-path.patch
+)
+
 src_configure() {
 	:
 }
