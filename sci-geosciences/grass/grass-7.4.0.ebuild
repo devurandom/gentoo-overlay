@@ -140,7 +140,14 @@ src_configure() {
 		setup-wxwidgets
 	fi
 
-	addwrite "${ROOT}dev/dri/renderD128"
+	if use opencl ; then
+		# OpenCL tests use DRI, bug #604168
+		# This code is copied and simplified from www-client/firefox-52.7.2, bug #380283
+		shopt -s nullglob
+		cards=$(echo -n /dev/dri/card* /dev/ati/card* /dev/nvidiactl* | sed 's/ /:/g')
+		[[ -n "${cards}" ]] && addpredict "${cards}"
+		shopt -u nullglob
+	fi
 
 	econf \
 		--enable-shared \
