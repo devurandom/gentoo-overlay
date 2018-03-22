@@ -1,0 +1,56 @@
+From 2c7fccaf99a6c1e70944f058060ac5bd29e2680e Mon Sep 17 00:00:00 2001
+From: Anne Jan Brouwer <brouwer@annejan.com>
+Date: Mon, 22 Jan 2018 13:55:16 +0100
+Subject: [PATCH] Change dependencies (main depends on src, tests depend on
+ main) fixes #350 als some minor automated housekeeping.
+
+---
+ CHANGELOG.md                       |  2 ++
+ localization/localization_ar_MA.ts | 60 +++++++++++++++----------------
+ localization/localization_ca.ts    | 60 +++++++++++++++----------------
+ localization/localization_cs_CZ.ts | 60 +++++++++++++++----------------
+ localization/localization_de_DE.ts | 60 +++++++++++++++----------------
+ localization/localization_de_LU.ts | 60 +++++++++++++++----------------
+ localization/localization_el_GR.ts | 60 +++++++++++++++----------------
+ localization/localization_en_GB.ts | 60 +++++++++++++++----------------
+ localization/localization_en_US.ts | 60 +++++++++++++++----------------
+ localization/localization_es_ES.ts | 60 +++++++++++++++----------------
+ localization/localization_fr_BE.ts | 60 +++++++++++++++----------------
+ localization/localization_fr_FR.ts | 74 +++++++++++++++++++++-----------------
+ localization/localization_fr_LU.ts | 60 +++++++++++++++----------------
+ localization/localization_gl_ES.ts | 60 +++++++++++++++----------------
+ localization/localization_he_IL.ts | 60 +++++++++++++++----------------
+ localization/localization_hu_HU.ts | 60 +++++++++++++++----------------
+ localization/localization_it_IT.ts | 60 +++++++++++++++----------------
+ localization/localization_lb_LU.ts | 60 +++++++++++++++----------------
+ localization/localization_nl_BE.ts | 60 +++++++++++++++----------------
+ localization/localization_nl_NL.ts | 60 +++++++++++++++----------------
+ localization/localization_pl_PL.ts | 60 +++++++++++++++----------------
+ localization/localization_pt_PT.ts | 60 +++++++++++++++----------------
+ localization/localization_ru_RU.ts | 60 +++++++++++++++----------------
+ localization/localization_sv_SE.ts | 60 +++++++++++++++----------------
+ localization/localization_zh_CN.ts | 60 +++++++++++++++----------------
+ qtpass.pro                         |  4 +--
+ src/configdialog.h                 |  2 +-
+ src/enums.h                        |  2 +-
+ src/executor.cpp                   |  5 +--
+ src/mainwindow.cpp                 | 25 +++++++------
+ src/simpletransaction.h            |  2 +-
+ tests/auto/util/tst_util.cpp       |  6 ++--
+ 32 files changed, 760 insertions(+), 742 deletions(-)
+
+diff --git a/qtpass.pro b/qtpass.pro
+index 33a26141..edb3ba90 100644
+--- a/qtpass.pro
++++ b/qtpass.pro
+@@ -2,8 +2,8 @@
+ 
+ TEMPLATE = subdirs
+ SUBDIRS += src tests main
+-tests.depends = src
+-main.depends = tests
++main.depends = src
++tests.depends = main
+ 
+ OTHER_FILES += LICENSE \
+                README.md \

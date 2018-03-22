@@ -27,18 +27,20 @@ RDEPEND="app-admin/pass
 DEPEND="${RDEPEND}
 	dev-qt/linguist-tools:5"
 
-src_prepare() {
-	default
+PATCHES=(
+	"${FILESDIR}/${P}"-2c7fccaf99a6c1e70944f058060ac5bd29e2680e.patch
+)
 
-	sed -i 's/SUBDIRS += src tests main/SUBDIRS += src main/' "${S}"/qtpass.pro || die
-	sed -i '/main\.depends = tests/d' "${S}"/qtpass.pro || die
-}
 src_configure() {
 	eqmake5 PREFIX="${D}"/usr
 }
 
+src_compile() {
+	emake sub-main
+}
+
 src_install() {
-	default
+	emake DESTDIR="${D}" sub-main-install_subtargets
 
 	doman ${PN}.1
 
