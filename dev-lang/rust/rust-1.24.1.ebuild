@@ -31,26 +31,30 @@ RUST_STAGE0_VERSION="1.$(($(get_version_component_range 2) - 1)).0"
 RUST_STAGE0_amd64="rust-${RUST_STAGE0_VERSION}-${CHOST_amd64}"
 RUST_STAGE0_x86="rust-${RUST_STAGE0_VERSION}-${CHOST_x86}"
 
-CARGO_DEPEND_VERSION="0.$(($(get_version_component_range 2) + 1)).0"
+CARGO_DEPEND_VERSION_MIN="0.$(get_version_component_range 2)"
+CARGO_DEPEND_VERSION_MAX="0.$(($(get_version_component_range 2) + 1))"
 
 DESCRIPTION="Systems programming language from Mozilla"
 HOMEPAGE="http://www.rust-lang.org/"
 
 SRC_URI="https://static.rust-lang.org/dist/${SRC} -> rustc-${PV}-src.tar.gz
-	amd64? ( https://static.rust-lang.org/dist/${RUST_STAGE0_amd64}.tar.gz )
-	x86? ( https://static.rust-lang.org/dist/${RUST_STAGE0_x86}.tar.gz )
+	!system-rust-bootstrap? (
+		amd64? ( https://static.rust-lang.org/dist/${RUST_STAGE0_amd64}.tar.gz )
+		x86? ( https://static.rust-lang.org/dist/${RUST_STAGE0_x86}.tar.gz )
+	)
 "
 
 LICENSE="|| ( MIT Apache-2.0 ) BSD-1 BSD-2 BSD-4 UoI-NCSA"
 
-IUSE="debug doc extended +jemalloc +ninja system-llvm"
+IUSE="debug doc extended +jemalloc +ninja system-rust-bootstrap system-llvm"
 
 RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
 	jemalloc? ( dev-libs/jemalloc )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
+	system-rust-bootstrap? ( >=virtual/rust-"${RUST_STAGE0_VERSION}" )
 	system-llvm? (
-		<sys-devel/llvm-6_pre:=
+		<sys-devel/llvm-5_pre:=
 		|| (
 			sys-devel/llvm:4
 			>=sys-devel/llvm-3:0
@@ -65,9 +69,11 @@ DEPEND="${RDEPEND}
 	)
 	dev-util/cmake
 "
-PDEPEND="!extended? ( >=dev-util/cargo-${CARGO_DEPEND_VERSION} )"
-
-PATCHES=( "${FILESDIR}/${P}"-separate-libdir.patch )
+PDEPEND="!extended? (
+		>=dev-util/cargo-${CARGO_DEPEND_VERSION_MIN}
+		<dev-util/cargo-${CARGO_DEPEND_VERSION_MAX}
+	)
+"
 
 S="${WORKDIR}/${MY_P}-src"
 
@@ -86,13 +92,20 @@ src_prepare() {
 	local rust_stage0_name="RUST_STAGE0_${ARCH}"
 	local rust_stage0="${!rust_stage0_name}"
 
-	"${WORKDIR}/${rust_stage0}"/install.sh --disable-ldconfig --destdir="${rust_stage0_root}" --prefix=/ || die
+	if ! use system-rust-bootstrap ; then
+		"${WORKDIR}/${rust_stage0}"/install.sh --disable-ldconfig --destdir="${rust_stage0_root}" --prefix=/ || die
+	fi
 
 	default
 }
 
 src_configure() {
-	local rust_stage0_root="${WORKDIR}"/rust-stage0
+	local rust_stage0_root
+	if use system-rust-bootstrap ; then
+		rust_stage0_root="${EPREFIX}"/usr
+	else
+		rust_stage0_root="${WORKDIR}"/rust-stage0
+	fi
 
 	local rust_target_name="CHOST_${ARCH}"
 	local rust_target="${!rust_target_name}"
