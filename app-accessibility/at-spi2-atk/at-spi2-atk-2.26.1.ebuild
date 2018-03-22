@@ -38,5 +38,10 @@ multilib_src_test() {
 	virtx meson_src_test
 }
 
-multilib_src_compile() { gnome-meson_src_compile; }
+multilib_src_compile() {
+	gnome-meson_src_compile
+	einfo "Fixing up headers ..."
+	find -name '*.h' | xargs sed -i "s,${BUILD_DIR},${S},g" || die
+}
+
 multilib_src_install() { gnome-meson_src_install; }

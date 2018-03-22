@@ -50,5 +50,10 @@ multilib_src_configure() {
 		-Denable-x11=$(usex X yes no)
 }
 
-multilib_src_compile() { gnome-meson_src_compile; }
+multilib_src_compile() {
+	gnome-meson_src_compile
+	einfo "Fixing up headers ..."
+	find -name '*.h' | xargs sed -i "s,${BUILD_DIR},${S},g" || die
+}
+
 multilib_src_install() { gnome-meson_src_install; }

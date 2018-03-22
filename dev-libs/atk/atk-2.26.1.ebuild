@@ -47,6 +47,8 @@ multilib_src_configure() {
 
 multilib_src_compile() {
 	gnome-meson_src_compile
+	einfo "Fixing up headers ..."
+	find -name '*.h' | xargs sed -i "s,${BUILD_DIR},${S},g" || die
 }
 
 multilib_src_test() {
