@@ -146,7 +146,7 @@ src_configure() {
 }
 
 python_compile() {
-	distutils-r1_python_compile build_ext -I ../ -L ../${PN}
+	emake
 }
 
 src_compile() {
@@ -157,6 +157,10 @@ src_compile() {
 		distutils-r1_src_compile
 		popd > /dev/null
 	fi
+}
+
+python_install() {
+	emake DESTDIR="${D}" install
 }
 
 src_install() {
