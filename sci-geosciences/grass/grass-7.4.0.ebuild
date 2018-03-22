@@ -135,6 +135,9 @@ src_prepare() {
 }
 
 src_configure() {
+	local mysql_libdir="$(mysql_config --variable=pkglibdir)"
+	local mysql_includedir="$(mysql_config --variable=pkgincludedir)"
+
 	if use X; then
 		WX_BUILD=yes
 		setup-wxwidgets
@@ -157,8 +160,8 @@ src_configure() {
 		$(use_with png) \
 		$(use_with postgres) \
 		$(use_with mysql) \
-		$(use_with mysql mysql-includes "${ROOT}usr/include/mysql") \
-		$(use_with mysql mysql-libs "${ROOT}usr/$(get_libdir)/mysql") \
+		$(use_with mysql mysql-includes "${EROOT}${mysql_includedir}") \
+		$(use_with mysql mysql-libs "${EROOT}${mysql_libdir}") \
 		$(use_with sqlite) \
 		$(use_with opengl) \
 		$(use_with odbc) \
