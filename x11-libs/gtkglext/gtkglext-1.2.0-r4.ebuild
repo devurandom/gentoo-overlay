@@ -28,6 +28,7 @@ DEPEND="${RDEPEND}
 	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gcc-8-fixes.patch"
 	# Ancient configure.in with broken multilib gl detection (bug #543050)
 	# Backport some configure updates from upstream git master to fix
 	epatch "${FILESDIR}/${P}-gl-configure.patch"
