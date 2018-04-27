@@ -29,6 +29,10 @@ DEPEND="${RDEPEND}
 # readd dependencies for test suite,
 # requires multiple ruby dependencies
 
+PATCHES=(
+	"${FILESDIR}/${P}"-cmake-3.11.0.patch
+)
+
 pkg_pretend() {
 	[[ ${MERGE_TYPE} != binary ]] && use openmp && tc-check-openmp
 }
