@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -65,10 +65,6 @@ DEPEND="${RDEPEND}
 		dev-libs/libxslt
 	)
 "
-
-PATCHES=(
-	"${FILESDIR}"/${PN}-5.0_alpha-swiften-libdir-cb2ff90c252e0fc7ec81d45681e90fdbf1c8bc8e.patch
-)
 
 scons_vars=()
 set_scons_vars() {
