@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 EAPI=5
 
 DESCRIPTION="CPU/GPU debugging and profiling suite by AMD"
-HOMEPAGE="http://developer.amd.com/tools/heterogeneous-computing/codexl/"
+HOMEPAGE="https://gpuopen.com/compute-product/codexl/"
 SRC_URI="amd64? ( http://developer.amd.com/download/CodeXL-Linux-${PV}-x86_64-release.tar.gz )"
 
 LICENSE=""
