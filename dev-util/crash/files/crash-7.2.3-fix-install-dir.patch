@@ -1,0 +1,14 @@
+--- a/Makefile.orig	2018-06-19 08:28:34.582244110 +0200
++++ b/Makefile	2018-06-19 08:29:08.692271851 +0200
+@@ -302,7 +302,10 @@
+ make_build_data: force
+ 	${CC} -c ${CRASH_CFLAGS} build_data.c ${WARNING_OPTIONS} ${WARNING_ERROR}
+ 
+-install:
++${INSTALLDIR}:
++	/usr/bin/install -d $@
++
++install: ${INSTALLDIR}
+ 	/usr/bin/install ${PROGRAM} ${INSTALLDIR}
+ #	/usr/bin/install ${PROGRAM}d ${INSTALLDIR}
+ 
