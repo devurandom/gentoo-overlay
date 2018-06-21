@@ -13,11 +13,11 @@ DESCRIPTION="Translator library for raster geospatial data formats (includes OGR
 HOMEPAGE="http://www.gdal.org/"
 SRC_URI="http://download.osgeo.org/${PN}/${PV}/${P}.tar.gz"
 
-SLOT="0/2.2"
+SLOT="0/2.3"
 LICENSE="BSD Info-ZIP MIT"
 KEYWORDS="~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~x86 ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos"
 IUSE_CPU_FLAGS_X86=(cpu_flags_x86_{avx,sse,ssse3})
-IUSE="armadillo +aux_xml ${IUSE_CPU_FLAGS_X86[@]} crypto curl debug doc +expat fits geos gif gml gnm grass hdf5 java jasper jpeg jpeg2k +libtirpc +libxml2 lto lzma mdb mongodb mysql netcdf odbc ogdi opencl oracle +pcre pdf perl png podofo postgres python spatialite sqlite threads webp xls"
+IUSE="armadillo +aux_xml ${IUSE_CPU_FLAGS_X86[@]} crypto curl debug doc +expat fits geos gif gml gnm grass hdf5 java jasper jpeg jpeg2k +libtirpc +libxml2 lto lzma mdb mongodb mysql netcdf odbc ogdi opencl oracle +pcre pdf perl png podofo postgres python spatialite sqlite threads webp xls zstd"
 
 COMMON_DEPEND="
 	dev-libs/json-c:=
@@ -63,7 +63,8 @@ COMMON_DEPEND="
 	spatialite? ( dev-db/spatialite )
 	sqlite? ( dev-db/sqlite:3 )
 	webp? ( media-libs/libwebp:= )
-	xls? ( dev-libs/freexl )"
+	xls? ( dev-libs/freexl )
+	zstd? ( app-arch/zstd )"
 
 RDEPEND="${COMMON_DEPEND}
 	java? ( >=virtual/jre-1.7:* )"
@@ -85,9 +86,9 @@ REQUIRED_USE="
 "
 
 PATCHES=(
-	"${FILESDIR}/${P}-soname.patch"
-	"${FILESDIR}/${P}-json-c-0.13.patch" # bug 641658
-	"${FILESDIR}/${P}-bashcomp-path.patch" # bug 641866
+	"${FILESDIR}/${PN}"-2.2.3-soname.patch
+	"${FILESDIR}/${PN}"-2.2.3-bashcomp-path.patch # bug 641866
+	"${FILESDIR}/${P}"-poppler-0.58-compat-124f0343436d1267319ac627fc220530091b41ea.patch
 )
 
 src_prepare() {
@@ -245,6 +246,7 @@ src_configure() {
 		$(use_with webp) \
 		$(use_with xls freexl) \
 		$(use_with libxml2 xml2) \
+		$(use_with zstd) \
 		"${myopts[@]}"
 
 	# mysql-config puts this in (and boy is it a PITA to get it out)
