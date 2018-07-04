@@ -66,6 +66,11 @@ DEPEND="${RDEPEND}
 	)
 "
 
+PATCHES=(
+	"${FILESDIR}/${P}"-make-generated-files-handle-unicode-characters-39ff091cddf8fd5e01047d80c7ed60c150537705.patch
+	"${FILESDIR}/${P}"-qt-5.11-compat-1d18148c86377787a8c77042b12ea66f20cb2ca9.patch
+)
+
 scons_vars=()
 set_scons_vars() {
 	scons_vars=(
