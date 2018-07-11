@@ -58,7 +58,7 @@ for target in "${ALL_LLVM_TARGETS[@]/%/?}" ; do
 done
 LLVM_TARGET_USEDEPS="${LLVM_TARGET_USEDEPS#,}"
 
-IUSE="debug doc extended +jemalloc +ninja system-rust-bootstrap system-llvm ${ALL_LLVM_TARGETS[*]}"
+IUSE="debug doc extended +jemalloc +ninja system-rust-bootstrap system-llvm wasm ${ALL_LLVM_TARGETS[*]}"
 
 RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
 	jemalloc? ( dev-libs/jemalloc )"
@@ -90,6 +90,9 @@ DEPEND="${RDEPEND}
 	dev-util/cmake
 "
 PDEPEND="!extended? ( >=dev-util/cargo-${CARGO_DEPEND_VERSION} )"
+
+# At least one target needed, sys-libs/llvm currently does not yet support wasm
+REQUIRED_USE="|| ( ${ALL_LLVM_TARGETS[*]} ) ^^ ( system-llvm wasm )"
 
 S="${WORKDIR}/${MY_P}-src"
 
@@ -130,6 +133,9 @@ src_configure() {
 		rust_target_name="RUST_CHOST_${v##*.}"
 		rust_targets+=",\"${!rust_target_name}\""
 	done
+	if use wasm; then
+		rust_targets+=",\"wasm32-unknown-unknown\""
+	fi
 	rust_targets="${rust_targets#,}"
 
 	rust_target_name="RUST_CHOST_${ARCH}"
@@ -170,6 +176,7 @@ src_configure() {
 		use-jemalloc = $(toml_usex jemalloc)
 		default-linker = "$(tc-getCC)"
 		rpath = false
+		lld = $(toml_usex wasm)
 	EOF
 
 	for v in $(multilib_get_enabled_abi_pairs); do
@@ -195,6 +202,13 @@ src_configure() {
 			EOF
 		fi
 	done
+
+	if use wasm; then
+		cat <<- EOF >> "${S}"/config.toml
+			[target.wasm32-unknown-unknown]
+			linker = "lld"
+		EOF
+	fi
 }
 
 src_compile() {
