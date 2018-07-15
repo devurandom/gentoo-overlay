@@ -1,0 +1,24 @@
+--- mumble-9999/src/mumble/CELTCodec.cpp.orig	2018-07-15 15:40:34.095635622 +0200
++++ mumble-9999/src/mumble/CELTCodec.cpp	2018-07-15 15:41:04.065726182 +0200
+@@ -37,9 +37,7 @@
+ 	alternatives << QString::fromLatin1("libcelt.%1.dylib").arg(celt_version);
+ 	alternatives << QString::fromLatin1("celt.%1.dylib").arg(celt_version);
+ #elif defined(Q_OS_UNIX)
+-	alternatives << QString::fromLatin1("libcelt0.so.%1").arg(celt_version);
+-	alternatives << QString::fromLatin1("libcelt.so.%1").arg(celt_version);
+-	alternatives << QString::fromLatin1("celt.so.%1").arg(celt_version);
++	alternatives << QString::fromLatin1("libcelt-mumble.so.%1").arg(celt_version);
+ #else
+ 	int cpuinfo[4];
+ 	__cpuid(cpuinfo, 1);
+--- mumble-9999/3rdparty/celt-0.7.0-build/celt-0.7.0-build.pro.orig	2018-07-15 15:44:51.283052484 +0200
++++ mumble-9999/3rdparty/celt-0.7.0-build/celt-0.7.0-build.pro	2018-07-15 15:45:06.766429318 +0200
+@@ -17,7 +17,7 @@
+ CONFIG += warn_off
+ CONFIG += no_include_pwd
+ VPATH = ../$$SOURCEDIR/libcelt
+-TARGET = celt0
++TARGET = celt-mumble
+ RC_FILE = celt-0.7.0.rc
+ DEFINES += HAVE_CONFIG_H
+ TARGET_VERSION_EXT = .$$VERSION

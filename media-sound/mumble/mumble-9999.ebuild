@@ -56,6 +56,7 @@ DEPEND="${RDEPEND}
 
 PATCHES=(
 	"${FILESDIR}/${P}"-drop-bundled-celt-0.11.patch
+	"${FILESDIR}/${P}"-custom-celt-library-name.patch
 )
 
 src_configure() {
@@ -116,7 +117,7 @@ src_install() {
 	doman man/mumble-overlay.1
 	doman man/mumble.1
 
-	dolib.so "${dir}"/libmumble.so* "${dir}"/libcelt0.so* "${dir}"/plugins/lib*.so*
+	dolib.so "${dir}"/libmumble.so* "${dir}"/libcelt-mumble.so* "${dir}"/plugins/lib*.so*
 }
 
 pkg_postinst() {
