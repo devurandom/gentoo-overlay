@@ -58,7 +58,7 @@ for target in "${ALL_LLVM_TARGETS[@]/%/?}" ; do
 done
 LLVM_TARGET_USEDEPS="${LLVM_TARGET_USEDEPS#,}"
 
-IUSE="debug doc extended +jemalloc +ninja system-rust-bootstrap system-llvm wasm ${ALL_LLVM_TARGETS[*]}"
+IUSE="cargo debug doc +jemalloc +ninja rls rustfmt system-rust-bootstrap system-llvm wasm ${ALL_LLVM_TARGETS[*]}"
 
 RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
 	jemalloc? ( dev-libs/jemalloc )"
@@ -87,9 +87,11 @@ DEPEND="${RDEPEND}
 		>=sys-devel/gcc-4.7
 		>=sys-devel/clang-3.5
 	)
+	cargo? ( !dev-util/cargo )
+	rustfmt? ( !dev-util/rustfmt )
 	dev-util/cmake
 "
-PDEPEND="!extended? ( >=dev-util/cargo-${CARGO_DEPEND_VERSION} )"
+PDEPEND="!cargo? ( >=dev-util/cargo-${CARGO_DEPEND_VERSION} )"
 
 # At least one target needed, sys-libs/llvm currently does not yet support wasm
 REQUIRED_USE="|| ( ${ALL_LLVM_TARGETS[*]} ) ^^ ( system-llvm wasm )"
@@ -141,6 +143,20 @@ src_configure() {
 	rust_target_name="RUST_CHOST_${ARCH}"
 	rust_target="${!rust_target_name}"
 
+	local extended="false" tools=""
+	if use cargo; then
+		extended="true"
+		tools="\"cargo\","
+	fi
+	if use rls; then
+		extended="true"
+		tools="\"rls\",$tools"
+	fi
+	if use rustfmt; then
+		extended="true"
+		tools="\"rustfmt\",$tools"
+	fi
+
 	cat <<- EOF > "${S}"/config.toml
 		[llvm]
 		optimize = $(toml_usex !debug)
@@ -161,7 +177,8 @@ src_configure() {
 		locked-deps = true
 		vendor = true
 		verbose = 2
-		extended = $(toml_usex extended)
+		extended = ${extended}
+		tools = [${tools}]
 		[install]
 		prefix = "${EPREFIX}/usr"
 		libdir = "$(get_libdir)"
@@ -216,8 +233,10 @@ src_compile() {
 	export RUSTFLAGS=-Clink-arg="$(${llvm_config} --ldflags)"
 	export RUST_BACKTRACE=1
 
+	# exclude=src/tools/miri: https://github.com/rust-lang/rust/issues/52305
 	env $(cat "${S}"/config.env | xargs -d '\n') \
-		./x.py build --verbose --config="${S}"/config.toml -j$(makeopts_jobs) || die
+		./x.py build --verbose --config="${S}"/config.toml -j$(makeopts_jobs) \
+			--exclude=src/tools/miri || die
 }
 
 src_install() {
@@ -229,6 +248,16 @@ src_install() {
 	mv "${D}/usr/bin/rustdoc" "${D}/usr/bin/rustdoc-${PV}" || die
 	mv "${D}/usr/bin/rust-gdb" "${D}/usr/bin/rust-gdb-${PV}" || die
 	mv "${D}/usr/bin/rust-lldb" "${D}/usr/bin/rust-lldb-${PV}" || die
+	if use cargo; then
+		mv "${D}/usr/bin/cargo" "${D}/usr/bin/cargo-${PV}" || die
+	fi
+	if use rls; then
+		mv "${D}/usr/bin/rls" "${D}/usr/bin/rls-${PV}" || die
+	fi
+	if use rustfmt; then
+		mv "${D}/usr/bin/rustfmt" "${D}/usr/bin/rustfmt-${PV}" || die
+		mv "${D}/usr/bin/cargo-fmt" "${D}/usr/bin/cargo-fmt-${PV}" || die
+	fi
 
 	# Copy shared library versions of standard libraries for all targets
 	# into the system's abi-dependent lib directories because the rust
@@ -266,6 +295,16 @@ src_install() {
 		/usr/bin/rust-gdb
 		/usr/bin/rust-lldb
 	EOF
+	if use cargo; then
+	    echo /usr/bin/cargo >> "${T}/provider-${P}"
+	fi
+	if use rls; then
+	    echo /usr/bin/rls >> "${T}/provider-${P}"
+	fi
+	if use rustfmt; then
+	    echo /usr/bin/rustfmt >> "${T}/provider-${P}"
+	    echo /usr/bin/cargo-fmt >> "${T}/provider-${P}"
+	fi
 	dodir /etc/env.d/rust
 	insinto /etc/env.d/rust
 	doins "${T}/provider-${P}"
