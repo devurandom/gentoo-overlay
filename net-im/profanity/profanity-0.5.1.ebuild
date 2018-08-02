@@ -1,10 +1,10 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
 EAPI=6
 
-PYTHON_COMPAT=( python2_7 python3_{3,4,5} pypy pypy3 )
+PYTHON_COMPAT=( python2_7 python3_{3,4,5,6,7} pypy pypy3 )
 
 inherit python-single-r1
 
@@ -18,7 +18,7 @@ KEYWORDS="~amd64"
 
 IUSE="icons notifications otr pgp +plugins python test +themes xscreensaver"
 
-REQUIRED_USE="python? ( plugins )"
+REQUIRED_USE="python? ( plugins ${PYTHON_REQUIRED_USE} )"
 
 # tests also need "stabber" and "libexpect", which are not in portage
 DEPEND="net-libs/libstrophe:=
@@ -35,7 +35,7 @@ DEPEND="net-libs/libstrophe:=
 	xscreensaver? (
 		x11-libs/libXScrnSaver
 		x11-libs/libX11 )
-	python? ( dev-lang/python:2.7 )"
+	python? ( ${PYTHON_DEPS} )"
 RDEPEND="${DEPEND}"
 DEPEND="${DEPEND}
 	test? ( dev-util/cmocka )"
