@@ -95,7 +95,8 @@ DEPEND="${RDEPEND}
 
 PATCHES=(
 	"${FILESDIR}/${PN}-fix-install-rules.patch"
-	"${FILESDIR}/${P}-fix-build-with-OSL-1.9.x.patch"
+	"${FILESDIR}/${P}-fix-build-with-gcc-8.patch"
+	"${FILESDIR}/${P}-fix-build-with-openvdb-4.patch"
 )
 
 blender_check_requirements() {
