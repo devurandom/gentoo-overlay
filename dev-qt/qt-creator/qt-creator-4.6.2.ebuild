@@ -1,12 +1,10 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-PLOCALES="cs de fr ja pl ru sl uk zh_CN zh_TW"
+PLOCALES="cs de fr ja pl ru sl uk zh-CN zh-TW"
 
-LLVM_MAX_SLOT=5
-
-inherit l10n llvm qmake-utils toolchain-funcs virtualx xdg
+inherit llvm qmake-utils virtualx xdg
 
 DESCRIPTION="Lightweight IDE for C++/QML development centering around Qt"
 HOMEPAGE="https://doc.qt.io/qtcreator/"
@@ -21,7 +19,7 @@ else
 	MY_P=${PN}-opensource-src-${MY_PV}
 	[[ ${MY_PV} == ${PV} ]] && MY_REL=official || MY_REL=development
 	SRC_URI="https://download.qt.io/${MY_REL}_releases/${PN/-}/${PV%.*}/${MY_PV}/${MY_P}.tar.xz"
-	KEYWORDS="~amd64 ~arm ~x86"
+	KEYWORDS="amd64 ~arm ~x86"
 	S=${WORKDIR}/${MY_P}
 fi
 
@@ -53,16 +51,9 @@ CDEPEND="
 	>=dev-qt/qtwidgets-${QT_PV}
 	>=dev-qt/qtx11extras-${QT_PV}
 	>=dev-qt/qtxml-${QT_PV}
-	clangcodemodel? (
-		<sys-devel/clang-6:=
-		|| (
-			sys-devel/llvm:5
-			sys-devel/llvm:4
-			>=sys-devel/llvm-3.9:0
-		)
-	)
+	clangcodemodel? ( >=sys-devel/clang-5:= )
 	designer? ( >=dev-qt/designer-${QT_PV} )
-	qbs? ( >=dev-util/qbs-1.8.1-r1 )
+	qbs? ( >=dev-util/qbs-1.11.1 )
 	systemd? ( sys-apps/systemd:= )
 	webengine? ( >=dev-qt/qtwebengine-${QT_PV}[widgets] )
 "
@@ -80,14 +71,7 @@ RDEPEND="${CDEPEND}
 	sys-devel/gdb[client,python]
 	autotools? ( sys-devel/autoconf )
 	bazaar? ( dev-vcs/bzr )
-	clangstaticanalyzer? (
-		<sys-devel/clang-6:*
-		|| (
-			sys-devel/llvm:5
-			sys-devel/llvm:4
-			>=sys-devel/llvm-3.9:0
-		)
-	)
+	clangstaticanalyzer? ( >=sys-devel/clang-5:* )
 	cmake? ( dev-util/cmake[server(+)] )
 	cvs? ( dev-vcs/cvs )
 	git? ( dev-vcs/git )
@@ -97,28 +81,13 @@ RDEPEND="${CDEPEND}
 "
 # qt translations must also be installed or qt-creator translations won't be loaded
 for x in ${PLOCALES}; do
-	RDEPEND+=" linguas_${x}? ( >=dev-qt/qttranslations-${QT_PV} )"
+	IUSE+=" l10n_${x}"
+	RDEPEND+=" l10n_${x}? ( >=dev-qt/qttranslations-${QT_PV} )"
 done
 unset x
 
 pkg_setup() {
 	use clangcodemodel && llvm_pkg_setup
-}
-
-src_unpack() {
-	if tc-is-gcc; then
-		if [[ $(gcc-major-version) -lt 4 ]] || \
-		   [[ $(gcc-major-version) -eq 4 && $(gcc-minor-version) -lt 9 ]]; then
-			eerror "GCC version 4.9 or later is required to build Qt Creator ${PV}"
-			die "GCC >= 4.9 required"
-		fi
-	fi
-
-	if [[ ${PV} == *9999 ]]; then
-		git-r3_src_unpack
-	else
-		default
-	fi
 }
 
 src_prepare() {
@@ -133,9 +102,10 @@ src_prepare() {
 		fi
 	done
 
-	# avoid building unused support libraries
+	# avoid building unused support libraries and tools
 	if ! use clangcodemodel; then
-		sed -i -e '/clangbackendipc/d' src/libs/libs.pro || die
+		sed -i -e '/clangsupport/d' src/libs/libs.pro || die
+		sed -i -e '/SUBDIRS += clang\(\|refactoring\|pchmanager\)backend/d' src/tools/tools.pro || die
 	fi
 	if ! use glsl; then
 		sed -i -e '/glsl/d' src/libs/libs.pro || die
@@ -150,8 +120,9 @@ src_prepare() {
 	fi
 
 	# disable broken or unreliable tests
+	sed -i -e 's/\(manual\|tools\|unit\)//g' tests/tests.pro || die
 	sed -i -e '/sdktool/ d' tests/auto/auto.pro || die
-	sed -i -e '/dumpers\.pro/ d' tests/auto/debugger/debugger.pro || die
+	sed -i -e '/\(dumpers\|offsets\)\.pro/ d' tests/auto/debugger/debugger.pro || die
 	sed -i -e '/CONFIG -=/ s/$/ testcase/' tests/auto/extensionsystem/pluginmanager/correctplugins1/plugin?/plugin?.pro || die
 	sed -i -e '/timeline\(items\|notes\|selection\)renderpass/ d' tests/auto/timeline/timeline.pro || die
 	sed -i -e 's/\<memcheck\>//' tests/auto/valgrind/valgrind.pro || die
@@ -160,7 +131,11 @@ src_prepare() {
 	sed -i -e "/^CLANG_RESOURCE_DIR\s*=/ s:\$\${LLVM_LIBDIR}:${EPREFIX}/usr/lib:" src/shared/clang/clang_defines.pri || die
 
 	# fix translations
-	sed -i -e "/^LANGUAGES\s*=/ s:=.*:= $(l10n_get_locales):" share/qtcreator/translations/translations.pro || die
+	local lang languages=
+	for lang in ${PLOCALES}; do
+		use l10n_${lang} && languages+=" ${lang/-/_}"
+	done
+	sed -i -e "/^LANGUAGES\s*=/ s:=.*:=${languages}:" share/qtcreator/translations/translations.pro || die
 
 	# remove bundled qbs
 	rm -rf src/shared/qbs || die
@@ -169,7 +144,7 @@ src_prepare() {
 src_configure() {
 	eqmake5 IDE_LIBRARY_BASENAME="$(get_libdir)" \
 		IDE_PACKAGE_MODE=1 \
-		$(use clangcodemodel && echo LLVM_INSTALL_DIR="$(get_llvm_prefix ${LLVM_MAX_SLOT})") \
+		$(use clangcodemodel && echo LLVM_INSTALL_DIR="$(get_llvm_prefix)") \
 		$(use qbs && echo QBS_INSTALL_DIR="${EPREFIX}/usr") \
 		CONFIG+=qbs_disable_rpath \
 		CONFIG+=qbs_enable_project_file_updates \
