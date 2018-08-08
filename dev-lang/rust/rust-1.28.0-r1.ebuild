@@ -58,10 +58,18 @@ for target in "${ALL_LLVM_TARGETS[@]/%/?}" ; do
 done
 LLVM_TARGET_USEDEPS="${LLVM_TARGET_USEDEPS#,}"
 
-IUSE="cargo debug doc +jemalloc +ninja rls rustfmt system-rust-bootstrap system-llvm wasm ${ALL_LLVM_TARGETS[*]}"
+IUSE="cargo debug doc +jemalloc libressl +ninja rls rustfmt system-rust-bootstrap system-llvm wasm ${ALL_LLVM_TARGETS[*]}"
 
 RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
-	jemalloc? ( dev-libs/jemalloc )"
+	jemalloc? ( dev-libs/jemalloc )
+	cargo? (
+		sys-libs/zlib
+		!libressl? ( dev-libs/openssl:0= )
+		libressl? ( dev-libs/libressl:0= )
+		net-libs/libssh2
+		net-libs/http-parser
+		net-misc/curl[ssl]
+	)"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
 	system-rust-bootstrap? (
