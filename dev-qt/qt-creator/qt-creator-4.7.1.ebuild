@@ -86,6 +86,10 @@ for x in ${PLOCALES}; do
 done
 unset x
 
+PATCHES=(
+	"${FILESDIR}/${P}-remove-cindex-version-check.patch"
+)
+
 pkg_setup() {
 	use clangcodemodel && llvm_pkg_setup
 }

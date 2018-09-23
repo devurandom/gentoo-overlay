@@ -1,0 +1,30 @@
+From 6ab3a02c28f07940f0feecd853da6462838fd580 Mon Sep 17 00:00:00 2001
+From: Ivan Donchevskii <ivan.donchevskii@qt.io>
+Date: Fri, 21 Sep 2018 12:55:07 +0200
+Subject: [PATCH] Clang: Remove version check for skipping inlude file warnings
+
+The change is not upstreamed so the version number is not valid.
+
+Task-number: QTCREATORBUG-21139
+Change-Id: I46fdb0a700780811b88083ae6ed55a241c705cb9
+Reviewed-by: Nikolai Kosjar <nikolai.kosjar@qt.io>
+---
+ src/tools/clangbackend/source/clangbackend_global.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/tools/clangbackend/source/clangbackend_global.h b/src/tools/clangbackend/source/clangbackend_global.h
+index ff25ddeb818..fee9541d87e 100644
+--- a/src/tools/clangbackend/source/clangbackend_global.h
++++ b/src/tools/clangbackend/source/clangbackend_global.h
+@@ -52,7 +52,7 @@ enum class PreferredTranslationUnit
+ #endif
+ 
+ // CLANG-UPGRADE-CHECK: Remove IS_SKIPWARNINGSFROMINCLUDEDFILES_SUPPORTED once we require clang >= 7.0
+-#if defined(CINDEX_VERSION_HAS_SKIPWARNINGSFROMINCLUDEDFILES_BACKPORTED) || CINDEX_VERSION_MINOR >= 46
++#if defined(CINDEX_VERSION_HAS_SKIPWARNINGSFROMINCLUDEDFILES_BACKPORTED)
+ #  define IS_SKIPWARNINGSFROMINCLUDEDFILES_SUPPORTED
+ #endif
+ 
+-- 
+2.16.3
+
