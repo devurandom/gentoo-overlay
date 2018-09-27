@@ -58,7 +58,7 @@ for target in "${ALL_LLVM_TARGETS[@]/%/?}" ; do
 done
 LLVM_TARGET_USEDEPS="${LLVM_TARGET_USEDEPS#,}"
 
-IUSE="cargo debug doc +jemalloc libressl +ninja rls rustfmt system-rust-bootstrap system-llvm wasm ${ALL_LLVM_TARGETS[*]}"
+IUSE="cargo debug doc +jemalloc libressl +ninja rls rustfmt source system-rust-bootstrap system-llvm wasm ${ALL_LLVM_TARGETS[*]}"
 
 RDEPEND=">=app-eselect/eselect-rust-0.3_pre20150425
 	jemalloc? ( dev-libs/jemalloc )
@@ -105,6 +105,8 @@ PDEPEND="!cargo? ( >=dev-util/cargo-${CARGO_DEPEND_VERSION} )"
 REQUIRED_USE="|| ( ${ALL_LLVM_TARGETS[*]} ) ^^ ( system-llvm wasm )"
 
 S="${WORKDIR}/${MY_P}-src"
+
+QA_PREBUILT="usr/src/*"
 
 toml_usex() {
 	usex "$1" true false
@@ -316,6 +318,11 @@ src_install() {
 	dodir /etc/env.d/rust
 	insinto /etc/env.d/rust
 	doins "${T}/provider-${P}"
+
+	if use source; then
+		insinto /usr/src/"${P}"/src
+		doins -r "${S}"/src/lib*
+	fi
 }
 
 pkg_postinst() {
