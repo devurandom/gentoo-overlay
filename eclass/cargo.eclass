@@ -37,13 +37,8 @@ cargo_crate_uris() {
 	local crate
 	for crate in "$@"; do
 		local name version url pretag
-		name="${crate%-*}"
-		version="${crate##*-}"
-		pretag="[a-zA-Z]+"
-		if [[ $version =~ $pretag ]]; then
-			version="${name##*-}-${version}"
-			name="${name%-*}"
-		fi
+		name="${crate%%-[0-9]*}"
+		version="${crate#${name}-}"
 		url="https://crates.io/api/v1/crates/${name}/${version}/download -> ${crate}.crate"
 		echo "${url}"
 	done
