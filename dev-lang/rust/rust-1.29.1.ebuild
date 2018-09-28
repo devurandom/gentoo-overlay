@@ -5,7 +5,7 @@ EAPI=6
 
 PYTHON_COMPAT=( python2_7 python3_{5,6} pypy )
 
-LLVM_MAX_SLOT=6
+LLVM_MAX_SLOT=7
 
 inherit multiprocessing multilib-build python-any-r1 versionator toolchain-funcs llvm
 
@@ -81,11 +81,11 @@ DEPEND="${RDEPEND}
 		)
 	)
 	system-llvm? (
-		<sys-devel/llvm-7_pre:=["${LLVM_TARGET_USEDEPS}"]
+		<sys-devel/llvm-8_pre:=["${LLVM_TARGET_USEDEPS}"]
 		|| (
+			sys-devel/llvm:7
 			sys-devel/llvm:6
 			sys-devel/llvm:5
-			sys-devel/llvm:4
 		)
 	)
 	!system-llvm? (
