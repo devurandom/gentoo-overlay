@@ -1,4 +1,4 @@
-From 28bcd32d1dfadb4228ee0b85e4aa6742d25f27a6 Mon Sep 17 00:00:00 2001
+From 04059a8357fbd88eedbee45ed87efc5f5493da15 Mon Sep 17 00:00:00 2001
 From: Dennis Schridde <devurandom@gmx.net>
 Date: Fri, 9 Nov 2018 10:36:06 +0100
 Subject: [PATCH] Fix FindOpenEXR.cmake to use version detected by pkg-config,
@@ -16,7 +16,7 @@ Fixes: ec4f679cd7ba175a5470a6198c07ebc6780f4c29
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/src/cmake/modules/FindOpenEXR.cmake b/src/cmake/modules/FindOpenEXR.cmake
-index 9ee97500..4bc96dc8 100644
+index 9ee97500..68de7804 100644
 --- a/src/cmake/modules/FindOpenEXR.cmake
 +++ b/src/cmake/modules/FindOpenEXR.cmake
 @@ -53,7 +53,11 @@ find_path (OPENEXR_INCLUDE_PATH OpenEXR/OpenEXRConfig.h
@@ -24,10 +24,10 @@ index 9ee97500..4bc96dc8 100644
  
  # Try to figure out version number
 -if (EXISTS "${OPENEXR_INCLUDE_PATH}/OpenEXR/ImfMultiPartInputFile.h")
-+if (DEFINED _OPENEXR_VERSION)
-+    set (OPENEXR_VERSION ${_OPENEXR_VERSION})
-+    string (REGEX REPLACE "([0-9]+)\\.[0-9]+" "\\1" OPENEXR_VERSION_MAJOR ${_OPENEXR_VERSION})
-+    string (REGEX REPLACE "[0-9]+\\.([0-9]+)" "\\1" OPENEXR_VERSION_MINOR ${_OPENEXR_VERSION})
++if (DEFINED _OPENEXR_VERSION AND NOT "${_OPENEXR_VERSION}" STREQUAL "")
++    set (OPENEXR_VERSION "${_OPENEXR_VERSION}")
++    string (REGEX REPLACE "([0-9]+)\\.[0-9]+" "\\1" OPENEXR_VERSION_MAJOR "${_OPENEXR_VERSION}")
++    string (REGEX REPLACE "[0-9]+\\.([0-9]+)" "\\1" OPENEXR_VERSION_MINOR "${_OPENEXR_VERSION}")
 +elseif (EXISTS "${OPENEXR_INCLUDE_PATH}/OpenEXR/ImfMultiPartInputFile.h")
      # Must be at least 2.0
      file(STRINGS "${OPENEXR_INCLUDE_PATH}/OpenEXR/OpenEXRConfig.h" TMP REGEX "^#define OPENEXR_VERSION_STRING .*$")
