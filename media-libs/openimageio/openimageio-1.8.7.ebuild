@@ -29,13 +29,13 @@ RESTRICT="test" #431412
 RDEPEND="
 	>=dev-libs/boost-1.62:=
 	dev-libs/pugixml:=
-	>=media-libs/ilmbase-2.2.0:=
+	>=media-libs/ilmbase-2.2.0-r1:=
 	media-libs/libpng:0=
 	>=media-libs/libwebp-0.2.1:=
-	>=media-libs/openexr-2.2.0:=
+	>=media-libs/openexr-2.2.0-r2:=
 	media-libs/tiff:0=
 	sys-libs/zlib:=
-	virtual/jpeg:0=
+	virtual/jpeg:0
 	colorio? ( >=media-libs/opencolorio-1.0.7:= )
 	ffmpeg? ( media-video/ffmpeg:= )
 	field3d? ( media-libs/Field3D:= )
