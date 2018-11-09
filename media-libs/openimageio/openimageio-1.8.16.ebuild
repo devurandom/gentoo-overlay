@@ -103,13 +103,12 @@ src_configure() {
 
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_DOCDIR="share/doc/${PF}"
-		-DLIB_INSTALL_DIR="/usr/$(get_libdir)"
 		-DBUILDSTATIC=OFF
 		-DLINKSTATIC=OFF
 		-DINSTALL_DOCS=$(usex doc)
 		-DOIIO_BUILD_TESTS=OFF # as they are RESTRICTed
 		-DSTOP_ON_WARNING=OFF
-		-DUSE_CPP14=ON
+		-DUSE_CPP=14
 		-DUSE_EXTERNAL_PUGIXML=ON
 		-DUSE_FFMPEG=$(usex ffmpeg)
 		-DUSE_FIELD3D=$(usex field3d)
