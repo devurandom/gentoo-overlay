@@ -28,6 +28,12 @@ DOCS=( changes.md CONTRIBUTING.md readme.txt )
 
 # Even though some of this stuff will not be used at runtime, it is all
 # required in order to satisfy the maven build system.
+# The syntax of each item follows what Maven uses in its error messages, which
+# makes updating the list by trial-running the ebuild easier.
+# Each item may optionally consist of two words (separated by one whitespace),
+# where the first word would be the remote repository, defaulting to Maven
+# Central if absent.
+# The basic idea is borrowed from the net-p2p/bisq-0.6.3 ebuild.
 EMAVEN_ARTIFACTS=(
 	asm:asm-parent:pom:3.3.1
 	asm:asm:jar:3.3.1
