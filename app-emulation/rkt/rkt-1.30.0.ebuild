@@ -95,6 +95,10 @@ src_unpack() {
 src_prepare() {
 	eapply_user
 
+	cd ../kvmtool
+	epatch "${FILESDIR}/${P}-fix-lkvm-resolve-program-snprintf.patch"
+	cd "${S}"
+
 	# This patch breaks linux kernel cc-option checks when the
 	# compiler doesn't recognize the -no-pie option.
 	rm stage1/usr_from_kvm/kernel/patches/0002-for-debian-gcc.patch || die

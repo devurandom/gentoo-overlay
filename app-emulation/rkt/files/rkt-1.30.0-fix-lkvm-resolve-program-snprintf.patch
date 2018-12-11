@@ -1,0 +1,26 @@
+See-Also: https://bugs.gentoo.org/671558
+Signed-Off-By: Dennis Schridde <devurandom@gmx.net>
+--- kvmtool/builtin-run.c.orig	2018-12-11 10:58:16.143353938 +0100
++++ kvmtool/builtin-run.c	2018-12-11 11:00:35.216479432 +0100
+@@ -48,6 +48,7 @@
+ #include <unistd.h>
+ #include <ctype.h>
+ #include <stdio.h>
++#include <assert.h>
+ 
+ #define MB_SHIFT		(20)
+ #define KB_SHIFT		(10)
+@@ -404,11 +405,12 @@
+ 	err = stat(src, &st);
+ 
+ 	if (!err && S_ISREG(st.st_mode)) {
+-		char resolved_path[PATH_MAX];
++		char resolved_path[PATH_MAX-5]; // PATH_MAX - strlen("/host")
+ 
+ 		if (!realpath(src, resolved_path))
+ 			die("Unable to resolve program %s: %s\n", src, strerror(errno));
+ 
++		assert(len <= PATH_MAX);
+ 		snprintf(dst, len, "/host%s", resolved_path);
+ 	} else
+ 		strncpy(dst, src, len);
