@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -11,11 +11,11 @@ prerelease="${prerelease%%[[:digit:]]*}"
 
 SRC_URI="http://dovecot.org/releases/${major_minor}/${prerelease}/${MY_P}.tar.gz"
 DESCRIPTION="An IMAP and POP3 server written with security primarily in mind"
-HOMEPAGE="http://www.dovecot.org/"
+HOMEPAGE="https://www.dovecot.org/"
 
 SLOT="0/${PV}"
 LICENSE="LGPL-2.1 MIT"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ppc ~ppc64 ~s390 ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~s390 ~sparc ~x86"
 
 IUSE_DOVECOT_AUTH="bsdauth kerberos ldap nss pam +shadow sia vpopmail"
 IUSE_DOVECOT_COMPRESS="bzip2 lzma lz4 zlib"
@@ -145,7 +145,6 @@ src_install () {
 
 	rm -rf "${ED}"/usr/share/doc/dovecot
 
-	dodoc ${DOCS}
 	dodoc doc/*.{txt,cnf,xml,sh}
 	docinto example-config
 	dodoc doc/example-config/*.{conf,ext}
