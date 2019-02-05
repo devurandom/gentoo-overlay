@@ -176,7 +176,8 @@ python_configure_all() {
 		$(use_with html5)
 		$(use_with html5_brotli)
 		$(use_with html5_gzip)
-		$(use_with jpeg)
+		$(use_with jpeg jpeg_decoder)
+		$(use_with jpeg jpeg_encoder)
 		# No idea what this does
 		--with-keyboard
 		$(use_with zeroconf mdns)
