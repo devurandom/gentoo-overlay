@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
@@ -20,7 +20,7 @@ RDEPEND="
 
 DEPEND="
 	>=virtual/jdk-1.8
-	dev-java/maven-bin:3.5"
+	dev-java/maven-bin:3.6"
 
 S="${WORKDIR}/clojure-clojure-e5a8cfa"
 
@@ -645,7 +645,7 @@ emvn() {
 		--define user.home="$HOME"
 		--fail-at-end
 	)
-  if ! [[ ${EBUILD_PHASE} = "test" ]]; then
+	if [[ ${EBUILD_PHASE} != "test" ]]; then
 		mavenflags+=(--define maven.test.skip=true)
 	fi
 	if [[ -n ${JAVA_PKG_DEBUG} ]]; then
