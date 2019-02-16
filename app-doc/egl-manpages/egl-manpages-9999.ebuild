@@ -1,12 +1,12 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI=4
+EAPI=7
 
-inherit subversion
+inherit git-r3
 
 ESVN_REPO_URI="https://cvs.khronos.org/svn/repos/registry/trunk/public/egl/sdk/docs/man/"
+EGIT_REPO_URI="https://github.com/KhronosGroup/EGL-Registry.git"
 
 DESCRIPTION="OpenGL man pages"
 HOMEPAGE="http://www.opengl.org/wiki/Getting_started/XML_Toolchain_and_Man_Pages"
@@ -18,9 +18,11 @@ IUSE="+man html"
 
 DEPEND="dev-libs/libxslt
 	app-text/docbook-mathml-dtd
-	html? ( dev-lang/perl )
+	html? ( dev-lang/python )
 	man? ( app-text/docbook-xsl-stylesheets )"
 RDEPEND="man? ( virtual/man )"
+
+S="${WORKDIR}/${P}/sdk/docs/man"
 
 src_prepare() {
 	if use man ; then
@@ -33,6 +35,8 @@ src_prepare() {
 			mv fixed-"${f}" "${f}" || die
 		done
 	fi
+
+	eapply_user
 }
 
 src_compile() {
@@ -47,10 +51,10 @@ src_compile() {
 	fi
 
 	if use html ; then
-		einfo "Compiling html manual ..."
+		einfo "Compiling HTML manual ..."
 
-		emake ROOT="${S}" || die "Failed creating html manual"
-		perl xhtml/makeindex.pl "${S}"/xhtml "${S}" > "${S}"/xhtml/index.html || die "Failed generating html manual index"
+		cd xhtml
+		emake ROOT="${S}" || die "Failed creating HTML manual"
 	fi
 }
 
