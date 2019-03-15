@@ -21,6 +21,9 @@ DEPEND="
 
 RDEPEND="
 	dev-python/python-dateutil[${PYTHON_USEDEP}]
-	dev-python/python-magic[${PYTHON_USEDEP}]"
+	|| (
+		sys-apps/file[python,${PYTHON_USEDEP}]
+		dev-python/python-magic[${PYTHON_USEDEP}]
+	)"
 
 S="$WORKDIR/${P/_/-}"
