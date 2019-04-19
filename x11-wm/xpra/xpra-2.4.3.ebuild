@@ -3,7 +3,7 @@
 
 EAPI=6
 
-PYTHON_COMPAT=( python2_7 python3_{4,5,6,7} )
+PYTHON_COMPAT=( python2_7 python3_{5,6,7} )
 DISTUTILS_SINGLE_IMPL=1
 inherit xdg distutils-r1 eutils flag-o-matic user tmpfiles prefix
 
@@ -22,7 +22,6 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	client? ( ^^ ( gtk2 gtk3 ) )
 	gtk2? ( python_single_target_python2_7 )
 	gtk3? ( || (
-		python_single_target_python3_4
 		python_single_target_python3_5
 		python_single_target_python3_6
 		python_single_target_python3_7
@@ -32,7 +31,6 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}
 	html5_minify? ( html5 )
 	opengl? ( client )
 	python_single_target_python2_7? ( gtk2 )
-	python_single_target_python3_4? ( gtk3 )
 	python_single_target_python3_5? ( gtk3 )
 	python_single_target_python3_6? ( gtk3 )
 	python_single_target_python3_7? ( gtk3 )
