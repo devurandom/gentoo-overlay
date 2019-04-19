@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 JAVA_PKG_IUSE="source test"
 
@@ -15,14 +15,17 @@ LICENSE="EPL-1.0 Apache-2.0 BSD"
 SLOT="$(ver_cut 1-2)"
 KEYWORDS="~amd64 ~x86 ~x86-linux"
 
+CDEPEND="dev-java/maven-bin:3.6"
+
 RDEPEND="
+	${CDEPEND}
 	>=virtual/jre-1.8"
 
 DEPEND="
-	>=virtual/jdk-1.8
-	dev-java/maven-bin:3.6"
+	${CDEPEND}
+	>=virtual/jdk-1.8"
 
-S="${WORKDIR}/clojure-clojure-e5a8cfa"
+S="${WORKDIR}/clojure-clojure-76b87a6"
 
 DOCS=( changes.md CONTRIBUTING.md readme.txt )
 
@@ -93,11 +96,16 @@ EMAVEN_ARTIFACTS=(
 	javax.inject:javax.inject:jar:1
 	javax.validation:validation-api:jar:1.1.0.Final
 	javax.ws.rs:jsr311-api:jar:1.1.1
+	javax.xml.bind:jaxb-api:jar:2.3.0
+	javax.xml.bind:jaxb-api-parent:pom:2.3.0
+	javax.xml.soap:javax.xml.soap-api:jar:1.4.0
+	javax.xml.ws:jaxws-api:jar:2.3.0
 	joda-time:joda-time:jar:2.2
 	junit:junit:jar:3.8.1
 	junit:junit:jar:3.8.2
 	log4j:log4j:jar:1.2.12
 	net.java:jvnet-parent:pom:1
+	net.java:jvnet-parent:pom:5
 	org.apache.ant:ant-launcher:jar:1.8.1
 	org.apache.ant:ant-nodeps:jar:1.8.1
 	org.apache.ant:ant-parent:pom:1.8.1
@@ -362,16 +370,15 @@ EMAVEN_ARTIFACTS=(
 	org.apache:apache:pom:14
 	org.apache:apache:pom:16
 	org.apache:apache:pom:18
-	org.clojure:core.specs.alpha:jar:0.1.24
+	org.clojure:core.specs.alpha:jar:0.2.44
 	org.clojure:data.generators:jar:0.1.2
 	org.clojure:pom.contrib:pom:0.0.26
 	org.clojure:pom.contrib:pom:0.1.2
 	org.clojure:pom.contrib:pom:0.2.2
-	org.clojure:spec.alpha:jar:0.1.143
+	org.clojure:spec.alpha:jar:0.2.176
 	org.clojure:test.check:jar:0.9.0
 	org.clojure:test.generative:jar:0.5.2
 	org.clojure:tools.namespace:jar:0.2.10
-	org.codehaus.jsr166-mirror:jsr166y:jar:1.7.0
 	org.codehaus.mojo:build-helper-maven-plugin:jar:1.5
 	org.codehaus.mojo:mojo-parent:pom:23
 	org.codehaus.plexus:plexus-archiver:jar:1.0
