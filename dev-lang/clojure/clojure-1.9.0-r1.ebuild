@@ -5,14 +5,14 @@ EAPI=6
 
 JAVA_PKG_IUSE="source test"
 
-inherit java-pkg-2 java-ant-2
+inherit java-pkg-2
 
 DESCRIPTION="General-purpose programming language with an emphasis on functional programming"
 HOMEPAGE="https://clojure.org/"
 SRC_URI="https://github.com/clojure/clojure/tarball/${P} -> ${P}.tar.gz"
 
 LICENSE="EPL-1.0 Apache-2.0 BSD"
-SLOT="1.9"
+SLOT="$(ver_cut 1-2)"
 KEYWORDS="~amd64 ~x86 ~x86-linux"
 
 RDEPEND="
