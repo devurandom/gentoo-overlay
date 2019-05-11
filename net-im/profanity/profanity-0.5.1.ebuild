@@ -8,8 +8,8 @@ PYTHON_COMPAT=( python2_7 python3_{3,4,5,6,7} pypy pypy3 )
 inherit python-single-r1
 
 DESCRIPTION="A console based XMPP client inspired by Irssi"
-HOMEPAGE="http://www.profanity.im/"
-SRC_URI="http://www.profanity.im/${P}.tar.gz"
+HOMEPAGE="https://profanity-im.github.io/"
+SRC_URI="https://profanity-im.github.io/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0/0.4"
