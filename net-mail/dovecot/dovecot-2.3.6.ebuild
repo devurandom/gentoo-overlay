@@ -2,10 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
-inherit ssl-cert systemd user versionator
+inherit eapi7-ver ssl-cert systemd user
 
 MY_P="${P/_/.}"
-major_minor="$(get_version_component_range 1-2)"
+major_minor="$(ver_cut 1-2)"
 prerelease="${PV/*_/}"
 prerelease="${prerelease%%[[:digit:]]*}"
 
@@ -17,11 +17,11 @@ SLOT="0/${PV}"
 LICENSE="LGPL-2.1 MIT"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~s390 ~sparc ~x86"
 
-IUSE_DOVECOT_AUTH="bsdauth kerberos ldap nss pam +shadow sia vpopmail"
+IUSE_DOVECOT_AUTH="bsdauth kerberos ldap lua nss pam +shadow sia vpopmail"
 IUSE_DOVECOT_COMPRESS="bzip2 lzma lz4 zlib"
 IUSE_DOVECOT_DB="mysql postgres sqlite"
 IUSE_DOVECOT_SSL="gnutls libressl +openssl"
-IUSE_DOVECOT_OTHER="boehm-gc caps debug doc ipv6 lucene selinux solr static-libs suid tcpd textcat"
+IUSE_DOVECOT_OTHER="boehm-gc caps debug doc hardened ipv6 lucene selinux sodium solr static-libs suid tcpd textcat"
 
 IUSE="${IUSE_DOVECOT_AUTH} ${IUSE_DOVECOT_COMPRESS} ${IUSE_DOVECOT_DB} ${IUSE_DOVECOT_SSL} ${IUSE_DOVECOT_OTHER}"
 
@@ -34,6 +34,7 @@ DEPEND="boehm-gc? ( dev-libs/boehm-gc )
 	kerberos? ( virtual/krb5 )
 	ldap? ( net-nds/openldap )
 	libressl? ( dev-libs/libressl )
+	lua? ( dev-lang/lua:* )
 	lucene? ( >=dev-cpp/clucene-2.3 )
 	lzma? ( app-arch/xz-utils )
 	lz4? ( app-arch/lz4 )
@@ -43,6 +44,7 @@ DEPEND="boehm-gc? ( dev-libs/boehm-gc )
 	pam? ( virtual/pam )
 	postgres? ( dev-db/postgresql:* !dev-db/postgresql[ldap,threads] )
 	selinux? ( sec-policy/selinux-dovecot )
+	sodium? ( dev-libs/sodium )
 	solr? ( net-misc/curl dev-libs/expat )
 	sqlite? ( dev-db/sqlite:* )
 	tcpd? ( sys-apps/tcp-wrappers )
@@ -50,7 +52,8 @@ DEPEND="boehm-gc? ( dev-libs/boehm-gc )
 	vpopmail? ( net-mail/vpopmail )
 	zlib? ( sys-libs/zlib )
 	virtual/libiconv
-	dev-libs/icu:="
+	dev-libs/icu:=
+	dev-libs/libbsd"
 
 RDEPEND="${DEPEND}
 	net-mail/mailbase"
@@ -58,10 +61,6 @@ RDEPEND="${DEPEND}
 S=${WORKDIR}/${MY_P}
 
 DOCS="AUTHORS NEWS README TODO"
-
-PATCHES=(
-	"${FILESDIR}/${PN}-10-ssl.patch"
-)
 
 pkg_setup() {
 	# default internal user
@@ -95,19 +94,24 @@ src_configure() {
 	VALGRIND=no econf \
 		--localstatedir="${EPREFIX}/var" \
 		--runstatedir="${EPREFIX}/run" \
+		--with-icu \
+		--with-libbsd \
 		--with-moduledir="${EPREFIX}/usr/$(get_libdir)/dovecot" \
+                --with-rundir="${EPREFIX}/run/dovecot" \
+		--with-statedir="${EPREFIX}/var/lib/dovecot" \
 		--without-stemmer \
 		--with-storages="cydir imapc maildir mbox mdbox pop3c sdbox" \
-		--disable-rpath \
-		--with-icu \
 		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
+		--disable-rpath \
 		$( use_with boehm-gc gc ) \
 		$( use_with bsdauth ) \
 		$( use_with bzip2 bzlib ) \
 		$( use_with caps libcap ) \
 		$( use_with doc docs ) \
+		$( use_with hardened hardening ) \
 		$( use_with kerberos gssapi ) \
 		$( use_with ldap ) \
+		$( use_with lua ) \
 		$( use_with lucene ) \
 		$( use_with lz4 ) \
 		$( use_with lzma ) \
@@ -117,6 +121,7 @@ src_configure() {
 		$( use_with postgres pgsql ) \
 		$( use_with shadow ) \
 		$( use_with sia ) \
+		$( use_with sodium ) \
 		$( use_with solr ) \
 		$( use_with sqlite ) \
 		$( use_with tcpd libwrap ) \
@@ -221,5 +226,5 @@ pkg_postinst() {
 		install_cert /etc/ssl/dovecot/server
 	fi
 
-	elog "Please read http://wiki2.dovecot.org/Upgrading/2.2 for upgrade notes."
+	elog "Please read http://wiki2.dovecot.org/Upgrading/${major_minor} for upgrade notes."
 }
