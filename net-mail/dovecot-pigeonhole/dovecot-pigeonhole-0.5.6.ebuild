@@ -1,22 +1,24 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 case "${PV}" in
 	*9999*) EXTRA_ECLASS="${EXTRA_ECLASS} autotools git-r3" ;;
 	*_pre*|*_rc*) EXTRA_ECLASS="${EXTRA_ECLASS} autotools" ;;
 esac
 
-inherit versionator ${EXTRA_ECLASS}
+inherit ${EXTRA_ECLASS}
 
-if version_is_at_least 0.4 ; then
+if ver_test -gt 0.5 ; then
+	DOVECOT_MAJOR_MINOR_VERSION=2.3
+elif ver_test -gt 0.4 ; then
 	DOVECOT_MAJOR_MINOR_VERSION=2.2
 else
 	die "Unexpected pigeonhole version: ${PV}"
 fi
 
-if version_is_at_least 0.4.17 ; then
+if ver_test -gt 0.4.17 ; then
 	DOVECOT_VERSION_ATLEAST=2.2.28
 else
 	DOVECOT_VERSION_ATLEAST="${DOVECOT_MAJOR_MINOR_VERSION}"
