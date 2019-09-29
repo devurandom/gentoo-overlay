@@ -5,9 +5,11 @@ EAPI=7
 
 inherit qmake-utils
 
+MY_PV="$(ver_rs 3 '')"
+
 DESCRIPTION="Multi-platform helper library for other libraries"
 HOMEPAGE="https://www.aquamaniac.de/sites/aqbanking/index.php"
-SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/108/${P}.tar.gz"
+SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/160/${PN}-${MY_PV}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0/60" # correspond with libgwenhywfar.so version
@@ -65,6 +67,8 @@ DEPEND="${COMMON_DEPEND}"
 
 # broken upstream, reported but got no reply
 RESTRICT="test"
+
+S="${WORKDIR}/${PN}-${MY_PV}"
 
 src_configure() {
 	disableQtModule() {

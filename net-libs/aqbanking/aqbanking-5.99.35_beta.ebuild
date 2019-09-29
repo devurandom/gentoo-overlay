@@ -3,9 +3,11 @@
 
 EAPI=7
 
+MY_PV="$(ver_rs 3 '')"
+
 DESCRIPTION="Generic Online Banking Interface"
 HOMEPAGE="https://www.aquamaniac.de/sites/aqbanking/index.php"
-SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/107/${P}.tar.gz"
+SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/162/${PN}-${MY_PV}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -20,7 +22,7 @@ BDEPEND="
 RDEPEND="
 	app-misc/ktoblzcheck
 	dev-libs/gmp:0=
-	sys-libs/gwenhywfar:=
+	>=sys-libs/gwenhywfar-4.99.10:=
 	virtual/libintl
 	smartcard? ( >=sys-libs/libchipcard-5.0.2 )
 	ebics? ( dev-libs/xmlsec[gcrypt,gnutls] )
@@ -29,6 +31,8 @@ RDEPEND="
 DEPEND="${RDEPEND}"
 
 # DOCS=( AUTHORS ChangeLog NEWS README TODO )
+
+S="${WORKDIR}/${PN}-${MY_PV}"
 
 MAKEOPTS="${MAKEOPTS} -j1" # 5.7.8 still fails with > -j1
 
@@ -50,9 +54,6 @@ src_install() {
 	rm -rv "${ED}"/usr/share/doc/ || die
 
 	einstalldocs
-
-	newdoc src/plugins/backends/aqhbci/tools/aqhbci-tool/README \
-		README.aqhbci-tool
 
 	if use examples; then
 		docinto tutorials
