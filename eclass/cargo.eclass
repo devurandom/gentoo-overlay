@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 # @ECLASS: cargo.eclass
@@ -12,18 +12,22 @@
 if [[ -z ${_CARGO_ECLASS} ]]; then
 _CARGO_ECLASS=1
 
-CARGO_DEPEND=""
-[[ ${CATEGORY}/${PN} != dev-util/cargo ]] && CARGO_DEPEND="virtual/cargo"
+if [[ ${PV} == *9999* ]]; then
+	# we need at least this for cargo vendor subommand
+	CARGO_DEPEND=">=virtual/cargo-1.37.0"
+else
+	CARGO_DEPEND="virtual/cargo"
+fi
 
 case ${EAPI} in
-	6) : DEPEND="${DEPEND} ${CARGO_DEPEND}";;
-	7) : BDEPEND="${BDEPEND} ${CARGO_DEPEND}";;
+	6) DEPEND="${CARGO_DEPEND}";;
+	7) BDEPEND="${CARGO_DEPEND}";;
 	*) die "EAPI=${EAPI:-0} is not supported" ;;
 esac
 
 inherit multiprocessing
 
-EXPORT_FUNCTIONS src_unpack src_compile src_install
+EXPORT_FUNCTIONS src_unpack src_compile src_install src_test
 
 IUSE="${IUSE} debug"
 
@@ -93,6 +97,26 @@ cargo_src_unpack() {
 	cargo_gen_config
 }
 
+# @FUNCTION: cargo_live_src_unpack
+# @DESCRIPTION:
+# Runs 'cargo fetch' and vendors downloaded crates for offline use, used in live ebuilds
+
+cargo_live_src_unpack() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	[[ "${PV}" == *9999* ]] || die "${FUNCNAME} only allowed in live/9999 ebuilds"
+	[[ "${EBUILD_PHASE}" == unpack ]] || die "${FUNCNAME} only allowed in src_unpack"
+
+	mkdir -p "${S}" || die
+
+	pushd "${S}" > /dev/null || die
+	CARGO_HOME="${ECARGO_HOME}" cargo fetch || die
+	CARGO_HOME="${ECARGO_HOME}" cargo vendor "${ECARGO_VENDOR}" || die
+	popd > /dev/null || die
+
+	cargo_gen_config
+}
+
 # @FUNCTION: cargo_gen_config
 # @DESCRIPTION:
 # Generate the $CARGO_HOME/config necessary to use our local registry
@@ -117,7 +141,7 @@ cargo_src_compile() {
 
 	export CARGO_HOME="${ECARGO_HOME}"
 
-	cargo build -j $(makeopts_jobs) $(usex debug "" --release) \
+	cargo build -j $(makeopts_jobs) $(usex debug "" --release) "$@" \
 		|| die "cargo build failed"
 }
 
@@ -127,11 +151,21 @@ cargo_src_compile() {
 cargo_src_install() {
 	debug-print-function ${FUNCNAME} "$@"
 
-	cargo install -j $(makeopts_jobs) --root="${D}/usr" $(usex debug --debug "") \
+	cargo install -j $(makeopts_jobs) --root="${D}/usr" $(usex debug --debug "") "$@" \
 		|| die "cargo install failed"
 	rm -f "${D}/usr/.crates.toml"
 
 	[ -d "${S}/man" ] && doman "${S}/man" || return 0
+}
+
+# @FUNCTION: cargo_src_test
+# @DESCRIPTION:
+# Test the package using cargo test
+cargo_src_test() {
+	debug-print-function ${FUNCNAME} "$@"
+
+	cargo test -j $(makeopts_jobs) $(usex debug "" --release) "$@" \
+		|| die "cargo test failed"
 }
 
 fi
