@@ -161,12 +161,26 @@ KEYWORDS="~amd64 ~ppc64 ~x86"
 # >app-backup/bacula-9.2[qt5] has file collisions, #686118
 DEPEND="sys-libs/zlib"
 RDEPEND="${DEPEND}
-	!>app-backup/bacula-9.2[qt5]"
+	!>app-backup/bacula-9.2[qt5]
+	>=dev-libs/oniguruma-6.8.0:="
 BDEPEND=">=virtual/rust-1.31.0"
 
 DOCS=( README.md doc/alternatives.md )
 
 QA_FLAGS_IGNORED="/usr/bin/bat"
+
+src_prepare() {
+	default
+	cd "${ECARGO_VENDOR}"/onig_sys-69.2.0
+	eapply -p2 "${FILESDIR}"/onig-sys-69.2.0-error-if-oniguruma-header-not-found.patch
+	eapply -p2 "${FILESDIR}"/onig-sys-69.2.0-search-usr-include-for-oniguruma.patch
+}
+
+src_compile() {
+	export RUSTONIG_SYSTEM_LIBONIG=1
+	export RUST_BACKTRACE=1
+	cargo_src_compile --verbose --verbose
+}
 
 src_install() {
 	cargo_src_install --path=.
