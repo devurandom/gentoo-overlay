@@ -15,7 +15,7 @@ LICENSE="GPL-3"
 SLOT="0/0.4"
 KEYWORDS="~amd64"
 
-IUSE="icons libnotify otr gpg +plugins python test +themes xscreensaver"
+IUSE="icons libnotify omemo otr gpg +plugins python test +themes xscreensaver"
 
 REQUIRED_USE="python? ( plugins ${PYTHON_REQUIRED_USE} )"
 
@@ -32,6 +32,10 @@ DEPEND="
 	gpg? ( app-crypt/gpgme:= )
 	icons? ( x11-libs/gtk+:2 )
 	libnotify? ( x11-libs/libnotify )
+	omemo? (
+		net-libs/libsignal-protocol-c
+		dev-libs/libgcrypt
+	)
 	otr? ( net-libs/libotr )
 	xscreensaver? (
 		x11-libs/libXScrnSaver
@@ -44,6 +48,7 @@ DEPEND="${DEPEND}
 src_configure() {
 	econf \
 		$(use_enable libnotify notifications) \
+		$(use_enable omemo) \
 		$(use_enable otr) \
 		$(use_enable gpg pgp) \
 		$(use_enable plugins c-plugins) \
