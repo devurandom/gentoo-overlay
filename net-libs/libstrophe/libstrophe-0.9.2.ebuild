@@ -5,7 +5,7 @@ EAPI=7
 
 DESCRIPTION="A simple, lightweight C library for writing XMPP clients"
 HOMEPAGE="http://strophe.im/libstrophe"
-SRC_URI="https://github.com/strophe/libstrophe/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/strophe/${PN}/releases/download/${PV}/${P}.tar.gz"
 
 LICENSE="|| ( MIT GPL-3 )"
 SLOT="0/0.8"
