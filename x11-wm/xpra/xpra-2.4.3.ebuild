@@ -82,7 +82,7 @@ COMMON_DEPEND="${PYTHON_DEPS}
 	html5_gzip? ( app-arch/gzip )
 	html5_minify? ( dev-util/yuicompressor )
 	opengl? ( dev-python/pygtkglext )
-	pam? ( virtual/pam )
+	pam? ( sys-libs/pam )
 	pulseaudio? (
 		media-sound/pulseaudio
 		media-libs/gstreamer:1.0
