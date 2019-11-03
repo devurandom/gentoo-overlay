@@ -90,6 +90,7 @@ pkg_setup() {
 	if use nvme; then
 		kernel_is -ge 4 4 || die "NVMe support requires kernel >= 4.4"
 	fi
+	python-single-r1_pkg_setup
 }
 
 src_prepare() {
