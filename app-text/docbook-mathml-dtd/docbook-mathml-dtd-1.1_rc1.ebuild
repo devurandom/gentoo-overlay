@@ -1,10 +1,9 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
-EAPI=4
+EAPI=7
 
-inherit sgml-catalog
+inherit sgml-catalog-r1
 
 MY_PV=${PV/_beta/b}
 MY_PV=${PV/_rc/CR}
@@ -26,9 +25,6 @@ RDEPEND="dev-libs/libxml2
 
 S=${WORKDIR}
 
-sgml-catalog_cat_include "/etc/sgml/mathml-docbook-${PV}.cat" \
-	"/usr/share/sgml/docbook/${P#docbook-}/docbook.cat"
-
 src_unpack() {
 	cp "${DISTDIR}"/dbmathml-${PV}.dtd "${S}" || die
 }
@@ -39,16 +35,34 @@ src_prepare() {
 		PUBLIC "-//OASIS//DTD DocBook MathML Module V${MY_PV}//EN" "dbmathml.dtd"
 		SYSTEM "http://www.oasis-open.org/docbook/xml/mathml/1.1CR1/dbmathml.dtd" "dbmathml.dtd"
 	EOF
+	eapply_user
 }
 
 src_install() {
+	insinto /etc/sgml
+	newins - "mathml-docbook-${PV}.cat" <<-EOF
+		CATALOG "${EPREFIX}/etc/sgml/sgml-docbook.cat"
+		CATALOG "${EPREFIX}/usr/share/sgml/docbook/${P#docbook-}/docbook.cat"
+	EOF
+
 	insinto /usr/share/sgml/docbook/${P#docbook-}
-	doins *.cat *.dtd || die
+	doins *.cat *.dtd
+}
+
+pkg_preinst() {
+	# work-around old revision removing it
+	cp "${ED}"/etc/sgml/mathml-docbook-${PV}.cat "${T}" || die
 }
 
 pkg_postinst() {
-	build-docbook-catalog || die
-	sgml-catalog_pkg_postinst || die
+	local backup=${T}/mathml-docbook-${PV}.cat
+	local real=${EROOT}/etc/sgml/mathml-docbook-${PV}.cat
+	if ! cmp -s "${backup}" "${real}"; then
+		cp "${backup}" "${real}" || die
+	fi
+
+	build-docbook-catalog
+	sgml-catalog-r1_pkg_postinst
 
 	xmlcatalog --noout \
 		--add public "-//OASIS//DTD DocBook MathML Module V${MV_PV}//EN" "file:///usr/share/sgml/docbook/${P#docbook-}/dbmathml.dtd" \
@@ -58,8 +72,8 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	build-docbook-catalog || die
-	sgml-catalog_pkg_postrm || die
+	build-docbook-catalog
+	sgml-catalog-r1_pkg_postrm
 
 	xmlcatalog --noout \
 		--del "-//OASIS//DTD DocBook MathML Module V${MV_PV}//EN" \
