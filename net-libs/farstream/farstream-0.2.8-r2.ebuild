@@ -5,7 +5,7 @@ EAPI=6
 GNOME2_LA_PUNT="yes"
 PYTHON_COMPAT=( python2_7 )
 
-inherit gnome2 python-any-r1
+inherit gnome2 python-any-r1 autotools
 
 DESCRIPTION="Audio/video conferencing framework specifically designed for instant messengers"
 HOMEPAGE="https://www.freedesktop.org/wiki/Software/Farstream"
@@ -44,8 +44,17 @@ DEPEND="${COMMONDEPEND}
 		media-libs/gst-plugins-good:1.0 )
 "
 
+PATCHES=(
+	"${FILESDIR}"/farstream-0.2.8-fix-make43.patch
+)
+
 pkg_setup() {
 	python-any-r1_pkg_setup
+}
+
+src_prepare() {
+	default
+	eautoreconf
 }
 
 src_configure() {
