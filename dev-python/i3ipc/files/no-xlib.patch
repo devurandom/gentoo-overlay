@@ -1,0 +1,105 @@
+--- a/i3ipc/connection.py	2019-08-27 01:17:46.352460379 +1000
++++ b/i3ipc/connection.py	2019-08-27 01:19:29.967857744 +1000
+@@ -5,7 +5,7 @@
+                       VersionReply, WorkspaceReply, SeatReply, InputReply)
+ from .events import (IpcBaseEvent, BarconfigUpdateEvent, BindingEvent, OutputEvent, ShutdownEvent,
+                      WindowEvent, TickEvent, ModeEvent, WorkspaceEvent, InputEvent, Event)
+-from ._private import PubSub, MessageType, EventType, Synchronizer
++from ._private import PubSub, MessageType, EventType
+ 
+ from typing import List, Optional, Union, Callable
+ import struct
+@@ -14,8 +14,6 @@
+ import os
+ from threading import Timer, Lock
+ import time
+-import Xlib
+-import Xlib.display
+ 
+ 
+ class Connection:
+@@ -56,15 +54,6 @@
+             socket_path = os.environ.get("SWAYSOCK")
+ 
+         if not socket_path:
+-            try:
+-                disp = Xlib.display.Display()
+-                root = disp.screen().root
+-                i3atom = disp.intern_atom("I3_SOCKET_PATH")
+-                socket_path = root.get_full_property(i3atom, Xlib.X.AnyPropertyType).value.decode()
+-            except Exception:
+-                pass
+-
+-        if not socket_path:
+             raise Exception('Failed to retrieve the i3 or sway IPC socket path')
+ 
+         if auto_reconnect:
+@@ -77,13 +77,6 @@
+         self._sub_lock = Lock()
+         self._auto_reconnect = auto_reconnect
+         self._quitting = False
+-        self._synchronizer = None
+-
+-    def _sync(self):
+-        if self._synchronizer is None:
+-            self._synchronizer = Synchronizer()
+-
+-        self._synchronizer.sync()
+ 
+     @property
+     def socket_path(self) -> str:
+--- a/i3ipc/aio/connection.py	2019-08-27 19:49:01.411172371 +1000
++++ b/i3ipc/aio/connection.py	2019-08-27 19:50:59.169564132 +1000
+@@ -1,4 +1,4 @@
+-from .._private import PubSub, MessageType, EventType, Synchronizer
++from .._private import PubSub, MessageType, EventType
+ from ..replies import (BarConfigReply, CommandReply, ConfigReply, OutputReply, TickReply,
+                        VersionReply, WorkspaceReply, SeatReply, InputReply)
+ from ..events import (IpcBaseEvent, BarconfigUpdateEvent, BindingEvent, OutputEvent, ShutdownEvent,
+@@ -7,8 +7,6 @@
+ import os
+ import json
+ from typing import Optional, List, Tuple, Callable, Union
+-from Xlib import display, X
+-from Xlib.error import DisplayError
+ import struct
+ import socket
+ 
+@@ -182,17 +180,6 @@
+     if exists(socket_path):
+         return socket_path
+ 
+-    # next try the root window property
+-    try:
+-        d = display.Display()
+-        atom = d.get_atom('I3_SOCKET_PATH')
+-        root = d.screen().root
+-        prop = root.get_full_property(atom, X.AnyPropertyType)
+-        if prop and prop.value:
+-            socket_path = prop.value.decode()
+-    except DisplayError:
+-        pass
+-
+     if exists(socket_path):
+         return socket_path
+ 
+@@ -251,13 +251,6 @@
+         self._subscriptions = set()
+         self._main_future = None
+         self._reconnect_future = None
+-        self._synchronizer = None
+-
+-    def _sync(self):
+-        if self._synchronizer is None:
+-            self._synchronizer = Synchronizer()
+-
+-        self._synchronizer.sync()
+ 
+     @property
+     def socket_path(self) -> str:
+--- a/i3ipc/_private/__init__.py	2020-04-06 21:35:40.648069848 +1000
++++ b/i3ipc/_private/__init__.py	2020-04-06 21:35:58.837455568 +1000
+@@ -1,3 +1,2 @@
+ from .pubsub import PubSub
+ from .types import MessageType, ReplyType, EventType
+-from .sync import Synchronizer
