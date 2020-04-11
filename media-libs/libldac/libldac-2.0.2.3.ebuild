@@ -5,11 +5,10 @@ EAPI=7
 
 inherit cmake-utils
 
-PACKAGING_VERSION="1.1"
 
 DESCRIPTION="LDAC codec library from AOSP"
 HOMEPAGE="https://android.googlesource.com/platform/external/libldac/"
-SRC_URI="https://github.com/EHfive/ldacBT/releases/download/${PACKAGING_VERSION}-ldac.${PV}/ldacBT.tar.gz -> ${P}-${PACKAGING_VERSION}.tar.gz"
+SRC_URI="https://github.com/EHfive/ldacBT/releases/download/v${PV}/ldacBT-${PV}.tar.gz"
 
 LICENSE="Apache-2.0"
 SLOT="0"
@@ -24,6 +23,9 @@ S="${WORKDIR}/ldacBT"
 
 src_prepare() {
 	eapply_user
-	mycmakeargs=( -DLDAC_SOFT_FLOAT=OFF -DINSTALL_LIBDIR=/usr/$(get_libdir) )
+	mycmakeargs=(
+		-DLDAC_SOFT_FLOAT=OFF
+		-DINSTALL_LIBDIR=/usr/$(get_libdir)
+		)
 	cmake-utils_src_prepare
 }
