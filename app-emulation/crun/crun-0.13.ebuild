@@ -5,7 +5,7 @@ EAPI=7
 
 PYTHON_COMPAT=( python3_{6,7} )
 
-inherit python-any-r1
+inherit python-any-r1 autotools
 
 DESCRIPTION="A fast and low-memory footprint OCI Container Runtime fully written in C"
 HOMEPAGE="https://github.com/containers/crun"
@@ -35,6 +35,15 @@ BDEPEND="
 RESTRICT="test"
 
 DOCS=README.md
+
+PATCHES=(
+	"${FILESDIR}"/crun-0.13-fix-duplicate-json_common-2e318803a2c49521ea448e3ae010b1564a7e95ed.patch
+)
+
+src_prepare() {
+	default
+	eautoreconf
+}
 
 src_configure() {
 	econf \
