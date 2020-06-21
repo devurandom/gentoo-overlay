@@ -1,8 +1,8 @@
-#!/sbin/runscript
-# Copyright 1999-2012 Gentoo Foundation
+#!/sbin/openrc-run
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License, v2 or later
-# $Header: /var/cvsroot/gentoo-x86/net-mail/dovecot/files/dovecot.init-r4,v 1.1 2012/12/01 10:40:49 eras Exp $
 
+extra_commands="checkconfig"
 extra_started_commands="reload"
 
 depend() {
@@ -24,12 +24,16 @@ checkconfig() {
 		return 1
 	fi
 	if [ -x /usr/sbin/dovecot ]; then
-		DOVECOT_BASEDIR=$(/usr/sbin/dovecot -c ${DOVECOT_CONF} -a | grep '^base_dir = ' | sed 's/^base_dir = //')
+		DOVECOT_BASEDIR=$(/usr/sbin/dovecot -c ${DOVECOT_CONF} config -h base_dir)
+		if [ $? -ne 0 ]; then
+			eerror "Error parsing ${DOVECOT_CONF}"
+			return 1
+		fi
 	else
 		eerror "dovecot not executable"
 		return 1
 	fi
-	DOVECOT_BASEDIR=${DOVECOT_BASEDIR:-/var/run/dovecot}
+	DOVECOT_BASEDIR=${DOVECOT_BASEDIR:-/run/dovecot}
 	DOVECOT_PIDFILE=${DOVECOT_BASEDIR}/master.pid
 }
 

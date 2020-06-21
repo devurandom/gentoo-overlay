@@ -1,8 +1,12 @@
-# Copyright 1999-2018 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
-inherit eapi7-ver ssl-cert systemd user
+EAPI=7
+
+# do not add a ssl USE flag.  ssl is mandatory
+SSL_DEPS_SKIP=1
+inherit autotools ssl-cert systemd toolchain-funcs
+
 
 MY_P="${P/_/.}"
 major_minor="$(ver_cut 1-2)"
@@ -15,40 +19,42 @@ HOMEPAGE="https://www.dovecot.org/"
 
 SLOT="0/${PV}"
 LICENSE="LGPL-2.1 MIT"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~s390 ~sparc ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sparc ~x86"
 
 IUSE_DOVECOT_AUTH="bsdauth kerberos ldap lua nss pam +shadow sia vpopmail"
 IUSE_DOVECOT_COMPRESS="bzip2 lzma lz4 zlib"
 IUSE_DOVECOT_DB="mysql postgres sqlite"
 IUSE_DOVECOT_SSL="gnutls libressl +openssl"
-IUSE_DOVECOT_OTHER="boehm-gc caps debug doc hardened ipv6 lucene selinux sodium solr static-libs suid tcpd textcat"
+IUSE_DOVECOT_OTHER="argon2 boehm-gc caps debug doc hardened ipv6 lucene selinux sodium solr static-libs suid tcpd textcat unwind"
 
 IUSE="${IUSE_DOVECOT_AUTH} ${IUSE_DOVECOT_COMPRESS} ${IUSE_DOVECOT_DB} ${IUSE_DOVECOT_SSL} ${IUSE_DOVECOT_OTHER}"
 
 REQUIRED_USE="^^ ( gnutls libressl openssl )"
 
-DEPEND="boehm-gc? ( dev-libs/boehm-gc )
+DEPEND="argon2? ( dev-libs/libsodium )
+	boehm-gc? ( dev-libs/boehm-gc )
 	bzip2? ( app-arch/bzip2 )
 	caps? ( sys-libs/libcap )
 	gnutls? ( net-libs/gnutls )
 	kerberos? ( virtual/krb5 )
 	ldap? ( net-nds/openldap )
-	libressl? ( dev-libs/libressl )
+	libressl? ( dev-libs/libressl:0= )
 	lua? ( dev-lang/lua:* )
 	lucene? ( >=dev-cpp/clucene-2.3 )
 	lzma? ( app-arch/xz-utils )
 	lz4? ( app-arch/lz4 )
-	mysql? ( virtual/mysql )
+	mysql? ( dev-db/mysql-connector-c:0= )
 	nss? ( dev-libs/nss )
-	openssl? ( dev-libs/openssl:0 )
+	openssl? ( dev-libs/openssl:0= )
 	pam? ( sys-libs/pam )
 	postgres? ( dev-db/postgresql:* !dev-db/postgresql[ldap,threads] )
 	selinux? ( sec-policy/selinux-dovecot )
-	sodium? ( dev-libs/sodium )
 	solr? ( net-misc/curl dev-libs/expat )
 	sqlite? ( dev-db/sqlite:* )
+	suid? ( acct-group/mail )
 	tcpd? ( sys-apps/tcp-wrappers )
 	textcat? ( app-text/libexttextcat )
+	unwind? ( sys-libs/libunwind )
 	vpopmail? ( net-mail/vpopmail )
 	zlib? ( sys-libs/zlib )
 	virtual/libiconv
@@ -56,24 +62,21 @@ DEPEND="boehm-gc? ( dev-libs/boehm-gc )
 	dev-libs/libbsd"
 
 RDEPEND="${DEPEND}
+	acct-group/dovecot
+	acct-group/dovenull
+	acct-user/dovecot
+	acct-user/dovenull
 	net-mail/mailbase"
 
 S=${WORKDIR}/${MY_P}
 
 DOCS="AUTHORS NEWS README TODO"
 
-pkg_setup() {
-	# default internal user
-	enewgroup dovecot 97
-	enewuser dovecot 97 -1 /dev/null dovecot
-
-	# default login user
-	enewuser dovenull -1 -1 /dev/null
-
-	# add "mail" group for suid'ing. Better security isolation.
-	if use suid; then
-		enewgroup mail
-	fi
+src_prepare() {
+	default
+	# bug 657108
+	elibtoolize
+	#eautoreconf
 }
 
 src_configure() {
@@ -92,17 +95,16 @@ src_configure() {
 	# turn valgrind tests off. Bug #340791
 	# Enable all storages: https://www.mail-archive.com/dovecot@dovecot.org/msg69576.html
 	VALGRIND=no econf \
-		--localstatedir="${EPREFIX}/var" \
-		--runstatedir="${EPREFIX}/run" \
 		--with-icu \
 		--with-libbsd \
 		--with-moduledir="${EPREFIX}/usr/$(get_libdir)/dovecot" \
-                --with-rundir="${EPREFIX}/run/dovecot" \
+		--with-rundir="${EPREFIX}/run/dovecot" \
 		--with-statedir="${EPREFIX}/var/lib/dovecot" \
 		--without-stemmer \
 		--with-storages="cydir imapc maildir mbox mdbox pop3c sdbox" \
 		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
 		--disable-rpath \
+		$( use_with argon2 sodium ) \
 		$( use_with boehm-gc gc ) \
 		$( use_with bsdauth ) \
 		$( use_with bzip2 bzlib ) \
@@ -121,11 +123,11 @@ src_configure() {
 		$( use_with postgres pgsql ) \
 		$( use_with shadow ) \
 		$( use_with sia ) \
-		$( use_with sodium ) \
 		$( use_with solr ) \
 		$( use_with sqlite ) \
 		$( use_with tcpd libwrap ) \
 		$( use_with textcat ) \
+		$( use_with unwind libunwind ) \
 		$( use_with vpopmail ) \
 		$( use_with zlib ) \
 		$( use_enable debug asserts ) \
@@ -142,11 +144,11 @@ src_install () {
 	# better:
 	if use suid;then
 		einfo "Changing perms to allow deliver to be suided"
-		fowners root:mail "${EPREFIX}/usr/libexec/dovecot/dovecot-lda"
-		fperms 4750 "${EPREFIX}/usr/libexec/dovecot/dovecot-lda"
+		fowners root:mail /usr/libexec/dovecot/dovecot-lda
+		fperms 4750 /usr/libexec/dovecot/dovecot-lda
 	fi
 
-	newinitd "${FILESDIR}"/dovecot.init-r4 dovecot
+	newinitd "${FILESDIR}"/dovecot.init-r6 dovecot
 
 	rm -rf "${ED}"/usr/share/doc/dovecot
 
@@ -168,15 +170,7 @@ src_install () {
 	doins doc/example-config/*.{conf,ext}
 	insinto /etc/dovecot/conf.d
 	doins doc/example-config/conf.d/*.{conf,ext}
-	fperms 0600 "${EPREFIX}"/etc/dovecot/dovecot-{ldap,sql}.conf.ext
-
-	# Update ssl cert locations
-	sed -i -e 's:^#ssl = yes:ssl = yes:' "${confd}/10-ssl.conf" \
-		|| die "ssl conf failed"
-	sed -i -e 's:^ssl_cert =.*:ssl_cert = </etc/ssl/dovecot/server.pem:' \
-		-e 's:^ssl_key =.*:ssl_key = </etc/ssl/dovecot/server.key:' \
-		"${confd}/10-ssl.conf" \
-		|| die "failed to update SSL settings in 10-ssl.conf"
+	fperms 0600 /etc/dovecot/dovecot-{ldap,sql}.conf.ext
 
 	# We're using pam files (imap and pop3) provided by mailbase
 	if use pam; then
@@ -193,6 +187,14 @@ src_install () {
 		sed -i -e 's/^#listen = \*, ::/listen = \*/g' "${conf}" \
 			|| die "failed to update listen settings in dovecot.conf"
 	fi
+
+	# Update ssl cert locations
+	sed -i -e 's:^#ssl = yes:ssl = yes:' "${confd}/10-ssl.conf" \
+		|| die "ssl conf failed"
+	sed -i -e 's:^ssl_cert =.*:ssl_cert = </etc/ssl/dovecot/server.pem:' \
+		-e 's:^ssl_key =.*:ssl_key = </etc/ssl/dovecot/server.key:' \
+		"${confd}/10-ssl.conf" \
+		|| die "failed to update SSL settings in 10-ssl.conf"
 
 	# Install SQL configuration
 	if use mysql || use postgres; then
