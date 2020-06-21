@@ -25,7 +25,7 @@ IUSE_DOVECOT_AUTH="bsdauth kerberos ldap lua nss pam +shadow sia vpopmail"
 IUSE_DOVECOT_COMPRESS="bzip2 lzma lz4 zlib"
 IUSE_DOVECOT_DB="mysql postgres sqlite"
 IUSE_DOVECOT_SSL="gnutls libressl +openssl"
-IUSE_DOVECOT_OTHER="argon2 boehm-gc caps debug doc hardened ipv6 lucene selinux sodium solr static-libs suid tcpd textcat unwind"
+IUSE_DOVECOT_OTHER="argon2 caps debug doc ipv6 lucene selinux sodium solr static-libs suid tcpd textcat unwind"
 
 IUSE="${IUSE_DOVECOT_AUTH} ${IUSE_DOVECOT_COMPRESS} ${IUSE_DOVECOT_DB} ${IUSE_DOVECOT_SSL} ${IUSE_DOVECOT_OTHER}"
 
@@ -101,16 +101,13 @@ src_configure() {
 		--with-rundir="${EPREFIX}/run/dovecot" \
 		--with-statedir="${EPREFIX}/var/lib/dovecot" \
 		--without-stemmer \
-		--with-storages="cydir imapc maildir mbox mdbox pop3c sdbox" \
 		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
 		--disable-rpath \
 		$( use_with argon2 sodium ) \
-		$( use_with boehm-gc gc ) \
 		$( use_with bsdauth ) \
 		$( use_with bzip2 bzlib ) \
 		$( use_with caps libcap ) \
 		$( use_with doc docs ) \
-		$( use_with hardened hardening ) \
 		$( use_with kerberos gssapi ) \
 		$( use_with ldap ) \
 		$( use_with lua ) \
