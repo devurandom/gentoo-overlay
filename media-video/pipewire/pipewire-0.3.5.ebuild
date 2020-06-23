@@ -17,8 +17,8 @@ DESCRIPTION="Multimedia processing graphs"
 HOMEPAGE="https://pipewire.org/"
 
 LICENSE="LGPL-2.1+"
-SLOT="0/0.2"
-IUSE="bluetooth doc ffmpeg gstreamer sdl systemd vaapi X"
+SLOT="0/0.3"
+IUSE="+alsa bluetooth doc ffmpeg gstreamer jack pulseaudio sdl systemd vaapi +vulkan X"
 
 BDEPEND="
 	app-doc/xmltoman
@@ -65,9 +65,17 @@ src_prepare() {
 src_configure() {
 	local emesonargs=(
 		-Dman=true
+		-Dspa-plugins=true
+		$(meson_use alsa)
+		$(meson_use alsa pipewire-alsa)
 		$(meson_use doc docs)
-		$(meson_feature gstreamer)
+		$(meson_use gstreamer)
+		$(meson_use jack)
+		$(meson_use jack pipewire-jack)
+		# Experimental, and double meaning (input, output)!
+		#$(meson_use pulseaudio pipewire-pulseaudio)
 		$(meson_use systemd)
+		$(meson_use vulkan)
 	)
 	meson_src_configure
 }
