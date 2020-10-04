@@ -414,6 +414,10 @@ multilib_src_configure() {
 		-DBUILD_opencv_features2d=$(usex features2d ON OFF)
 	)
 
+	if use eigen ; then
+		GLOBALCMAKEARGS+=("-DEIGEN_INCLUDE_PATH=$(pkg-config --cflags-only-I eigen3 | sed 's/^-I//')")
+	fi
+
 	# ===================================================
 	# OpenCV Contrib Modules
 	# ===================================================
