@@ -459,6 +459,10 @@ multilib_src_configure() {
 		-DCPU_DISPATCH=
 	)
 
+	if use eigen ; then
+		GLOBALCMAKEARGS+=("-DEIGEN_INCLUDE_PATH=$(pkg-config --cflags-only-I eigen3 | sed 's/^-I//')")
+	fi
+
 	# ===================================================
 	# OpenCV Contrib Modules
 	# ===================================================
