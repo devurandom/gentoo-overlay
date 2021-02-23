@@ -7,8 +7,6 @@ JAVA_PKG_IUSE="test"
 
 inherit java-pkg-2 java-ant-2
 
-EGIT_REF="76b87a6"
-
 DESCRIPTION="General-purpose programming language with an emphasis on functional programming"
 HOMEPAGE="https://clojure.org/"
 SRC_URI="https://github.com/clojure/${PN}/archive/${P}.tar.gz"
@@ -31,7 +29,7 @@ DEPEND="
 	${CDEPEND}
 	>=virtual/jdk-1.8"
 
-S="${WORKDIR}/clojure-${PN}-${EGIT_REF}"
+S="${WORKDIR}/clojure-${P}"
 
 DOCS=( changes.md CONTRIBUTING.md readme.txt )
 
