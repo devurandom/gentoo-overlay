@@ -17,8 +17,8 @@ KEYWORDS="~amd64 ~x86 ~x86-linux"
 RESTRICT="!test? ( test )" # broken due to file not found issue and more
 
 CDEPEND="
-	dev-java/spec-alpha:0.2
-	dev-java/core-specs-alpha:0.2
+	>=dev-java/spec-alpha-0.2.194:0.2
+	>=dev-java/core-specs-alpha-0.2.56:0.2
 	dev-java/ant-core:0"
 
 RDEPEND="
