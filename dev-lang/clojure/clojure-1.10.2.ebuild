@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -9,7 +9,7 @@ inherit java-pkg-2
 
 DESCRIPTION="General-purpose programming language with an emphasis on functional programming"
 HOMEPAGE="https://clojure.org/"
-SRC_URI="https://github.com/clojure/clojure/tarball/${P} -> ${P}.tar.gz"
+SRC_URI="https://github.com/clojure/${PN}/archive/${P}.tar.gz"
 
 LICENSE="EPL-1.0 Apache-2.0 BSD"
 SLOT="$(ver_cut 1-2)"
@@ -25,7 +25,7 @@ DEPEND="
 	${CDEPEND}
 	>=virtual/jdk-1.8"
 
-S="${WORKDIR}/clojure-clojure-76b87a6"
+S="${WORKDIR}/clojure-${P}"
 
 DOCS=( changes.md CONTRIBUTING.md readme.txt )
 
@@ -400,12 +400,12 @@ EMAVEN_ARTIFACTS=(
 	org.apache.velocity:velocity-tools:jar:2.0
 	org.apache.xbean:xbean:pom:3.4
 	org.apache.xbean:xbean-reflect:jar:3.4
-	org.clojure:core.specs.alpha:jar:0.2.44
+	org.clojure:core.specs.alpha:jar:0.2.56
 	org.clojure:data.generators:jar:0.1.2
 	org.clojure:pom.contrib:pom:0.0.26
 	org.clojure:pom.contrib:pom:0.1.2
-	org.clojure:pom.contrib:pom:0.2.2
-	org.clojure:spec.alpha:jar:0.2.176
+	org.clojure:pom.contrib:pom:0.3.0
+	org.clojure:spec.alpha:jar:0.2.194
 	org.clojure:test.check:jar:0.9.0
 	org.clojure:test.generative:jar:0.5.2
 	org.clojure:tools.namespace:jar:0.2.10
