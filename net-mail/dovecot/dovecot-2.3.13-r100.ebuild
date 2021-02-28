@@ -1,12 +1,13 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
+LUA_COMPAT=( lua5-{1..3} )
+
 # do not add a ssl USE flag.  ssl is mandatory
 SSL_DEPS_SKIP=1
-inherit autotools ssl-cert systemd toolchain-funcs
-
+inherit autotools lua-single ssl-cert systemd toolchain-funcs
 
 MY_P="${P/_/.}"
 major_minor="$(ver_cut 1-2)"
@@ -19,27 +20,27 @@ HOMEPAGE="https://www.dovecot.org/"
 
 SLOT="0/${PV}"
 LICENSE="LGPL-2.1 MIT"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sparc ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sparc ~x86"
 
 IUSE_DOVECOT_AUTH="bsdauth kerberos ldap lua nss pam +shadow sia vpopmail"
-IUSE_DOVECOT_COMPRESS="bzip2 lzma lz4 zlib"
+IUSE_DOVECOT_COMPRESS="bzip2 lzma lz4 zlib zstd"
 IUSE_DOVECOT_DB="mysql postgres sqlite"
 IUSE_DOVECOT_SSL="gnutls libressl +openssl"
-IUSE_DOVECOT_OTHER="argon2 caps debug doc ipv6 lucene selinux sodium solr static-libs suid tcpd textcat unwind"
+IUSE_DOVECOT_OTHER="argon2 caps debug doc ipv6 lucene rpc selinux sodium solr static-libs suid tcpd textcat unwind"
 
 IUSE="${IUSE_DOVECOT_AUTH} ${IUSE_DOVECOT_COMPRESS} ${IUSE_DOVECOT_DB} ${IUSE_DOVECOT_SSL} ${IUSE_DOVECOT_OTHER}"
 
-REQUIRED_USE="^^ ( gnutls libressl openssl )"
+REQUIRED_USE="^^ ( gnutls libressl openssl )
+	lua? ( ${LUA_REQUIRED_USE} )"
 
 DEPEND="argon2? ( dev-libs/libsodium )
-	boehm-gc? ( dev-libs/boehm-gc )
 	bzip2? ( app-arch/bzip2 )
 	caps? ( sys-libs/libcap )
 	gnutls? ( net-libs/gnutls )
 	kerberos? ( virtual/krb5 )
 	ldap? ( net-nds/openldap )
 	libressl? ( dev-libs/libressl:0= )
-	lua? ( dev-lang/lua:* )
+	lua? ( ${LUA_DEPS} )
 	lucene? ( >=dev-cpp/clucene-2.3 )
 	lzma? ( app-arch/xz-utils )
 	lz4? ( app-arch/lz4 )
@@ -48,6 +49,7 @@ DEPEND="argon2? ( dev-libs/libsodium )
 	openssl? ( dev-libs/openssl:0= )
 	pam? ( sys-libs/pam )
 	postgres? ( dev-db/postgresql:* !dev-db/postgresql[ldap,threads] )
+	rpc? ( net-libs/libtirpc net-libs/rpcsvc-proto )
 	selinux? ( sec-policy/selinux-dovecot )
 	solr? ( net-misc/curl dev-libs/expat )
 	sqlite? ( dev-db/sqlite:* )
@@ -57,6 +59,7 @@ DEPEND="argon2? ( dev-libs/libsodium )
 	unwind? ( sys-libs/libunwind )
 	vpopmail? ( net-mail/vpopmail )
 	zlib? ( sys-libs/zlib )
+	zstd? ( app-arch/zstd )
 	virtual/libiconv
 	dev-libs/icu:=
 	dev-libs/libbsd"
@@ -72,11 +75,22 @@ S=${WORKDIR}/${MY_P}
 
 DOCS="AUTHORS NEWS README TODO"
 
+PATCHES=(
+	"${FILESDIR}/${PN}"-autoconf-lua-version.patch
+	"${FILESDIR}/${PN}"-unwind-generic.patch
+	"${FILESDIR}/${PN}"-socket-name-too-long.patch
+	"${FILESDIR}/${P}"-32-bit-tests-1.patch
+	"${FILESDIR}/${P}"-32-bit-tests-2.patch
+)
+
+pkg_setup() {
+	use lua && lua-single_pkg_setup
+}
+
 src_prepare() {
 	default
 	# bug 657108
-	elibtoolize
-	#eautoreconf
+	eautoreconf
 }
 
 src_configure() {
@@ -88,13 +102,15 @@ src_configure() {
 
 	if use gnutls; then
 		conf="${conf} --with-ssl=gnutls"
+	elif use libressl; then
+		conf="${conf} --with-ssl=libressl"
 	else
 		conf="${conf} --with-ssl=openssl"
 	fi
 
 	# turn valgrind tests off. Bug #340791
 	# Enable all storages: https://www.mail-archive.com/dovecot@dovecot.org/msg69576.html
-	VALGRIND=no econf \
+	VALGRIND=no LUAPC="${ELUA}" econf \
 		--with-icu \
 		--with-libbsd \
 		--with-moduledir="${EPREFIX}/usr/$(get_libdir)/dovecot" \
@@ -127,13 +143,14 @@ src_configure() {
 		$( use_with unwind libunwind ) \
 		$( use_with vpopmail ) \
 		$( use_with zlib ) \
+		$( use_with zstd ) \
 		$( use_enable debug asserts ) \
 		$( use_enable debug devel-checks ) \
 		$( use_enable static-libs static ) \
 		${conf}
 }
 
-src_install () {
+src_install() {
 	default
 
 	# insecure:
