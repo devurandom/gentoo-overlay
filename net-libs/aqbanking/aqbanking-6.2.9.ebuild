@@ -7,7 +7,7 @@ MY_P="${P/_beta/beta}"
 
 DESCRIPTION="Generic Online Banking Interface"
 HOMEPAGE="https://www.aquamaniac.de/sites/aqbanking/index.php"
-SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/342/${MY_P}.tar.gz"
+SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/366/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -22,7 +22,7 @@ BDEPEND="
 DEPEND="
 	app-misc/ktoblzcheck
 	dev-libs/gmp:0=
-	>=sys-libs/gwenhywfar-5.4.1:=
+	>=sys-libs/gwenhywfar-5.5.1:=
 	virtual/libintl
 	ebics? ( dev-libs/xmlsec[gcrypt] )
 	ofx? ( >=dev-libs/libofx-0.9.5:= )
