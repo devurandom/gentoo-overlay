@@ -56,8 +56,6 @@ EMAVEN_ARTIFACTS=(
 	biz.aQute.bnd:bndlib:jar:2.3.0
 	biz.aQute.bnd:bndlib:pom:2.1.0
 	biz.aQute.bnd:bndlib:pom:2.3.0
-	biz.aQute:bndlib:jar:1.50.0
-	biz.aQute:bndlib:pom:1.50.0
 	biz.aQute.bnd:parent:pom:2.1.0
 	biz.aQute.bnd:parent:pom:2.3.0
 	bouncycastle:bcpg-jdk15:pom:140
@@ -87,14 +85,14 @@ EMAVEN_ARTIFACTS=(
 	com.amazonaws:aws-java-sdk-s3:pom:1.11.305
 	com.amazonaws:jmespath-java:jar:1.11.305
 	com.amazonaws:jmespath-java:pom:1.11.305
-	com.cognitect.aws:api:jar:0.8.484
-	com.cognitect.aws:api:pom:0.8.484
-	com.cognitect.aws:endpoints:jar:1.1.11.911
-	com.cognitect.aws:endpoints:pom:1.1.11.911
-	com.cognitect.aws:s3:jar:810.2.801.0
-	com.cognitect.aws:s3:pom:810.2.801.0
-	com.cognitect:http-client:jar:0.1.104
-	com.cognitect:http-client:pom:0.1.104
+	com.cognitect.aws:api:jar:0.8.505
+	com.cognitect.aws:api:pom:0.8.505
+	com.cognitect.aws:endpoints:jar:1.1.11.969
+	com.cognitect.aws:endpoints:pom:1.1.11.969
+	com.cognitect.aws:s3:jar:811.2.858.0
+	com.cognitect.aws:s3:pom:811.2.858.0
+	com.cognitect:http-client:jar:0.1.106
+	com.cognitect:http-client:pom:0.1.106
 	com.fasterxml.jackson.core:jackson-annotations:jar:2.1.1
 	com.fasterxml.jackson.core:jackson-annotations:jar:2.3.1
 	com.fasterxml.jackson.core:jackson-annotations:jar:2.6.0
@@ -143,8 +141,6 @@ EMAVEN_ARTIFACTS=(
 	com.google.code.findbugs:jsr305:pom:3.0.2
 	com.google.code.google-collections:google-collect:jar:snapshot-20080530
 	com.google.code.google-collections:google-collect:pom:snapshot-20080530
-	com.googlecode.javaewah:JavaEWAH:jar:1.1.6
-	com.googlecode.javaewah:JavaEWAH:pom:1.1.6
 	com.google.collections:google-collections:jar:1.0
 	com.google.collections:google-collections:pom:1.0
 	com.google.errorprone:error_prone_annotations:jar:2.1.3
@@ -173,30 +169,10 @@ EMAVEN_ARTIFACTS=(
 	com.google.protobuf:protobuf-java:pom:2.4.1
 	com.intellij:annotations:jar:9.0.4
 	com.intellij:annotations:pom:9.0.4
-	com.jcraft:jsch.agentproxy.connector-factory:jar:0.0.9
-	com.jcraft:jsch.agentproxy.connector-factory:pom:0.0.9
-	com.jcraft:jsch.agentproxy.core:jar:0.0.9
-	com.jcraft:jsch.agentproxy.core:pom:0.0.9
-	com.jcraft:jsch.agentproxy.jsch:jar:0.0.9
-	com.jcraft:jsch.agentproxy.jsch:pom:0.0.9
-	com.jcraft:jsch.agentproxy.pageant:jar:0.0.9
-	com.jcraft:jsch.agentproxy.pageant:pom:0.0.9
-	com.jcraft:jsch.agentproxy:pom:0.0.9
-	com.jcraft:jsch.agentproxy.sshagent:jar:0.0.9
-	com.jcraft:jsch.agentproxy.sshagent:pom:0.0.9
-	com.jcraft:jsch.agentproxy.usocket-jna:jar:0.0.9
-	com.jcraft:jsch.agentproxy.usocket-jna:pom:0.0.9
-	com.jcraft:jsch.agentproxy.usocket-nc:jar:0.0.9
-	com.jcraft:jsch.agentproxy.usocket-nc:pom:0.0.9
 	com.jcraft:jsch:jar:0.1.27
 	com.jcraft:jsch:jar:0.1.44-1
-	com.jcraft:jsch:jar:0.1.54
 	com.jcraft:jsch:pom:0.1.27
 	com.jcraft:jsch:pom:0.1.44-1
-	com.jcraft:jsch:pom:0.1.49
-	com.jcraft:jsch:pom:0.1.54
-	com.jcraft:jzlib:jar:1.1.3
-	com.jcraft:jzlib:pom:1.1.3
 	commons-beanutils:commons-beanutils-core:jar:1.8.3
 	commons-beanutils:commons-beanutils-core:pom:1.8.3
 	commons-beanutils:commons-beanutils:jar:1.7.0
@@ -219,7 +195,6 @@ EMAVEN_ARTIFACTS=(
 	commons-codec:commons-codec:pom:1.2
 	commons-codec:commons-codec:pom:1.3
 	commons-codec:commons-codec:pom:1.6
-	commons-codec:commons-codec:pom:1.9
 	commons-collections:commons-collections:jar:3.2
 	commons-collections:commons-collections:jar:3.2.1
 	commons-collections:commons-collections:jar:3.2.2
@@ -283,10 +258,8 @@ EMAVEN_ARTIFACTS=(
 	com.sun.jersey:jersey-project:pom:1.17.1
 	com.sun.xml.bind:jaxb-impl:jar:2.2.3-1
 	com.sun.xml.bind:jaxb-impl:pom:2.2.3-1
-	com.theoryinpractise:clojure-maven-plugin:jar:1.3.13
 	com.theoryinpractise:clojure-maven-plugin:jar:1.3.7
 	com.theoryinpractise:clojure-maven-plugin:jar:1.7.1
-	com.theoryinpractise:clojure-maven-plugin:pom:1.3.13
 	com.theoryinpractise:clojure-maven-plugin:pom:1.3.7
 	com.theoryinpractise:clojure-maven-plugin:pom:1.7.1
 	com.thoughtworks.xstream:xstream:jar:1.4.5
@@ -364,10 +337,6 @@ EMAVEN_ARTIFACTS=(
 	logkit:logkit:pom:1.0.1
 	nekohtml:nekohtml:pom:1.9.6.2
 	nekohtml:xercesMinimal:pom:1.9.6.2
-	net.java.dev.jna:jna:jar:4.1.0
-	net.java.dev.jna:jna-platform:jar:4.1.0
-	net.java.dev.jna:jna-platform:pom:4.1.0
-	net.java.dev.jna:jna:pom:4.1.0
 	net.java:jvnet-parent:pom:1
 	org.apache:apache:pom:10
 	org.apache:apache:pom:11
@@ -424,12 +393,10 @@ EMAVEN_ARTIFACTS=(
 	org.apache.felix:felix-parent:pom:2.1
 	org.apache.felix:felix-parent:pom:3
 	org.apache.felix:felix-parent:pom:4
-	org.apache.felix:maven-bundle-plugin:jar:2.3.7
 	org.apache.felix:maven-bundle-plugin:jar:2.4.0
 	org.apache.felix:maven-bundle-plugin:jar:2.5.0
 	org.apache.felix:maven-bundle-plugin:jar:3.0.1
 	org.apache.felix:maven-bundle-plugin:jar:3.5.1
-	org.apache.felix:maven-bundle-plugin:pom:2.3.7
 	org.apache.felix:maven-bundle-plugin:pom:2.4.0
 	org.apache.felix:maven-bundle-plugin:pom:2.5.0
 	org.apache.felix:maven-bundle-plugin:pom:3.0.1
@@ -453,7 +420,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.httpcomponents:httpclient:pom:4.2.6
 	org.apache.httpcomponents:httpclient:pom:4.3.5
 	org.apache.httpcomponents:httpclient:pom:4.5.12
-	org.apache.httpcomponents:httpclient:pom:4.5.2
 	org.apache.httpcomponents:httpclient:pom:4.5.5
 	org.apache.httpcomponents:httpclient:pom:4.5.8
 	org.apache.httpcomponents:httpcomponents-client:pom:4.0.2
@@ -461,7 +427,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.httpcomponents:httpcomponents-client:pom:4.2.6
 	org.apache.httpcomponents:httpcomponents-client:pom:4.3.5
 	org.apache.httpcomponents:httpcomponents-client:pom:4.5.12
-	org.apache.httpcomponents:httpcomponents-client:pom:4.5.2
 	org.apache.httpcomponents:httpcomponents-client:pom:4.5.5
 	org.apache.httpcomponents:httpcomponents-client:pom:4.5.8
 	org.apache.httpcomponents:httpcomponents-core:pom:4.0.1
@@ -470,7 +435,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.httpcomponents:httpcomponents-core:pom:4.3.2
 	org.apache.httpcomponents:httpcomponents-core:pom:4.4.11
 	org.apache.httpcomponents:httpcomponents-core:pom:4.4.13
-	org.apache.httpcomponents:httpcomponents-core:pom:4.4.4
 	org.apache.httpcomponents:httpcomponents-core:pom:4.4.9
 	org.apache.httpcomponents:httpcomponents-parent:pom:10
 	org.apache.httpcomponents:httpcomponents-parent:pom:11
@@ -488,7 +452,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.httpcomponents:httpcore:pom:4.3.2
 	org.apache.httpcomponents:httpcore:pom:4.4.11
 	org.apache.httpcomponents:httpcore:pom:4.4.13
-	org.apache.httpcomponents:httpcore:pom:4.4.4
 	org.apache.httpcomponents:httpcore:pom:4.4.9
 	org.apache.httpcomponents:project:pom:4.0
 	org.apache.httpcomponents:project:pom:4.1
@@ -595,11 +558,9 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-aether-provider:pom:3.0
 	org.apache.maven:maven-aether-provider:pom:3.1.0
 	org.apache.maven:maven-aether-provider:pom:3.2.1
-	org.apache.maven:maven-archiver:jar:2.4.1
 	org.apache.maven:maven-archiver:jar:2.4.2
 	org.apache.maven:maven-archiver:jar:2.5
 	org.apache.maven:maven-archiver:jar:2.6
-	org.apache.maven:maven-archiver:pom:2.4.1
 	org.apache.maven:maven-archiver:pom:2.4.2
 	org.apache.maven:maven-archiver:pom:2.5
 	org.apache.maven:maven-archiver:pom:2.6
@@ -618,14 +579,12 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-artifact-manager:jar:2.2.1
 	org.apache.maven:maven-artifact-manager:pom:2.0.6
 	org.apache.maven:maven-artifact-manager:pom:2.0.7
-	org.apache.maven:maven-artifact-manager:pom:2.0.8
 	org.apache.maven:maven-artifact-manager:pom:2.0.9
 	org.apache.maven:maven-artifact-manager:pom:2.2.0
 	org.apache.maven:maven-artifact-manager:pom:2.2.1
 	org.apache.maven:maven-artifact:pom:2.0.5
 	org.apache.maven:maven-artifact:pom:2.0.6
 	org.apache.maven:maven-artifact:pom:2.0.7
-	org.apache.maven:maven-artifact:pom:2.0.8
 	org.apache.maven:maven-artifact:pom:2.0.9
 	org.apache.maven:maven-artifact:pom:2.2.0
 	org.apache.maven:maven-artifact:pom:2.2.1
@@ -691,7 +650,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-model:pom:2.0.5
 	org.apache.maven:maven-model:pom:2.0.6
 	org.apache.maven:maven-model:pom:2.0.7
-	org.apache.maven:maven-model:pom:2.0.8
 	org.apache.maven:maven-model:pom:2.0.9
 	org.apache.maven:maven-model:pom:2.2.0
 	org.apache.maven:maven-model:pom:2.2.1
@@ -780,14 +738,12 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-plugin-registry:jar:2.2.1
 	org.apache.maven:maven-plugin-registry:pom:2.0.6
 	org.apache.maven:maven-plugin-registry:pom:2.0.7
-	org.apache.maven:maven-plugin-registry:pom:2.0.8
 	org.apache.maven:maven-plugin-registry:pom:2.0.9
 	org.apache.maven:maven-plugin-registry:pom:2.2.0
 	org.apache.maven:maven-plugin-registry:pom:2.2.1
 	org.apache.maven:maven:pom:2.0.5
 	org.apache.maven:maven:pom:2.0.6
 	org.apache.maven:maven:pom:2.0.7
-	org.apache.maven:maven:pom:2.0.8
 	org.apache.maven:maven:pom:2.0.9
 	org.apache.maven:maven:pom:2.2.0
 	org.apache.maven:maven:pom:2.2.1
@@ -804,7 +760,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-profile:jar:2.2.1
 	org.apache.maven:maven-profile:pom:2.0.6
 	org.apache.maven:maven-profile:pom:2.0.7
-	org.apache.maven:maven-profile:pom:2.0.8
 	org.apache.maven:maven-profile:pom:2.0.9
 	org.apache.maven:maven-profile:pom:2.2.0
 	org.apache.maven:maven-profile:pom:2.2.1
@@ -816,7 +771,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-project:jar:2.2.1
 	org.apache.maven:maven-project:pom:2.0.6
 	org.apache.maven:maven-project:pom:2.0.7
-	org.apache.maven:maven-project:pom:2.0.8
 	org.apache.maven:maven-project:pom:2.0.9
 	org.apache.maven:maven-project:pom:2.2.0
 	org.apache.maven:maven-project:pom:2.2.1
@@ -833,7 +787,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-repository-metadata:jar:3.6.3
 	org.apache.maven:maven-repository-metadata:pom:2.0.6
 	org.apache.maven:maven-repository-metadata:pom:2.0.7
-	org.apache.maven:maven-repository-metadata:pom:2.0.8
 	org.apache.maven:maven-repository-metadata:pom:2.0.9
 	org.apache.maven:maven-repository-metadata:pom:2.2.0
 	org.apache.maven:maven-repository-metadata:pom:2.2.1
@@ -862,7 +815,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven:maven-settings:jar:3.6.3
 	org.apache.maven:maven-settings:pom:2.0.6
 	org.apache.maven:maven-settings:pom:2.0.7
-	org.apache.maven:maven-settings:pom:2.0.8
 	org.apache.maven:maven-settings:pom:2.0.9
 	org.apache.maven:maven-settings:pom:2.2.0
 	org.apache.maven:maven-settings:pom:2.2.1
@@ -925,13 +877,10 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven.plugins:maven-site-plugin:pom:3.3
 	org.apache.maven.plugins:maven-surefire-plugin:jar:2.12.4
 	org.apache.maven.plugins:maven-surefire-plugin:pom:2.12.4
-	org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.0
 	org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.1
 	org.apache.maven.plugin-tools:maven-plugin-annotations:jar:3.2
-	org.apache.maven.plugin-tools:maven-plugin-annotations:pom:3.0
 	org.apache.maven.plugin-tools:maven-plugin-annotations:pom:3.1
 	org.apache.maven.plugin-tools:maven-plugin-annotations:pom:3.2
-	org.apache.maven.plugin-tools:maven-plugin-tools:pom:3.0
 	org.apache.maven.plugin-tools:maven-plugin-tools:pom:3.1
 	org.apache.maven.plugin-tools:maven-plugin-tools:pom:3.2
 	org.apache.maven.reporting:maven-reporting-api:jar:2.0.6
@@ -989,10 +938,8 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven.shared:maven-common-artifact-filters:pom:3.1.0
 	org.apache.maven.shared:maven-dependency-analyzer:jar:1.11.1
 	org.apache.maven.shared:maven-dependency-analyzer:pom:1.11.1
-	org.apache.maven.shared:maven-dependency-tree:jar:1.2
 	org.apache.maven.shared:maven-dependency-tree:jar:2.1
 	org.apache.maven.shared:maven-dependency-tree:jar:3.0.1
-	org.apache.maven.shared:maven-dependency-tree:pom:1.2
 	org.apache.maven.shared:maven-dependency-tree:pom:2.1
 	org.apache.maven.shared:maven-dependency-tree:pom:3.0.1
 	org.apache.maven.shared:maven-filtering:jar:3.2.0
@@ -1010,7 +957,6 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven.shared:maven-shared-components:pom:31
 	org.apache.maven.shared:maven-shared-components:pom:33
 	org.apache.maven.shared:maven-shared-components:pom:34
-	org.apache.maven.shared:maven-shared-components:pom:9
 	org.apache.maven.shared:maven-shared-incremental:jar:1.1
 	org.apache.maven.shared:maven-shared-incremental:pom:1.1
 	org.apache.maven.shared:maven-shared-io:jar:3.0.0
@@ -1054,14 +1000,12 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven.wagon:wagon:pom:2.10
 	org.apache.maven.wagon:wagon:pom:2.7
 	org.apache.maven.wagon:wagon-provider-api:jar:1.0
-	org.apache.maven.wagon:wagon-provider-api:jar:1.0-alpha-5
 	org.apache.maven.wagon:wagon-provider-api:jar:1.0-beta-2
 	org.apache.maven.wagon:wagon-provider-api:jar:1.0-beta-4
 	org.apache.maven.wagon:wagon-provider-api:jar:2.0
 	org.apache.maven.wagon:wagon-provider-api:jar:2.10
 	org.apache.maven.wagon:wagon-provider-api:jar:2.7
 	org.apache.maven.wagon:wagon-provider-api:pom:1.0
-	org.apache.maven.wagon:wagon-provider-api:pom:1.0-alpha-5
 	org.apache.maven.wagon:wagon-provider-api:pom:1.0-beta-2
 	org.apache.maven.wagon:wagon-provider-api:pom:1.0-beta-4
 	org.apache.maven.wagon:wagon-provider-api:pom:1.0-beta-6
@@ -1076,9 +1020,7 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven.wagon:wagon-ssh-common:jar:2.0
 	org.apache.maven.wagon:wagon-ssh-common:pom:1.0-beta-2
 	org.apache.maven.wagon:wagon-ssh-common:pom:2.0
-	org.apache.maven.wagon:wagon-ssh-external:jar:1.0-alpha-5
 	org.apache.maven.wagon:wagon-ssh-external:jar:1.0-beta-2
-	org.apache.maven.wagon:wagon-ssh-external:pom:1.0-alpha-5
 	org.apache.maven.wagon:wagon-ssh-external:pom:1.0-beta-2
 	org.apache.maven.wagon:wagon-ssh:jar:1.0-beta-2
 	org.apache.maven.wagon:wagon-ssh:jar:2.0
@@ -1112,9 +1054,9 @@ EMAVEN_ARTIFACTS=(
 	org.apache.xbean:xbean-reflect:pom:3.7
 	org.checkerframework:checker-compat-qual:jar:2.0.0
 	org.checkerframework:checker-compat-qual:pom:2.0.0
-	org.clojure:clojure:jar:1.10.2
+	org.clojure:clojure:jar:1.10.3
 	org.clojure:clojure:pom:1.10.1
-	org.clojure:clojure:pom:1.10.2
+	org.clojure:clojure:pom:1.10.3
 	org.clojure:clojure:pom:1.3.0
 	org.clojure:clojure:pom:1.4.0
 	org.clojure:clojure:pom:1.5.1
@@ -1122,15 +1064,12 @@ EMAVEN_ARTIFACTS=(
 	org.clojure:clojure:pom:1.7.0
 	org.clojure:clojure:pom:1.8.0
 	org.clojure:clojure:pom:1.9.0
-	org.clojure:core.async:jar:1.2.603
-	org.clojure:core.async:pom:0.3.442
-	org.clojure:core.async:pom:1.2.603
-	org.clojure:core.cache:jar:0.8.2
-	org.clojure:core.cache:pom:0.6.5
-	org.clojure:core.cache:pom:0.8.2
-	org.clojure:core.memoize:jar:0.8.2
-	org.clojure:core.memoize:pom:0.5.9
-	org.clojure:core.memoize:pom:0.8.2
+	org.clojure:core.async:jar:1.3.610
+	org.clojure:core.async:pom:1.3.610
+	org.clojure:core.cache:jar:1.0.207
+	org.clojure:core.cache:pom:1.0.207
+	org.clojure:core.memoize:jar:1.0.236
+	org.clojure:core.memoize:pom:1.0.236
 	org.clojure:core.specs.alpha:jar:0.2.56
 	org.clojure:core.specs.alpha:pom:0.1.24
 	org.clojure:core.specs.alpha:pom:0.2.44
@@ -1139,13 +1078,11 @@ EMAVEN_ARTIFACTS=(
 	org.clojure:data.codec:pom:0.1.0
 	org.clojure:data.json:jar:1.0.0
 	org.clojure:data.json:pom:1.0.0
-	org.clojure:data.priority-map:jar:0.0.7
-	org.clojure:data.priority-map:pom:0.0.7
+	org.clojure:data.priority-map:jar:1.0.0
+	org.clojure:data.priority-map:pom:1.0.0
 	org.clojure:data.xml:jar:0.2.0-alpha6
 	org.clojure:data.xml:pom:0.2.0-alpha6
 	org.clojure:pom.contrib:pom:0.0.25
-	org.clojure:pom.contrib:pom:0.1.2
-	org.clojure:pom.contrib:pom:0.2.0
 	org.clojure:pom.contrib:pom:0.2.2
 	org.clojure:pom.contrib:pom:0.3.0
 	org.clojure:pom.contrib:pom:1.0.0
@@ -1154,21 +1091,18 @@ EMAVEN_ARTIFACTS=(
 	org.clojure:spec.alpha:pom:0.2.176
 	org.clojure:spec.alpha:pom:0.2.194
 	org.clojure:tools.analyzer:jar:1.0.0
-	org.clojure:tools.analyzer.jvm:jar:1.0.0
-	org.clojure:tools.analyzer.jvm:pom:0.7.0
-	org.clojure:tools.analyzer.jvm:pom:1.0.0
-	org.clojure:tools.analyzer:pom:0.6.9
+	org.clojure:tools.analyzer.jvm:jar:1.1.0
+	org.clojure:tools.analyzer.jvm:pom:1.1.0
 	org.clojure:tools.analyzer:pom:1.0.0
-	org.clojure:tools.cli:jar:1.0.194
-	org.clojure:tools.cli:pom:1.0.194
-	org.clojure:tools.deps.alpha:jar:0.9.884
-	org.clojure:tools.deps.alpha:pom:0.9.884
-	org.clojure:tools.gitlibs:jar:1.0.100
-	org.clojure:tools.gitlibs:pom:1.0.100
+	org.clojure:tools.cli:jar:1.0.206
+	org.clojure:tools.cli:pom:1.0.206
+	org.clojure:tools.deps.alpha:jar:0.11.905
+	org.clojure:tools.deps.alpha:pom:0.11.905
+	org.clojure:tools.gitlibs:jar:2.1.144
+	org.clojure:tools.gitlibs:pom:2.1.144
 	org.clojure:tools.logging:jar:1.1.0
 	org.clojure:tools.logging:pom:1.1.0
 	org.clojure:tools.reader:jar:1.3.2
-	org.clojure:tools.reader:pom:1.0.0-beta4
 	org.clojure:tools.reader:pom:1.3.2
 	org.codehaus:codehaus-parent:pom:3
 	org.codehaus:codehaus-parent:pom:4
@@ -1211,17 +1145,14 @@ EMAVEN_ARTIFACTS=(
 	org.codehaus.plexus:plexus-classworlds:pom:2.5.1
 	org.codehaus.plexus:plexus-classworlds:pom:2.5.2
 	org.codehaus.plexus:plexus-classworlds:pom:2.6.0
-	org.codehaus.plexus:plexus-compiler-api:jar:1.8.1
 	org.codehaus.plexus:plexus-compiler-api:jar:2.2
 	org.codehaus.plexus:plexus-compiler-api:jar:2.3
-	org.codehaus.plexus:plexus-compiler-api:pom:1.8.1
 	org.codehaus.plexus:plexus-compiler-api:pom:2.2
 	org.codehaus.plexus:plexus-compiler-api:pom:2.3
 	org.codehaus.plexus:plexus-compiler-javac:jar:2.2
 	org.codehaus.plexus:plexus-compiler-javac:pom:2.2
 	org.codehaus.plexus:plexus-compiler-manager:jar:2.2
 	org.codehaus.plexus:plexus-compiler-manager:pom:2.2
-	org.codehaus.plexus:plexus-compiler:pom:1.8.1
 	org.codehaus.plexus:plexus-compiler:pom:2.2
 	org.codehaus.plexus:plexus-compiler:pom:2.3
 	org.codehaus.plexus:plexus-compilers:pom:2.2
@@ -1284,7 +1215,6 @@ EMAVEN_ARTIFACTS=(
 	org.codehaus.plexus:plexus-interactivity-api:pom:1.0-alpha-6
 	org.codehaus.plexus:plexus-interactivity:pom:1.0-alpha-6
 	org.codehaus.plexus:plexus-interpolation:jar:1.11
-	org.codehaus.plexus:plexus-interpolation:jar:1.13
 	org.codehaus.plexus:plexus-interpolation:jar:1.14
 	org.codehaus.plexus:plexus-interpolation:jar:1.15
 	org.codehaus.plexus:plexus-interpolation:jar:1.19
@@ -1333,15 +1263,12 @@ EMAVEN_ARTIFACTS=(
 	org.codehaus.plexus:plexus:pom:4.0
 	org.codehaus.plexus:plexus:pom:5.1
 	org.codehaus.plexus:plexus:pom:6.1
-	org.codehaus.plexus:plexus-utils:jar:1.0.4
 	org.codehaus.plexus:plexus-utils:jar:1.1
 	org.codehaus.plexus:plexus-utils:jar:1.5.1
 	org.codehaus.plexus:plexus-utils:jar:1.5.10
 	org.codehaus.plexus:plexus-utils:jar:1.5.15
 	org.codehaus.plexus:plexus-utils:jar:1.5.6
-	org.codehaus.plexus:plexus-utils:jar:2.1
 	org.codehaus.plexus:plexus-utils:jar:3.0
-	org.codehaus.plexus:plexus-utils:jar:3.0.1
 	org.codehaus.plexus:plexus-utils:jar:3.0.10
 	org.codehaus.plexus:plexus-utils:jar:3.0.15
 	org.codehaus.plexus:plexus-utils:jar:3.0.17
@@ -1358,7 +1285,6 @@ EMAVEN_ARTIFACTS=(
 	org.codehaus.plexus:plexus-utils:pom:1.4.1
 	org.codehaus.plexus:plexus-utils:pom:1.4.2
 	org.codehaus.plexus:plexus-utils:pom:1.4.5
-	org.codehaus.plexus:plexus-utils:pom:1.4.6
 	org.codehaus.plexus:plexus-utils:pom:1.5.1
 	org.codehaus.plexus:plexus-utils:pom:1.5.10
 	org.codehaus.plexus:plexus-utils:pom:1.5.15
@@ -1370,7 +1296,6 @@ EMAVEN_ARTIFACTS=(
 	org.codehaus.plexus:plexus-utils:pom:2.0.5
 	org.codehaus.plexus:plexus-utils:pom:2.1
 	org.codehaus.plexus:plexus-utils:pom:3.0
-	org.codehaus.plexus:plexus-utils:pom:3.0.1
 	org.codehaus.plexus:plexus-utils:pom:3.0.10
 	org.codehaus.plexus:plexus-utils:pom:3.0.15
 	org.codehaus.plexus:plexus-utils:pom:3.0.17
@@ -1407,19 +1332,16 @@ EMAVEN_ARTIFACTS=(
 	org.eclipse.aether:aether-spi:pom:0.9.0.M2
 	org.eclipse.aether:aether-util:jar:0.9.0.M2
 	org.eclipse.aether:aether-util:pom:0.9.0.M2
-	org.eclipse.jetty:jetty-client:jar:9.4.24.v20191120
-	org.eclipse.jetty:jetty-client:pom:9.4.24.v20191120
-	org.eclipse.jetty:jetty-http:jar:9.4.24.v20191120
-	org.eclipse.jetty:jetty-http:pom:9.4.24.v20191120
-	org.eclipse.jetty:jetty-io:jar:9.4.24.v20191120
-	org.eclipse.jetty:jetty-io:pom:9.4.24.v20191120
+	org.eclipse.jetty:jetty-client:jar:9.4.36.v20210114
+	org.eclipse.jetty:jetty-client:pom:9.4.36.v20210114
+	org.eclipse.jetty:jetty-http:jar:9.4.36.v20210114
+	org.eclipse.jetty:jetty-http:pom:9.4.36.v20210114
+	org.eclipse.jetty:jetty-io:jar:9.4.36.v20210114
+	org.eclipse.jetty:jetty-io:pom:9.4.36.v20210114
 	org.eclipse.jetty:jetty-parent:pom:14
-	org.eclipse.jetty:jetty-project:pom:9.4.24.v20191120
-	org.eclipse.jetty:jetty-util:jar:9.4.24.v20191120
-	org.eclipse.jetty:jetty-util:pom:9.4.24.v20191120
-	org.eclipse.jgit:org.eclipse.jgit:jar:4.10.0.201712302008-r
-	org.eclipse.jgit:org.eclipse.jgit-parent:pom:4.10.0.201712302008-r
-	org.eclipse.jgit:org.eclipse.jgit:pom:4.10.0.201712302008-r
+	org.eclipse.jetty:jetty-project:pom:9.4.36.v20210114
+	org.eclipse.jetty:jetty-util:jar:9.4.36.v20210114
+	org.eclipse.jetty:jetty-util:pom:9.4.36.v20210114
 	org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.0.0.M2a
 	org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.0.0.M5
 	org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.4
@@ -1508,13 +1430,11 @@ EMAVEN_ARTIFACTS=(
 	org.objenesis:objenesis:pom:2.2
 	org.osgi:org.osgi.compendium:jar:4.2.0
 	org.osgi:org.osgi.compendium:pom:4.2.0
-	org.osgi:org.osgi.core:jar:4.1.0
 	org.osgi:org.osgi.core:jar:4.2.0
 	org.osgi:org.osgi.core:jar:4.3.1
 	org.osgi:org.osgi.core:pom:4.1.0
 	org.osgi:org.osgi.core:pom:4.2.0
 	org.osgi:org.osgi.core:pom:4.3.1
-	org.ow2.asm:asm-all:pom:4.2
 	org.ow2.asm:asm-analysis:jar:4.1
 	org.ow2.asm:asm-analysis:jar:7.0
 	org.ow2.asm:asm-analysis:pom:4.1
@@ -1528,7 +1448,6 @@ EMAVEN_ARTIFACTS=(
 	org.ow2.asm:asm:jar:7.0
 	org.ow2.asm:asm:jar:7.3.1
 	org.ow2.asm:asm-parent:pom:4.1
-	org.ow2.asm:asm-parent:pom:4.2
 	org.ow2.asm:asm-parent:pom:5.2
 	org.ow2.asm:asm:pom:4.1
 	org.ow2.asm:asm:pom:5.2
@@ -1574,7 +1493,6 @@ EMAVEN_ARTIFACTS=(
 	org.slf4j:slf4j-api:jar:1.7.7
 	org.slf4j:slf4j-api:pom:1.5.3
 	org.slf4j:slf4j-api:pom:1.5.6
-	org.slf4j:slf4j-api:pom:1.7.2
 	org.slf4j:slf4j-api:pom:1.7.25
 	org.slf4j:slf4j-api:pom:1.7.29
 	org.slf4j:slf4j-api:pom:1.7.30
@@ -1589,7 +1507,6 @@ EMAVEN_ARTIFACTS=(
 	org.slf4j:slf4j-nop:pom:1.7.30
 	org.slf4j:slf4j-parent:pom:1.5.3
 	org.slf4j:slf4j-parent:pom:1.5.6
-	org.slf4j:slf4j-parent:pom:1.7.2
 	org.slf4j:slf4j-parent:pom:1.7.25
 	org.slf4j:slf4j-parent:pom:1.7.29
 	org.slf4j:slf4j-parent:pom:1.7.30
