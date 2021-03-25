@@ -1830,6 +1830,8 @@ emvn() {
 }
 
 src_compile() {
+	# Our install_dir is JAVA_PKG_SHAREPATH, a variable we cannot access here:
+	local install_dir=/usr/share/"${PN}-${SLOT%/*}"
 	local stable_version stable_sha clojure_version tools_deps_version
 
 	read stable_version stable_sha < stable.properties
@@ -1862,11 +1864,7 @@ src_compile() {
 	# The wrapper script needs some more work (could the java eclass be used
 	# instead?):
 	sed -i "${S}"/src/main/resources/clojure/install/clojure \
-		-e "s,^install_dir=.*$,install_dir=/usr," \
-		-e "s,^tools_cp=.*$,tools_cp=/usr/share/${PN}-${SLOT}/lib/clojure-tools.jar," \
-		-e "s,\\\$install_dir/libexec/exec.jar,/usr/share/${PN}-${SLOT}/lib/exec.jar," \
-		-e "s,\\\$install_dir/example-deps.edn,/usr/share/${PN}/example-deps.edn," \
-		-e "s,\\\$install_dir/deps.edn,/usr/share/${PN}/deps.edn," \
+		-e "s,^install_dir=.*$,install_dir=${install_dir}," \
 		|| die
 }
 
@@ -1875,19 +1873,27 @@ src_test() {
 }
 
 src_install() {
-	# See script/release.sh for how to build a package
+	# See script/release.sh for how to build a package.
+	# Third-party Clojure tools expect to find JARs and deps.edn in certain
+	# locations relative to `:install-dir` printed by `clj -Sdescribe`, with
+	# their original names including a version number, which does not follow
+	# Gentoo Java packaging standards.  We hence adhere to the Clojure way
+	# of installing things, to make them work.
 
-	java-pkg_newjar target/clojure-tools-"${PV}".jar clojure-tools.jar
-	java-pkg_dojar exec.jar
+	# Our install_dir is JAVA_PKG_SHAREPATH, a variable we cannot access here:
+	local install_dir=/usr/share/"${PN}-${SLOT%/*}"
 
 	cp doc/clojure.1 doc/clj.1
 	doman doc/clojure.1 doc/clj.1
 
 	einstalldocs
 
+	java-pkg_jarinto "${install_dir}"/libexec
+	java-pkg_dojar target/clojure-tools-"${PV}".jar exec.jar
+
 	cd src/main/resources/clojure/install
 
-	insinto /usr/share/"${PN}"
+	insinto "${install_dir}"
 	doins deps.edn example-deps.edn
 
 	dobin clojure clj
