@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <maintainer type="person">
+    <email>devurandom@gmx.net</email>
+    <description>Primary maintainer</description>
+  </maintainer>
+  <maintainer type="project">
+    <email>systemd@gentoo.org</email>
+    <name>Gentoo Systemd Project</name>
+  </maintainer>
+</pkgmetadata>
