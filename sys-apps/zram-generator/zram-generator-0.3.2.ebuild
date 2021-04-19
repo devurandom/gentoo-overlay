@@ -49,7 +49,7 @@ SRC_URI="https://github.com/systemd/zram-generator/archive/refs/tags/v${PV}.tar.
 
 RESTRICT="mirror"
 
-LICENSE="Apache-2.0 Apache-2.0 WITH LLVM-exception MIT"
+LICENSE="Apache-2.0 Apache-2.0-with-LLVM-exceptions MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
