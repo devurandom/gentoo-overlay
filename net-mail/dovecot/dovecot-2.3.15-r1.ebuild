@@ -3,7 +3,7 @@
 
 EAPI=7
 
-LUA_COMPAT=( lua5-{1..3} )
+LUA_COMPAT=( lua5-1 lua5-3 )
 
 # do not add a ssl USE flag.  ssl is mandatory
 SSL_DEPS_SKIP=1
@@ -26,14 +26,18 @@ IUSE_DOVECOT_AUTH="bsdauth kerberos ldap lua nss pam +shadow sia vpopmail"
 IUSE_DOVECOT_COMPRESS="bzip2 lzma lz4 zlib zstd"
 IUSE_DOVECOT_DB="mysql postgres sqlite"
 IUSE_DOVECOT_SSL="gnutls libressl +openssl"
-IUSE_DOVECOT_OTHER="argon2 caps debug doc ipv6 lucene rpc selinux sodium solr static-libs suid tcpd textcat unwind"
+IUSE_DOVECOT_OTHER="argon2 caps debug doc ipv6 lucene rpc selinux sodium solr static-libs suid systemd tcpd textcat unwind"
 
 IUSE="${IUSE_DOVECOT_AUTH} ${IUSE_DOVECOT_COMPRESS} ${IUSE_DOVECOT_DB} ${IUSE_DOVECOT_SSL} ${IUSE_DOVECOT_OTHER}"
 
 REQUIRED_USE="^^ ( gnutls libressl openssl )
 	lua? ( ${LUA_REQUIRED_USE} )"
 
-DEPEND="argon2? ( dev-libs/libsodium )
+DEPEND="
+	virtual/libiconv
+	dev-libs/icu:=
+	dev-libs/libbsd
+	argon2? ( dev-libs/libsodium )
 	bzip2? ( app-arch/bzip2 )
 	caps? ( sys-libs/libcap )
 	gnutls? ( net-libs/gnutls )
@@ -42,8 +46,8 @@ DEPEND="argon2? ( dev-libs/libsodium )
 	libressl? ( dev-libs/libressl:0= )
 	lua? ( ${LUA_DEPS} )
 	lucene? ( >=dev-cpp/clucene-2.3 )
-	lzma? ( app-arch/xz-utils )
 	lz4? ( app-arch/lz4 )
+	lzma? ( app-arch/xz-utils )
 	mysql? ( dev-db/mysql-connector-c:0= )
 	nss? ( dev-libs/nss )
 	openssl? ( dev-libs/openssl:0= )
@@ -53,6 +57,7 @@ DEPEND="argon2? ( dev-libs/libsodium )
 	selinux? ( sec-policy/selinux-dovecot )
 	solr? ( net-misc/curl dev-libs/expat )
 	sqlite? ( dev-db/sqlite:* )
+	systemd? ( sys-apps/systemd:= )
 	suid? ( acct-group/mail )
 	tcpd? ( sys-apps/tcp-wrappers )
 	textcat? ( app-text/libexttextcat )
@@ -60,27 +65,24 @@ DEPEND="argon2? ( dev-libs/libsodium )
 	vpopmail? ( net-mail/vpopmail )
 	zlib? ( sys-libs/zlib )
 	zstd? ( app-arch/zstd )
-	virtual/libiconv
-	dev-libs/icu:=
-	dev-libs/libbsd"
+	"
 
-RDEPEND="${DEPEND}
+RDEPEND="
+	${DEPEND}
 	acct-group/dovecot
 	acct-group/dovenull
 	acct-user/dovecot
 	acct-user/dovenull
-	net-mail/mailbase"
+	net-mail/mailbase
+	"
 
-S=${WORKDIR}/${MY_P}
+S="${WORKDIR}/${MY_P}"
 
 DOCS="AUTHORS NEWS README TODO"
 
 PATCHES=(
-	"${FILESDIR}/${PN}"-autoconf-lua-version.patch
-	"${FILESDIR}/${PN}"-unwind-generic.patch
+	"${FILESDIR}/${PN}"-autoconf-lua-version-v2.patch
 	"${FILESDIR}/${PN}"-socket-name-too-long.patch
-	"${FILESDIR}/${P}"-32-bit-tests-1.patch
-	"${FILESDIR}/${P}"-32-bit-tests-2.patch
 )
 
 pkg_setup() {
@@ -110,14 +112,16 @@ src_configure() {
 
 	# turn valgrind tests off. Bug #340791
 	# Enable all storages: https://www.mail-archive.com/dovecot@dovecot.org/msg69576.html
-	VALGRIND=no LUAPC="${ELUA}" econf \
+	VALGRIND=no \
+	LUAPC="${ELUA}" \
+	systemdsystemunitdir="$(systemd_get_systemunitdir)" \
+	econf \
 		--with-icu \
 		--with-libbsd \
 		--with-moduledir="${EPREFIX}/usr/$(get_libdir)/dovecot" \
 		--with-rundir="${EPREFIX}/run/dovecot" \
 		--with-statedir="${EPREFIX}/var/lib/dovecot" \
 		--without-stemmer \
-		--with-systemdsystemunitdir="$(systemd_get_systemunitdir)" \
 		--disable-rpath \
 		$( use_with argon2 sodium ) \
 		$( use_with bsdauth ) \
@@ -138,6 +142,7 @@ src_configure() {
 		$( use_with sia ) \
 		$( use_with solr ) \
 		$( use_with sqlite ) \
+		$( use_with systemd ) \
 		$( use_with tcpd libwrap ) \
 		$( use_with textcat ) \
 		$( use_with unwind libunwind ) \
@@ -156,7 +161,7 @@ src_install() {
 	# insecure:
 	# use suid && fperms u+s /usr/libexec/dovecot/deliver
 	# better:
-	if use suid;then
+	if use suid; then
 		einfo "Changing perms to allow deliver to be suided"
 		fowners root:mail /usr/libexec/dovecot/dovecot-lda
 		fperms 4750 /usr/libexec/dovecot/dovecot-lda
