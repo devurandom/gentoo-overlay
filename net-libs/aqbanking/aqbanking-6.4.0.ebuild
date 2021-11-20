@@ -6,8 +6,8 @@ EAPI=7
 MY_P="${P/_beta/beta}"
 
 DESCRIPTION="Generic Online Banking Interface"
-HOMEPAGE="https://www.aquamaniac.de/sites/aqbanking/index.php"
-SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/366/${MY_P}.tar.gz"
+HOMEPAGE="https://www.aqbanking.de/"
+SRC_URI="https://aquamaniac.de/rdm/attachments/download/394/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
