@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Authors
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -7,8 +7,8 @@ MY_P="${P/_rc/rc}"
 inherit qmake-utils
 
 DESCRIPTION="Multi-platform helper library for other libraries"
-HOMEPAGE="https://www.aquamaniac.de/sites/aqbanking/index.php"
-SRC_URI="https://www.aquamaniac.de/rdm/attachments/download/364/${MY_P}.tar.gz"
+HOMEPAGE="https://www.aqbanking.de/"
+SRC_URI="https://aquamaniac.de/rdm/attachments/download/396/${MY_P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0/79" # correspond with libgwenhywfar.so version
