@@ -1,0 +1,20 @@
+--- brew-install-1.10.3.1040/src/main/resources/clojure/install/clojure.bkp	2021-12-30 15:15:19.802190986 +0100
++++ brew-install-1.10.3.1040/src/main/resources/clojure/install/clojure	2021-12-30 15:16:23.375393310 +0100
+@@ -423,7 +423,7 @@
+   if "$verbose"; then
+     >&2 echo "Refreshing classpath"
+   fi
+-  "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
++  "$JAVA_CMD" "${jvm_opts[@]}" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.make-classpath2 --config-user "$config_user" --config-project "$config_project" --basis-file "$basis_file" --libs-file "$libs_file" --cp-file "$cp_file" --jvm-file "$jvm_file" --main-file "$main_file" --manifest-file "$manifest_file" "${tools_args[@]}"
+ fi
+ 
+ if "$describe"; then
+@@ -437,7 +437,7 @@
+ if "$prep"; then
+   exit 0
+ elif "$pom"; then
+-  exec "$JAVA_CMD" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
++  exec "$JAVA_CMD" "${jvm_opts[@]}" -classpath "$tools_cp" clojure.main -m clojure.tools.deps.alpha.script.generate-manifest2 --config-user "$config_user" --config-project "$config_project" --gen=pom "${tools_args[@]}"
+ elif "$print_classpath"; then
+   echo "$cp"
+ elif "$describe"; then

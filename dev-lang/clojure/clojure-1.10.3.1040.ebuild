@@ -3,7 +3,7 @@
 
 EAPI=7
 
-TOOLS_BUILD_PV="0.5.1"
+TOOLS_BUILD_PV="0.6.3"
 JAVA_PKG_IUSE="test"
 
 inherit java-pkg-2
@@ -47,8 +47,8 @@ EMAVEN_ARTIFACTS=(
 	aopalliance:aopalliance:pom:1.0
 	com.cognitect.aws:api:jar:0.8.524
 	com.cognitect.aws:api:pom:0.8.524
-	com.cognitect.aws:endpoints:jar:1.1.12.69
-	com.cognitect.aws:endpoints:pom:1.1.12.69
+	com.cognitect.aws:endpoints:jar:1.1.12.93
+	com.cognitect.aws:endpoints:pom:1.1.12.93
 	com.cognitect.aws:s3:jar:814.2.991.0
 	com.cognitect.aws:s3:pom:814.2.991.0
 	com.cognitect:http-client:jar:0.1.106
@@ -71,12 +71,11 @@ EMAVEN_ARTIFACTS=(
 	commons-codec:commons-codec:pom:1.11
 	commons-io:commons-io:jar:2.6
 	commons-io:commons-io:pom:2.6
-	javax.annotation:jsr250-api:jar:1.0
-	javax.annotation:jsr250-api:pom:1.0
-	javax.enterprise:cdi-api:jar:1.0
-	javax.enterprise:cdi-api:pom:1.0
+	javax.annotation:javax.annotation-api:jar:1.2
+	javax.annotation:javax.annotation-api:pom:1.2
 	javax.inject:javax.inject:jar:1
 	javax.inject:javax.inject:pom:1
+	net.java:jvnet-parent:pom:3
 	org.apache:apache:pom:18
 	org.apache:apache:pom:19
 	org.apache:apache:pom:21
@@ -92,28 +91,28 @@ EMAVEN_ARTIFACTS=(
 	org.apache.httpcomponents:httpcomponents-parent:pom:11
 	org.apache.httpcomponents:httpcore:jar:4.4.13
 	org.apache.httpcomponents:httpcore:pom:4.4.13
-	org.apache.maven:maven-artifact:jar:3.8.2
-	org.apache.maven:maven-artifact:pom:3.8.2
-	org.apache.maven:maven-builder-support:jar:3.8.2
-	org.apache.maven:maven-builder-support:pom:3.8.2
-	org.apache.maven:maven-core:jar:3.8.2
-	org.apache.maven:maven-core:pom:3.8.2
-	org.apache.maven:maven-model-builder:jar:3.8.2
-	org.apache.maven:maven-model-builder:pom:3.8.2
-	org.apache.maven:maven-model:jar:3.8.2
-	org.apache.maven:maven-model:pom:3.8.2
+	org.apache.maven:maven-artifact:jar:3.8.3
+	org.apache.maven:maven-artifact:pom:3.8.3
+	org.apache.maven:maven-builder-support:jar:3.8.3
+	org.apache.maven:maven-builder-support:pom:3.8.3
+	org.apache.maven:maven-core:jar:3.8.3
+	org.apache.maven:maven-core:pom:3.8.3
+	org.apache.maven:maven-model-builder:jar:3.8.3
+	org.apache.maven:maven-model-builder:pom:3.8.3
+	org.apache.maven:maven-model:jar:3.8.3
+	org.apache.maven:maven-model:pom:3.8.3
 	org.apache.maven:maven-parent:pom:34
-	org.apache.maven:maven-plugin-api:jar:3.8.2
-	org.apache.maven:maven-plugin-api:pom:3.8.2
-	org.apache.maven:maven:pom:3.8.2
-	org.apache.maven:maven-repository-metadata:jar:3.8.2
-	org.apache.maven:maven-repository-metadata:pom:3.8.2
-	org.apache.maven:maven-resolver-provider:jar:3.8.2
-	org.apache.maven:maven-resolver-provider:pom:3.8.2
-	org.apache.maven:maven-settings-builder:jar:3.8.2
-	org.apache.maven:maven-settings-builder:pom:3.8.2
-	org.apache.maven:maven-settings:jar:3.8.2
-	org.apache.maven:maven-settings:pom:3.8.2
+	org.apache.maven:maven-plugin-api:jar:3.8.3
+	org.apache.maven:maven-plugin-api:pom:3.8.3
+	org.apache.maven:maven:pom:3.8.3
+	org.apache.maven:maven-repository-metadata:jar:3.8.3
+	org.apache.maven:maven-repository-metadata:pom:3.8.3
+	org.apache.maven:maven-resolver-provider:jar:3.8.3
+	org.apache.maven:maven-resolver-provider:pom:3.8.3
+	org.apache.maven:maven-settings-builder:jar:3.8.3
+	org.apache.maven:maven-settings-builder:pom:3.8.3
+	org.apache.maven:maven-settings:jar:3.8.3
+	org.apache.maven:maven-settings:pom:3.8.3
 	org.apache.maven.resolver:maven-resolver-api:jar:1.6.3
 	org.apache.maven.resolver:maven-resolver-api:pom:1.6.3
 	org.apache.maven.resolver:maven-resolver-connector-basic:jar:1.6.3
@@ -167,10 +166,12 @@ EMAVEN_ARTIFACTS=(
 	org.clojure:tools.analyzer:pom:1.1.0
 	org.clojure:tools.cli:jar:1.0.206
 	org.clojure:tools.cli:pom:1.0.206
-	org.clojure:tools.deps.alpha:jar:0.12.1048
-	org.clojure:tools.deps.alpha:pom:0.12.1048
-	org.clojure:tools.gitlibs:jar:2.3.167
-	org.clojure:tools.gitlibs:pom:2.3.167
+	org.clojure:tools.deps.alpha:jar:0.12.1071
+	org.clojure:tools.deps.alpha:jar:0.12.1084
+	org.clojure:tools.deps.alpha:pom:0.12.1071
+	org.clojure:tools.deps.alpha:pom:0.12.1084
+	org.clojure:tools.gitlibs:jar:2.4.172
+	org.clojure:tools.gitlibs:pom:2.4.172
 	org.clojure:tools.logging:jar:1.1.0
 	org.clojure:tools.logging:pom:1.1.0
 	org.clojure:tools.namespace:jar:1.0.0
@@ -182,34 +183,38 @@ EMAVEN_ARTIFACTS=(
 	org.codehaus.mojo:animal-sniffer-annotations:pom:1.14
 	org.codehaus.mojo:animal-sniffer-parent:pom:1.14
 	org.codehaus.mojo:mojo-parent:pom:34
+	org.codehaus.plexus:plexus-cipher:jar:2.0
+	org.codehaus.plexus:plexus-cipher:pom:2.0
 	org.codehaus.plexus:plexus-classworlds:jar:2.6.0
 	org.codehaus.plexus:plexus-classworlds:pom:2.6.0
 	org.codehaus.plexus:plexus-component-annotations:jar:2.1.0
 	org.codehaus.plexus:plexus-component-annotations:pom:2.1.0
 	org.codehaus.plexus:plexus-containers:pom:2.1.0
-	org.codehaus.plexus:plexus-interpolation:jar:1.25
-	org.codehaus.plexus:plexus-interpolation:pom:1.25
+	org.codehaus.plexus:plexus-interpolation:jar:1.26
+	org.codehaus.plexus:plexus-interpolation:pom:1.26
 	org.codehaus.plexus:plexus:pom:5.1
-	org.codehaus.plexus:plexus-utils:jar:3.2.1
-	org.codehaus.plexus:plexus-utils:pom:3.2.1
-	org.eclipse.jetty:jetty-client:jar:9.4.36.v20210114
-	org.eclipse.jetty:jetty-client:pom:9.4.36.v20210114
-	org.eclipse.jetty:jetty-http:jar:9.4.36.v20210114
-	org.eclipse.jetty:jetty-http:pom:9.4.36.v20210114
-	org.eclipse.jetty:jetty-io:jar:9.4.36.v20210114
-	org.eclipse.jetty:jetty-io:pom:9.4.36.v20210114
-	org.eclipse.jetty:jetty-project:pom:9.4.36.v20210114
-	org.eclipse.jetty:jetty-util:jar:9.4.36.v20210114
-	org.eclipse.jetty:jetty-util:pom:9.4.36.v20210114
-	org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.4
-	org.eclipse.sisu:org.eclipse.sisu.inject:pom:0.3.4
-	org.eclipse.sisu:org.eclipse.sisu.plexus:jar:0.3.4
-	org.eclipse.sisu:org.eclipse.sisu.plexus:pom:0.3.4
-	org.eclipse.sisu:sisu-inject:pom:0.3.4
-	org.eclipse.sisu:sisu-plexus:pom:0.3.4
-	org.jboss.weld:weld-api-bom:pom:1.0
-	org.jboss.weld:weld-api-parent:pom:1.0
-	org.jboss.weld:weld-parent:pom:6
+	org.codehaus.plexus:plexus:pom:8
+	org.codehaus.plexus:plexus-sec-dispatcher:jar:2.0
+	org.codehaus.plexus:plexus-sec-dispatcher:pom:2.0
+	org.codehaus.plexus:plexus-utils:jar:3.4.1
+	org.codehaus.plexus:plexus-utils:pom:3.3.0
+	org.codehaus.plexus:plexus-utils:pom:3.4.1
+	org.eclipse.jetty:jetty-client:jar:9.4.44.v20210927
+	org.eclipse.jetty:jetty-client:pom:9.4.44.v20210927
+	org.eclipse.jetty:jetty-http:jar:9.4.44.v20210927
+	org.eclipse.jetty:jetty-http:pom:9.4.44.v20210927
+	org.eclipse.jetty:jetty-io:jar:9.4.44.v20210927
+	org.eclipse.jetty:jetty-io:pom:9.4.44.v20210927
+	org.eclipse.jetty:jetty-project:pom:9.4.44.v20210927
+	org.eclipse.jetty:jetty-util:jar:9.4.44.v20210927
+	org.eclipse.jetty:jetty-util:pom:9.4.44.v20210927
+	org.eclipse.sisu:org.eclipse.sisu.inject:jar:0.3.5
+	org.eclipse.sisu:org.eclipse.sisu.inject:pom:0.3.5
+	org.eclipse.sisu:org.eclipse.sisu.plexus:jar:0.3.5
+	org.eclipse.sisu:org.eclipse.sisu.plexus:pom:0.3.5
+	org.eclipse.sisu:sisu-inject:pom:0.3.5
+	org.eclipse.sisu:sisu-plexus:pom:0.3.5
+	org.junit:junit-bom:pom:5.8.1
 	org.ow2.asm:asm:jar:5.2
 	org.ow2.asm:asm-parent:pom:5.2
 	org.ow2.asm:asm:pom:5.2
@@ -217,19 +222,14 @@ EMAVEN_ARTIFACTS=(
 	org.slf4j:jcl-over-slf4j:jar:1.7.30
 	org.slf4j:jcl-over-slf4j:pom:1.7.30
 	org.slf4j:slf4j-api:jar:1.7.32
-	org.slf4j:slf4j-api:pom:1.7.30
 	org.slf4j:slf4j-api:pom:1.7.32
-	org.slf4j:slf4j-nop:jar:1.7.30
-	org.slf4j:slf4j-nop:pom:1.7.30
+	org.slf4j:slf4j-nop:jar:1.7.32
+	org.slf4j:slf4j-nop:pom:1.7.32
 	org.slf4j:slf4j-parent:pom:1.7.30
 	org.slf4j:slf4j-parent:pom:1.7.32
-	org.sonatype.forge:forge-parent:pom:4
 	org.sonatype.oss:oss-parent:pom:5
 	org.sonatype.oss:oss-parent:pom:7
 	org.sonatype.oss:oss-parent:pom:9
-	org.sonatype.plexus:plexus-sec-dispatcher:jar:1.4
-	org.sonatype.plexus:plexus-sec-dispatcher:pom:1.4
-	org.sonatype.spice:spice-parent:pom:12
 )
 
 __extract_info() {
