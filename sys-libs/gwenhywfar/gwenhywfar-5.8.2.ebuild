@@ -3,12 +3,13 @@
 
 EAPI=7
 
+SRC_FILE_ID=411
 MY_P="${P/_rc/rc}"
 inherit qmake-utils
 
 DESCRIPTION="Multi-platform helper library for other libraries"
 HOMEPAGE="https://www.aqbanking.de/"
-SRC_URI="https://aquamaniac.de/rdm/attachments/download/396/${MY_P}.tar.gz"
+SRC_URI="https://aquamaniac.de/rdm/attachments/download/${SRC_FILE_ID}/${MY_P}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0/79" # correspond with libgwenhywfar.so version
