@@ -3,11 +3,12 @@
 
 EAPI=7
 
+SRC_FILE_ID=400
 MY_P="${P/_beta/beta}"
 
 DESCRIPTION="Generic Online Banking Interface"
 HOMEPAGE="https://www.aqbanking.de/"
-SRC_URI="https://aquamaniac.de/rdm/attachments/download/394/${MY_P}.tar.gz"
+SRC_URI="https://aquamaniac.de/rdm/attachments/download/${SRC_FILE_ID}/${MY_P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
