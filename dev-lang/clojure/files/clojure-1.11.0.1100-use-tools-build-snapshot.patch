@@ -1,0 +1,11 @@
+--- brew-install-1.11.0.1100/deps.edn.orig	2022-04-05 12:27:20.340945565 +0200
++++ brew-install-1.11.0.1100/deps.edn	2022-04-05 12:27:38.563855168 +0200
+@@ -9,7 +9,7 @@
+  {
+   ;; clj -T:build release
+   :build    
+-  {:deps {io.github.clojure/tools.build {:git/tag "v0.8.0" :git/sha "e3e3532"}}
++  {:deps {io.github.clojure/tools.build {:local/root "../tools.build-0.8.0"}}
+    :paths ["script"]
+    :ns-default build}
+   

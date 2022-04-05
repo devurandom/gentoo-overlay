@@ -3,7 +3,7 @@
 
 EAPI=7
 
-TOOLS_BUILD_PV="0.6.3"
+TOOLS_BUILD_PV="0.8.0"
 JAVA_PKG_IUSE="test"
 
 inherit java-pkg-2
@@ -16,10 +16,12 @@ SRC_URI="
 "
 
 LICENSE="EPL-1.0 Apache-2.0 BSD"
-SLOT="$(ver_cut 1-2)"
+SLOT="0/$(ver_cut 1-2)"
 KEYWORDS="~amd64 ~x86 ~x86-linux"
 
-RDEPEND=">=virtual/jre-1.8"
+RDEPEND="
+	!dev-lang/clojure:1.10
+	>=virtual/jre-1.8"
 
 DEPEND="
 	>=dev-lang/clojure-1.10.3
@@ -31,7 +33,7 @@ DOCS=( CHANGELOG.md README.md )
 
 PATCHES=(
 	"${FILESDIR}/${P}"-use-tools-build-snapshot.patch
-	"${FILESDIR}/${P}"-use-jvm-opts-when-make-classpath.patch
+	"${FILESDIR}/${PN}"-1.10.3.1040-use-jvm-opts-when-make-classpath.patch
 )
 
 # Even though some of this stuff will not be used at runtime, it is all
@@ -45,74 +47,84 @@ PATCHES=(
 EMAVEN_ARTIFACTS=(
 	aopalliance:aopalliance:jar:1.0
 	aopalliance:aopalliance:pom:1.0
-	com.cognitect.aws:api:jar:0.8.524
-	com.cognitect.aws:api:pom:0.8.524
-	com.cognitect.aws:endpoints:jar:1.1.12.93
-	com.cognitect.aws:endpoints:pom:1.1.12.93
-	com.cognitect.aws:s3:jar:814.2.991.0
-	com.cognitect.aws:s3:pom:814.2.991.0
-	com.cognitect:http-client:jar:0.1.106
-	com.cognitect:http-client:pom:0.1.106
+	com.cognitect.aws:api:jar:0.8.539
+	com.cognitect.aws:api:pom:0.8.539
+	com.cognitect.aws:endpoints:jar:1.1.12.150
+	com.cognitect.aws:endpoints:pom:1.1.12.150
+	com.cognitect.aws:s3:jar:814.2.1053.0
+	com.cognitect.aws:s3:pom:814.2.1053.0
+	com.cognitect:http-client:jar:1.0.110
+	com.cognitect:http-client:pom:1.0.110
 	com.google.code.findbugs:jsr305:jar:3.0.2
 	com.google.code.findbugs:jsr305:pom:3.0.2
-	com.google.errorprone:error_prone_annotations:jar:2.1.3
-	com.google.errorprone:error_prone_annotations:pom:2.1.3
-	com.google.errorprone:error_prone_parent:pom:2.1.3
+	com.google.errorprone:error_prone_annotations:jar:2.7.1
+	com.google.errorprone:error_prone_annotations:pom:2.7.1
+	com.google.errorprone:error_prone_parent:pom:2.7.1
 	com.google:google:pom:5
-	com.google.guava:guava:jar:25.1-android
-	com.google.guava:guava-parent:pom:25.1-android
-	com.google.guava:guava:pom:25.1-android
+	com.google.guava:failureaccess:jar:1.0.1
+	com.google.guava:failureaccess:pom:1.0.1
+	com.google.guava:guava:jar:31.0.1-android
+	com.google.guava:guava-parent:pom:26.0-android
+	com.google.guava:guava-parent:pom:31.0.1-android
+	com.google.guava:guava:pom:31.0.1-android
+	com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava
+	com.google.guava:listenablefuture:pom:9999.0-empty-to-avoid-conflict-with-guava
 	com.google.inject:guice:jar:no_aop:4.2.2
 	com.google.inject:guice-parent:pom:4.2.2
 	com.google.inject:guice:pom:4.2.2
-	com.google.j2objc:j2objc-annotations:jar:1.1
-	com.google.j2objc:j2objc-annotations:pom:1.1
+	com.google.j2objc:j2objc-annotations:jar:1.3
+	com.google.j2objc:j2objc-annotations:pom:1.3
 	commons-codec:commons-codec:jar:1.11
 	commons-codec:commons-codec:pom:1.11
-	commons-io:commons-io:jar:2.6
-	commons-io:commons-io:pom:2.6
+	commons-io:commons-io:jar:2.11.0
+	commons-io:commons-io:pom:2.11.0
+	commons-logging:commons-logging:jar:1.2
+	commons-logging:commons-logging:pom:1.2
 	javax.annotation:javax.annotation-api:jar:1.2
 	javax.annotation:javax.annotation-api:pom:1.2
 	javax.inject:javax.inject:jar:1
 	javax.inject:javax.inject:pom:1
 	net.java:jvnet-parent:pom:3
+	org.apache:apache:pom:13
 	org.apache:apache:pom:18
 	org.apache:apache:pom:19
 	org.apache:apache:pom:21
 	org.apache:apache:pom:23
 	org.apache.commons:commons-lang3:jar:3.8.1
 	org.apache.commons:commons-lang3:pom:3.8.1
+	org.apache.commons:commons-parent:pom:34
 	org.apache.commons:commons-parent:pom:42
 	org.apache.commons:commons-parent:pom:47
-	org.apache.httpcomponents:httpclient:jar:4.5.12
-	org.apache.httpcomponents:httpclient:pom:4.5.12
-	org.apache.httpcomponents:httpcomponents-client:pom:4.5.12
+	org.apache.commons:commons-parent:pom:52
+	org.apache.httpcomponents:httpclient:jar:4.5.13
+	org.apache.httpcomponents:httpclient:pom:4.5.13
+	org.apache.httpcomponents:httpcomponents-client:pom:4.5.13
 	org.apache.httpcomponents:httpcomponents-core:pom:4.4.13
 	org.apache.httpcomponents:httpcomponents-parent:pom:11
 	org.apache.httpcomponents:httpcore:jar:4.4.13
 	org.apache.httpcomponents:httpcore:pom:4.4.13
-	org.apache.maven:maven-artifact:jar:3.8.3
-	org.apache.maven:maven-artifact:pom:3.8.3
-	org.apache.maven:maven-builder-support:jar:3.8.3
-	org.apache.maven:maven-builder-support:pom:3.8.3
-	org.apache.maven:maven-core:jar:3.8.3
-	org.apache.maven:maven-core:pom:3.8.3
-	org.apache.maven:maven-model-builder:jar:3.8.3
-	org.apache.maven:maven-model-builder:pom:3.8.3
-	org.apache.maven:maven-model:jar:3.8.3
-	org.apache.maven:maven-model:pom:3.8.3
+	org.apache.maven:maven-artifact:jar:3.8.4
+	org.apache.maven:maven-artifact:pom:3.8.4
+	org.apache.maven:maven-builder-support:jar:3.8.4
+	org.apache.maven:maven-builder-support:pom:3.8.4
+	org.apache.maven:maven-core:jar:3.8.4
+	org.apache.maven:maven-core:pom:3.8.4
+	org.apache.maven:maven-model-builder:jar:3.8.4
+	org.apache.maven:maven-model-builder:pom:3.8.4
+	org.apache.maven:maven-model:jar:3.8.4
+	org.apache.maven:maven-model:pom:3.8.4
 	org.apache.maven:maven-parent:pom:34
-	org.apache.maven:maven-plugin-api:jar:3.8.3
-	org.apache.maven:maven-plugin-api:pom:3.8.3
-	org.apache.maven:maven:pom:3.8.3
-	org.apache.maven:maven-repository-metadata:jar:3.8.3
-	org.apache.maven:maven-repository-metadata:pom:3.8.3
-	org.apache.maven:maven-resolver-provider:jar:3.8.3
-	org.apache.maven:maven-resolver-provider:pom:3.8.3
-	org.apache.maven:maven-settings-builder:jar:3.8.3
-	org.apache.maven:maven-settings-builder:pom:3.8.3
-	org.apache.maven:maven-settings:jar:3.8.3
-	org.apache.maven:maven-settings:pom:3.8.3
+	org.apache.maven:maven-plugin-api:jar:3.8.4
+	org.apache.maven:maven-plugin-api:pom:3.8.4
+	org.apache.maven:maven:pom:3.8.4
+	org.apache.maven:maven-repository-metadata:jar:3.8.4
+	org.apache.maven:maven-repository-metadata:pom:3.8.4
+	org.apache.maven:maven-resolver-provider:jar:3.8.4
+	org.apache.maven:maven-resolver-provider:pom:3.8.4
+	org.apache.maven:maven-settings-builder:jar:3.8.4
+	org.apache.maven:maven-settings-builder:pom:3.8.4
+	org.apache.maven:maven-settings:jar:3.8.4
+	org.apache.maven:maven-settings:pom:3.8.4
 	org.apache.maven.resolver:maven-resolver-api:jar:1.6.3
 	org.apache.maven.resolver:maven-resolver-api:pom:1.6.3
 	org.apache.maven.resolver:maven-resolver-connector-basic:jar:1.6.3
@@ -131,24 +143,30 @@ EMAVEN_ARTIFACTS=(
 	org.apache.maven.shared:maven-shared-components:pom:34
 	org.apache.maven.shared:maven-shared-utils:jar:3.3.4
 	org.apache.maven.shared:maven-shared-utils:pom:3.3.4
-	org.checkerframework:checker-compat-qual:jar:2.0.0
-	org.checkerframework:checker-compat-qual:pom:2.0.0
+	org.checkerframework:checker-compat-qual:jar:2.5.5
+	org.checkerframework:checker-compat-qual:pom:2.5.5
+	org.checkerframework:checker-qual:jar:3.12.0
+	org.checkerframework:checker-qual:pom:3.12.0
 	org.clojure:clojure:jar:1.10.3
+	org.clojure:clojure:jar:1.11.0
 	org.clojure:clojure:pom:1.10.3
-	org.clojure:core.async:jar:1.3.622
-	org.clojure:core.async:pom:1.3.622
-	org.clojure:core.cache:jar:1.0.207
-	org.clojure:core.cache:pom:1.0.207
-	org.clojure:core.memoize:jar:1.0.236
-	org.clojure:core.memoize:pom:1.0.236
+	org.clojure:clojure:pom:1.11.0
+	org.clojure:core.async:jar:1.5.644
+	org.clojure:core.async:pom:1.5.644
+	org.clojure:core.cache:jar:1.0.225
+	org.clojure:core.cache:pom:1.0.225
+	org.clojure:core.memoize:jar:1.0.253
+	org.clojure:core.memoize:pom:1.0.253
 	org.clojure:core.specs.alpha:jar:0.2.56
+	org.clojure:core.specs.alpha:jar:0.2.62
 	org.clojure:core.specs.alpha:pom:0.2.56
+	org.clojure:core.specs.alpha:pom:0.2.62
 	org.clojure:data.codec:jar:0.1.0
 	org.clojure:data.codec:pom:0.1.0
-	org.clojure:data.json:jar:1.0.0
-	org.clojure:data.json:pom:1.0.0
-	org.clojure:data.priority-map:jar:1.0.0
-	org.clojure:data.priority-map:pom:1.0.0
+	org.clojure:data.json:jar:2.4.0
+	org.clojure:data.json:pom:2.4.0
+	org.clojure:data.priority-map:jar:1.1.0
+	org.clojure:data.priority-map:pom:1.1.0
 	org.clojure:data.xml:jar:0.2.0-alpha6
 	org.clojure:data.xml:pom:0.2.0-alpha6
 	org.clojure:java.classpath:jar:1.0.0
@@ -159,30 +177,27 @@ EMAVEN_ARTIFACTS=(
 	org.clojure:pom.contrib:pom:1.0.0
 	org.clojure:pom.contrib:pom:1.1.0
 	org.clojure:spec.alpha:jar:0.2.194
+	org.clojure:spec.alpha:jar:0.3.218
 	org.clojure:spec.alpha:pom:0.2.194
+	org.clojure:spec.alpha:pom:0.3.218
 	org.clojure:tools.analyzer:jar:1.1.0
-	org.clojure:tools.analyzer.jvm:jar:1.2.0
-	org.clojure:tools.analyzer.jvm:pom:1.2.0
+	org.clojure:tools.analyzer.jvm:jar:1.2.1
+	org.clojure:tools.analyzer.jvm:pom:1.2.1
 	org.clojure:tools.analyzer:pom:1.1.0
 	org.clojure:tools.cli:jar:1.0.206
 	org.clojure:tools.cli:pom:1.0.206
-	org.clojure:tools.deps.alpha:jar:0.12.1071
-	org.clojure:tools.deps.alpha:jar:0.12.1084
-	org.clojure:tools.deps.alpha:pom:0.12.1071
-	org.clojure:tools.deps.alpha:pom:0.12.1084
+	org.clojure:tools.deps.alpha:jar:0.12.1148
+	org.clojure:tools.deps.alpha:jar:0.13.1168
+	org.clojure:tools.deps.alpha:pom:0.12.1148
+	org.clojure:tools.deps.alpha:pom:0.13.1168
 	org.clojure:tools.gitlibs:jar:2.4.172
 	org.clojure:tools.gitlibs:pom:2.4.172
-	org.clojure:tools.logging:jar:1.1.0
-	org.clojure:tools.logging:pom:1.1.0
-	org.clojure:tools.namespace:jar:1.0.0
-	org.clojure:tools.namespace:pom:1.0.0
-	org.clojure:tools.reader:jar:1.3.2
-	org.clojure:tools.reader:pom:1.3.2
-	org.codehaus:codehaus-parent:pom:4
-	org.codehaus.mojo:animal-sniffer-annotations:jar:1.14
-	org.codehaus.mojo:animal-sniffer-annotations:pom:1.14
-	org.codehaus.mojo:animal-sniffer-parent:pom:1.14
-	org.codehaus.mojo:mojo-parent:pom:34
+	org.clojure:tools.logging:jar:1.2.1
+	org.clojure:tools.logging:pom:1.2.1
+	org.clojure:tools.namespace:jar:1.2.0
+	org.clojure:tools.namespace:pom:1.2.0
+	org.clojure:tools.reader:jar:1.3.6
+	org.clojure:tools.reader:pom:1.3.6
 	org.codehaus.plexus:plexus-cipher:jar:2.0
 	org.codehaus.plexus:plexus-cipher:pom:2.0
 	org.codehaus.plexus:plexus-classworlds:jar:2.6.0
@@ -214,6 +229,7 @@ EMAVEN_ARTIFACTS=(
 	org.eclipse.sisu:org.eclipse.sisu.plexus:pom:0.3.5
 	org.eclipse.sisu:sisu-inject:pom:0.3.5
 	org.eclipse.sisu:sisu-plexus:pom:0.3.5
+	org.junit:junit-bom:pom:5.7.2
 	org.junit:junit-bom:pom:5.8.1
 	org.ow2.asm:asm:jar:5.2
 	org.ow2.asm:asm-parent:pom:5.2
