@@ -1,0 +1,11 @@
+--- brew-install-1.11.1.1149/deps.edn.orig
++++ brew-install-1.11.1.1149/deps.edn
+@@ -9,7 +9,7 @@
+  {
+   ;; clj -T:build release
+   :build    
+-  {:deps {io.github.clojure/tools.build {:git/tag "v0.8.1" :git/sha "7d40500"}}
++  {:deps {io.github.clojure/tools.build {:local/root "../tools.build-0.8.1"}}
+    :paths ["script"]
+    :ns-default build}
+   

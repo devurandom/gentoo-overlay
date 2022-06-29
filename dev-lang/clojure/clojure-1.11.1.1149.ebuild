@@ -3,7 +3,7 @@
 
 EAPI=7
 
-TOOLS_BUILD_PV="0.8.0"
+TOOLS_BUILD_PV="0.8.1"
 JAVA_PKG_IUSE="test"
 
 inherit java-pkg-2
@@ -147,19 +147,17 @@ EMAVEN_ARTIFACTS=(
 	org.checkerframework:checker-compat-qual:pom:2.5.5
 	org.checkerframework:checker-qual:jar:3.12.0
 	org.checkerframework:checker-qual:pom:3.12.0
-	org.clojure:clojure:jar:1.10.3
 	org.clojure:clojure:jar:1.11.0
-	org.clojure:clojure:pom:1.10.3
+	org.clojure:clojure:jar:1.11.1
 	org.clojure:clojure:pom:1.11.0
+	org.clojure:clojure:pom:1.11.1
 	org.clojure:core.async:jar:1.5.644
 	org.clojure:core.async:pom:1.5.644
 	org.clojure:core.cache:jar:1.0.225
 	org.clojure:core.cache:pom:1.0.225
 	org.clojure:core.memoize:jar:1.0.253
 	org.clojure:core.memoize:pom:1.0.253
-	org.clojure:core.specs.alpha:jar:0.2.56
 	org.clojure:core.specs.alpha:jar:0.2.62
-	org.clojure:core.specs.alpha:pom:0.2.56
 	org.clojure:core.specs.alpha:pom:0.2.62
 	org.clojure:data.codec:jar:0.1.0
 	org.clojure:data.codec:pom:0.1.0
@@ -173,12 +171,9 @@ EMAVEN_ARTIFACTS=(
 	org.clojure:java.classpath:pom:1.0.0
 	org.clojure:pom.contrib:pom:0.0.25
 	org.clojure:pom.contrib:pom:0.2.2
-	org.clojure:pom.contrib:pom:0.3.0
 	org.clojure:pom.contrib:pom:1.0.0
 	org.clojure:pom.contrib:pom:1.1.0
-	org.clojure:spec.alpha:jar:0.2.194
 	org.clojure:spec.alpha:jar:0.3.218
-	org.clojure:spec.alpha:pom:0.2.194
 	org.clojure:spec.alpha:pom:0.3.218
 	org.clojure:tools.analyzer:jar:1.1.0
 	org.clojure:tools.analyzer.jvm:jar:1.2.1
@@ -187,11 +182,13 @@ EMAVEN_ARTIFACTS=(
 	org.clojure:tools.cli:jar:1.0.206
 	org.clojure:tools.cli:pom:1.0.206
 	org.clojure:tools.deps.alpha:jar:0.12.1148
-	org.clojure:tools.deps.alpha:jar:0.13.1168
+	org.clojure:tools.deps.alpha:jar:0.14.1212
 	org.clojure:tools.deps.alpha:pom:0.12.1148
-	org.clojure:tools.deps.alpha:pom:0.13.1168
+	org.clojure:tools.deps.alpha:pom:0.14.1212
 	org.clojure:tools.gitlibs:jar:2.4.172
+	org.clojure:tools.gitlibs:jar:2.4.181
 	org.clojure:tools.gitlibs:pom:2.4.172
+	org.clojure:tools.gitlibs:pom:2.4.181
 	org.clojure:tools.logging:jar:1.2.1
 	org.clojure:tools.logging:pom:1.2.1
 	org.clojure:tools.namespace:jar:1.2.0
